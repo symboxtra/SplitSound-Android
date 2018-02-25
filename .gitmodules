@@ -1,6 +1,0 @@
-[submodule "JRTPLIB"]
-	path = JRTPLIB
-	url = https://github.com/symboxtra/JRTPLIB
-[submodule "JThread"]
-	path = JThread
-	url = https://github.com/symboxtra/JThread
