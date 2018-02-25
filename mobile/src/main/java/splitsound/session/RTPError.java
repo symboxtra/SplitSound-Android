@@ -6,18 +6,6 @@ package splitsound.protocol.rtcp;
 
 public class RTPError
 {
-	private class RTPErrorInfo
-	{
-		public int code;
-		public String description;
-		
-		public RTPErrorInfo(int code, String description)
-		{
-			this.code = code;
-			this.description = description;
-		}
-	}
-	
 	public static final int ERR_RTP_OUTOFMEM                                          = -1;
 	public static final int ERR_RTP_NOTHREADSUPPORT                                   = -2;
 	public static final int ERR_RTP_COLLISIONLIST_BADADDRESS                          = -3;
@@ -216,7 +204,7 @@ public class RTPError
 	public static final int ERR_RTP_TCPTRANS_ERRORINSEND                              = -196;
 	public static final int ERR_RTP_TCPTRANS_ERRORINRECV                              = -197;
 	
-	private final RTPErrorInfo[] ERROR_DESCRIPTIONS  =
+	private static final RTPErrorInfo[] ERROR_DESCRIPTIONS  =
 	{
 		new RTPErrorInfo(ERR_RTP_OUTOFMEM,"Out of memory" ),
 		new RTPErrorInfo(ERR_RTP_NOTHREADSUPPORT, "No JThread support was compiled in"),
@@ -423,10 +411,10 @@ public class RTPError
 		int i;
 		
 		if (errcode >= 0)
-			return "No error"
+			return "No error";
 		
 		i = 0;
-		whiel (ERROR_DESCRIPTIONS[i].code != 0)
+		while (ERROR_DESCRIPTIONS[i].code != 0)
 		{
 			if (ERROR_DESCRIPTIONS[i].code == errcode)
 				return ERROR_DESCRIPTIONS[i].description;
@@ -435,4 +423,9 @@ public class RTPError
 		
 		return "Unknown error code: " + errcode;
 	}
+
+    public static void main(String[] args)
+    {
+        System.out.println(RTPGetErrorString(-1));
+    }
 }
