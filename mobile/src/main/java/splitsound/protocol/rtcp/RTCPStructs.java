@@ -35,7 +35,7 @@ public class RTCPStructs
     {
         int ssrc;
         byte fractionlost;
-        byte packetslost[] = new byte[3];
+        byte packetslost[];
         byte exthighseqnr;
         int jitter;
         int lsr;

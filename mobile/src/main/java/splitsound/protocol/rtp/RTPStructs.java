@@ -37,7 +37,7 @@ public class RTPStructs
 
         static int sizeOf()
         {
-            return 96;
+            return 12;
         }
     }
 
@@ -46,8 +46,29 @@ public class RTPStructs
         public short extid;
         public short length;
 
-        public RTPExtensionHeader()
-        {}
+        private static byte[] bits = new byte[5];
+
+        public RTPExtensionHeader(byte[] packet, int offset)
+        {
+            extid = (short)((packet[offset] << 8) | packet[offset + 1]);
+            length = (short)((packet[offset + 2] << 8) | packet[offset + 3]);
+
+            bits[0] = packet[offset];
+            bits[1] = packet[offset];
+            bits[2] = packet[offset];
+            bits[3] = packet[offset];
+
+        }
+
+        static int sizeOf()
+        {
+            return 4;
+        }
+
+        static byte[] getBytes()
+        {
+            return bits;
+        }
     }
 
     static class RTPSourceIdentifier
