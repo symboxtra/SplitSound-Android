@@ -26,6 +26,8 @@ android {
             path "CMakeLists.txt"
         }
     }
+
+
 }
 
 dependencies {
@@ -37,4 +39,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     wearApp project(':wear')
     implementation 'com.google.android.gms:play-services-wearable:+'
+    compile fileTree(dir: "$buildDir/native-libs", include: 'native-libs.jar')
 }
