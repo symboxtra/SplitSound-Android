@@ -1,4 +1,4 @@
-package splitsound.protocol.rtcp;
+package splitsound.session;
 
 /**
  * Created by J. McKernan on 2/25/2018.
