@@ -1,4 +1,4 @@
-package splitsound.session;
+package splitsound.utilities;
 
 /**
  * Created by J. McKernan on 2/25/2018.
@@ -424,8 +424,9 @@ public class RTPError
 		return "Unknown error code: " + errcode;
 	}
 
-    public static void main(String[] args)
-    {
-        System.out.println(RTPGetErrorString(-1));
-    }
+	public static void main(String[] args)
+	{
+		System.out.println("Error code: " + RTPError.ERR_RTP_OUTOFMEM);
+		System.out.println("Error string: " + RTPGetErrorString(-1));
+	}
 }

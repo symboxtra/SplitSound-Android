@@ -1,7 +1,7 @@
 package splitsound.session;
 
 import splitsound.protocol.rtcp.RTPError;
-import splitsound.protocol.rtp.*;
+import splitsound.utilities.RTPError;
 
 /**
  * Created by Neel on 2/25/2018.
