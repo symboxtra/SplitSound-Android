@@ -11,6 +11,8 @@ import splitsound.protocol.RTPConstants;
 public class RTPTime
 {
     private double m_t;
+    private long RTP_NTPTIMEOFFSET
+
     class RTPNTPTime
     {
         private int msw, lsw;
@@ -105,7 +107,7 @@ public class RTPTime
 
     }
 
-    public RTPTime currentTime()
+    public static RTPTime currentTime()
     {
         long time = System.nanoTime();
 
@@ -116,7 +118,7 @@ public class RTPTime
         return new RTPTime(t);
     }
 
-    public void wait(RTPTime delay)
+    public static void wait(RTPTime delay)
     {
         if(delay.m_t <= 0)
             return;
@@ -131,5 +133,20 @@ public class RTPTime
             Thread.sleep(timeInMilli);
         }catch(InterruptedException e)
         {}
+    }
+
+    public double getTime()
+    {
+        return m_t;
+    }
+
+    public void addTime(RTPTime t)
+    {
+        m_t += t.getTime();
+    }
+
+    public void subtractTime(RTPTime t)
+    {
+        m_t -= t.getTime();
     }
 }
