@@ -5,7 +5,7 @@ package splitsound.protocol;
  */
 
 public final class RTPConstants {
-    public static int RTP_VERSION = 2
+    public static int RTP_VERSION = 2;
     public static int RTP_MAXCSRCS = 15;
     public static int RTP_MINPACKETSIZE = 600;
     public static int RTP_DEFAULTPACKETSIZE = 400;
