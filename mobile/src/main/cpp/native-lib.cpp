@@ -1,5 +1,4 @@
 #include <jni.h>
-#include <test.h>
 #include <string>
 
 extern "C"
