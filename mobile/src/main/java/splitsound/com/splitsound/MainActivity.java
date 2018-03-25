@@ -1,5 +1,6 @@
 package splitsound.com.splitsound;
 
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        enableStrictMode();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -46,17 +48,18 @@ public class MainActivity extends AppCompatActivity {
         Participant p = new Participant("127.0.0.1", 6003, 6004);
         testReceive.session.addParticipant(p);
 
-        /*for(int i = 0;i < 10;i++)
+        for(int i = 0;i < 10;i++)
         {
             String str = "Test number " + i;
             testReceive.session.sendData(str.getBytes());
-    }*/
+        }
 
         
     }
 
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
+    public void enableStrictMode()
+    {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+    }
 }
