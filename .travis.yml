@@ -18,6 +18,10 @@ android:
         - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
 
 # Install NDK
+before_install:
+    - mkdir -p $ANDROID_HOME/licenses
+    - echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
+    - echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> $ANDROID_HOME/licenses/android-sdk-license
 install:
     #- rm -rf $HOME/android-ndk-r16b
     #- (cd $HOME && curl -L http://dl.google.com/android/repository/android-ndk-r16b-linux-x86_64.zip -O --progress-bar)
