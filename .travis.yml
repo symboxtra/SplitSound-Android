@@ -7,6 +7,7 @@ env:
         - ANDROID_TARGET=android-27
         - ANDROID_ABI=google_apis/armeabi-v7a
 
+# Install components
 android:
     components:
         - tools
@@ -17,26 +18,17 @@ android:
         - extra-android-m2repository
         - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
 
-# Install NDK
+# Install NDK and CMake
 before_install:
-   # - rm -rf $HOME/android-ndk-r16b
-    #- (cd $HOME && curl -L http://dl.google.com/android/repository/android-ndk-r16b-linux-x86_64.zip -O --progress-bar)
-    #- unzip -oq $HOME/android-ndk-r16b-linux-x86_64.zip -d $HOME
-    #- rm $HOME/android-ndk-r16b-linux-x86_64.zip
-    #- export ANDROID_NDK_HOME=$HOME/android-ndk-r16b
-    - ls $HOME
-    #- ls $HOME/android-ndk-r16b
-    - pwd
-    - ls
-    - echo y | sdkmanager ndk-bundle
+    - echo y | sdkmanager "ndk-bundle"
     - echo y | sdkmanager "cmake;3.6.4111459"
 
-before_script:
-    - chmod +x gradlew
-
+# Build gradle
 script:
+    - chmod +x gradlew
     - ./gradlew build
 
+# Cache
 before_cache:
     - rm -r $HOME/.gradle/caches/modules-2/modules-2.lock
     - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -46,4 +38,13 @@ cache:
         - $HOME/.gradle/wrapper/
         - $HOME/.android/build-cache
 
-after_failure: "cat $TRAVIS_BUILD_DIR/app/build/outputs/lint-results-debug.xml"
+# Build succeeded
+after_success:
+    - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports" # Collect coverage data
+    - curl https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh > send.sh && chmod +x send.sh
+    - ./send.sh success $WEBHOOK_URL # Webhook to Discord
+
+# Build failed
+after_failure:
+    - curl https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh > send.sh && chmod +x send.sh
+    - ./send.sh failure $WEBHOOK_URL # Webhook to Discord
