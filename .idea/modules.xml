@@ -3,8 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SplitSound-Android.iml" filepath="$PROJECT_DIR$/SplitSound-Android.iml" />
+      <module fileurl="file://D:\jmcker\Documents\SplitSound\SplitSound-Android\SplitSound-Android.iml" filepath="D:\jmcker\Documents\SplitSound\SplitSound-Android\SplitSound-Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/mobile/mobile.iml" filepath="$PROJECT_DIR$/mobile/mobile.iml" />
+      <module fileurl="file://D:\jmcker\Documents\SplitSound\SplitSound-Android\mobile\mobile.iml" filepath="D:\jmcker\Documents\SplitSound\SplitSound-Android\mobile\mobile.iml" />
       <module fileurl="file://$PROJECT_DIR$/wear/wear.iml" filepath="$PROJECT_DIR$/wear/wear.iml" />
+      <module fileurl="file://D:\jmcker\Documents\SplitSound\SplitSound-Android\wear\wear.iml" filepath="D:\jmcker\Documents\SplitSound\SplitSound-Android\wear\wear.iml" />
     </modules>
   </component>
 </project>
