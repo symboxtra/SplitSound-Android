@@ -29,7 +29,7 @@ before_install:
     - pwd
     - ls
     - echo y | sdkmanager ndk-bundle
-    - echo y | sdkmanager cmake;3.6.4111459
+    - echo y | sdkmanager "cmake;3.6.4111459"
 
 before_script:
     - chmod +x gradlew
