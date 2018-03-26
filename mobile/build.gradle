@@ -33,6 +33,7 @@ android {
 
     lintOptions {
         abortOnError false
+        checkReleaseBuilds false
     }
 
     task nativeLibsToJar(type: Zip, description: "Create a jar archive of the native libs") {
