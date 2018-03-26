@@ -19,12 +19,14 @@ android:
 
 # Install NDK
 before_install:
-    - cd $HOME
     - rm -rf $HOME/android-ndk-r16b
-    - curl -L http://dl.google.com/android/repository/android-ndk-r16b-linux-x86_64.zip -O
-    - unzip -oq android-ndk-r16b-linux-x86_64.zip
-    - rm android-ndk-r16b-linux-x86_64.zip
+    - (cd $HOME && curl -L http://dl.google.com/android/repository/android-ndk-r16b-linux-x86_64.zip -O)
+    - unzip -oq $HOME/android-ndk-r16b-linux-x86_64.zip
+    - rm $HOME/android-ndk-r16b-linux-x86_64.zip
     - export ANDROID_NDK_HOME=$HOME/android-ndk-r16b
+    - ls $HOME
+    - ls $HOME/android-ndk-r16b
+    - pwd
     - ls
 
 before_script:
