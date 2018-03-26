@@ -25,7 +25,7 @@ before_install:
     #- rm $HOME/android-ndk-r16b-linux-x86_64.zip
     #- export ANDROID_NDK_HOME=$HOME/android-ndk-r16b
     - ls $HOME
-    - ls $HOME/android-ndk-r16b
+    #- ls $HOME/android-ndk-r16b
     - pwd
     - ls
     - echo y | sdkmanager ndk-bundle
