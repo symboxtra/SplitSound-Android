@@ -2,32 +2,12 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <layer-list>
-            <item android:right="5dp" android:left="5dp">
-                <shape android:shape="rectangle"
-                    xmlns:android="http://schemas.android.com/apk/res/android">
-                    <gradient
-                        android:startColor="#22FF22"
-                        android:endColor="#22FF22"
-                        android:angle="90">
-                    </gradient>
-
-                    <corners android:radius="500dp" />
-
-                    <stroke
-                        android:width="1px"
-                        android:color="#22FF22" />
+            <item>
+                <shape android:shape="oval">
+                    <solid android:color="#92D36E"/>
+                    <size android:height="125dp" android:width="125dp"/>
                 </shape>
             </item>
-            <item android:bottom="4px">
-                <shape android:shape="rectangle"
-                    xmlns:android="http://schemas.android.com/apk/res/android">
-
-                    <solid android:color="#FF22"/>
-                    <corners android:radius="100dp"/>
-
-                </shape>
-            </item>
-
         </layer-list>
     </item>
 </selector>
