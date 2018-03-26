@@ -1,4 +1,5 @@
 language: android
+sudo: required
 jdk: oraclejdk7
 
 before_cache:
@@ -12,7 +13,7 @@ cache:
 env:
     global:
         - ANDROID_TARGET=android-26
-        - ANDROID_ABI=armeabi-v7a
+        - ANDROID_ABI=google_apis/armeabi-v7a
 android:
     components:
         - tools
