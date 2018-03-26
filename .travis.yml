@@ -28,9 +28,9 @@ before_install:
     - ls $HOME/android-ndk-r16b
     - pwd
     - ls
-    - echo sdkmanager --version
-    - echo y | sdkmanager --licenses
+    - sdkmanager --version
     - which sdkmanager
+    - echo y | sdkmanager --licenses
 
 before_script:
     - chmod +x gradlew
