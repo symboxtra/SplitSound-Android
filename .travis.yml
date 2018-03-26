@@ -13,6 +13,7 @@ android:
         - platform-tools
         - tools
         - build-tools-27.0.3
+        - cmake
         - ${ANDROID_TARGET}
         - extra-android-m2repository
         - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
@@ -28,6 +29,7 @@ before_install:
     - ls $HOME/android-ndk-r16b
     - pwd
     - ls
+    - echo "y" | sdkmanager "cmake;3.6.4111456"
 
 before_script:
     - chmod +x gradlew
