@@ -4,6 +4,9 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.net.DatagramSocket;
@@ -24,9 +27,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //new Thread(){
+          //  int i = bounce();
+        //}.start();
+
         // Example of a call to a native method
-        TextView tv = (TextView) findViewById(R.id.sample_text);
+        TextView tv = (TextView) this.findViewById(R.id.sample_text);
+        Button b = (Button)this.findViewById(R.id.connect);
+        Animation bounce = AnimationUtils.loadAnimation(this, R.anim.bounce);
+        bounce.setRepeatCount(Animation.INFINITE);
+        b.startAnimation(bounce);
         tv.setText("Wassup!");
+
 
         DatagramSocket rtpSocket = null;
         DatagramSocket rtcpSocket = null;
@@ -61,5 +73,37 @@ public class MainActivity extends AppCompatActivity {
     {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+    }
+    public int bounce()
+    {
+        Button b = (Button)this.findViewById(R.id.connect);
+
+        if(b==null)
+        {
+            Log.e("Bounce", "Connect Button is null");
+            return 0;
+        }
+        float x = 110;
+        int flag = -1;
+        while(true)
+        {
+            if(x == -1)
+                break;
+            if(x == 0)
+                flag = 1;
+            else if(x == 100)
+                flag = -1;
+
+            b.setTranslationZ(x+=(10*flag));
+
+
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return 1;
     }
 }
