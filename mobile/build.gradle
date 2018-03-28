@@ -9,13 +9,24 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++14 -frtti -fexceptions"
             }
         }
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    testOptions {
+        execution 'ANDROID_TEST_ORCHESTRATOR' // For instrumented tests
+        animationsDisabled true
+
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
     buildTypes {
         debug {
             testCoverageEnabled true
@@ -25,46 +36,40 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     externalNativeBuild {
         cmake {
             path "CMakeLists.txt"
         }
     }
 
+    // Prevent build failures due to lint errors
     lintOptions {
         abortOnError false
-        checkReleaseBuilds false
     }
+}
 
-    task nativeLibsToJar(type: Zip, description: "Create a jar archive of the native libs") {
-        destinationDir file("$projectDir/libs")
-        baseName "Native_Libs"
-        extension "jar"
-        from fileTree(dir: "libs", include: "**/*.so")
-        into "lib"
+// Test logging
+tasks.withType(Test) {
+    testLogging {
+        exceptionFormat "full"
+        events "started", "skipped", "passed", "failed", "standardOut", "standardError"
+        showStandardStreams true
     }
-
-    tasks.withType(JavaCompile) {
-        compileTask -> compileTask.dependsOn(nativeLibsToJar)
-    }
-
-    sourceSets {
-        main {
-            jniLibs.srcDirs './main/jni/'
-        }
-    }
-
 }
 
 dependencies {
     implementation 'com.google.code.gson:gson:2.6.2'
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.google.android.gms:play-services-wearable:+'
     implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test:rules:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    wearApp project(':wear')
-    implementation 'com.google.android.gms:play-services-wearable:+'
+    androidTestUtil 'com.android.support.test:orchestrator:1.0.1'
+
+    testImplementation 'junit:junit:4.12'
     implementation files('libs/rtpLib.jar')
+
+    wearApp project(':wear')
 }

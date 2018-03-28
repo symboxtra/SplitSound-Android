@@ -16,9 +16,11 @@ import jlibrtp.*;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Used to load the 'native-lib' library on application startup.
-    static {
-        System.loadLibrary("native-lib");
+    private static final String TAG = "MainActivity";
+
+    static public String helloWorld()
+    {
+        return "Hello World";
     }
 
     @Override

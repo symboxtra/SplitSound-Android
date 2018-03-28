@@ -19,14 +19,21 @@ android:
         - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
 
 # Install NDK and CMake
-before_install:
+install:
     - echo y | sdkmanager "ndk-bundle"
     - echo y | sdkmanager "cmake;3.6.4111459"
 
-# Build gradle
+before_script:
+    - echo no | android create avd --force -n test -k ${ANDROID_TARGET} --abi ${ANDROID_ABI} || true
+    - echo no | avdmanager create avd --force --name test2 --package "system-images;${ANDROID_TARGET};google_apis;armeabi-v7a" --abi ${ANDROID_ABI} --device Pixel || true
+    - emulator -avd test -no-skin -no-audio -no-window & || emulator -avd test2 -no-skin -no-audio -no-window &
+    - android-wait-for-emulator
+    - adb shell input keyevent 82 &
+
+# Run test suite
 script:
     - chmod +x gradlew
-    - ./gradlew build
+    - ./gradlew clean test createDebugCoverageReport
 
 # Cache
 before_cache:
