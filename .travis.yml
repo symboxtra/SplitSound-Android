@@ -26,7 +26,7 @@ before_install:
 # Build gradle
 script:
     - chmod +x gradlew
-    - ./gradlew build
+    - ./gradlew build jacocoTestReport test
 
 # Cache
 before_cache:
