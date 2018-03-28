@@ -9,9 +9,7 @@ env:
 # Install components
 android:
     components:
-        - tools
         - platform-tools
-        - tools
         - build-tools-27.0.3
         - ${ANDROID_TARGET}
         - extra-android-m2repository
@@ -19,12 +17,17 @@ android:
 
 # Install NDK and CMake
 install:
+    - mkdir android-sdk
+    - curl -L https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip -O
+    - unzip -oq sdk-tools-linux-3859397.zip -d ./android-sdk
+    - rm sdk-tools-linux-3859397.zip
+    - export PATH=$PWD/android-sdk/tools/:$PWD/android-sdk/tools/bin:$PATH # Override Travis tools
     - echo y | sdkmanager "ndk-bundle"
     - echo y | sdkmanager "cmake;3.6.4111459"
 
 before_script:
-    - echo no | android create avd --force -n test -t ${ANDROID_TARGET} --abi ${ANDROID_ABI} || true
-    - emulator -avd test -no-skin -no-audio -no-window &
+    - echo no | avdmanager create avd --force --name test2 --package "system-images;${ANDROID_TARGET};google_apis;armeabi-v7a" --abi ${ANDROID_ABI} --device Pixel || true
+    - emulator -avd test -no-skin -no-audio -no-window & || emulator -avd test2 -no-skin -no-audio -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
 
