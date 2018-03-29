@@ -5,7 +5,8 @@ sudo: required
 env:
     global:
         - ANDROID_TARGET=android-27
-        - ANDROID_ABI=google_apis/armeabi-v7a
+        - ANDROID_ABI=armeabi-v7a
+        - ANDROID_TAG=google_apis
 
 # Install components
 android:
@@ -16,13 +17,13 @@ android:
         - build-tools-27.0.3
         - ${ANDROID_TARGET}
         - extra-android-m2repository
-        - sys-img-armeabi-v7a-addon-google_apis-google-android-27
+        - sys-img-armeabi-v7a-google_apis-27
 
 # Install NDK and CMake
 before_install:
     - echo y | sdkmanager "ndk-bundle"
     - echo y | sdkmanager "cmake;3.6.4111459"
-    - echo no | android create avd --force -n test -t ${ANDROID_TARGET} --abi ${ANDROID_ABI}
+    - echo no | android create avd --force -n test -t ${ANDROID_TARGET} --abi ${ANDROID_ABI} --tag ${ANDROID_TAG}
     - emulator -avd test &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
