@@ -16,13 +16,13 @@ android:
         - build-tools-27.0.3
         - ${ANDROID_TARGET}
         - extra-android-m2repository
-        - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
+        - sys-img-armeabi-v7a-addon-google_apis-google-android-27
 
 # Install NDK and CMake
 before_install:
     - echo y | sdkmanager "ndk-bundle"
     - echo y | sdkmanager "cmake;3.6.4111459"
-    - echo no | android create avd --force -n test -t ${ANDROID_TARGET}
+    - echo no | android create avd --force -n test -t ${ANDROID_TARGET} --abi ${ANDROID_ABI}
     - emulator -avd test &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
