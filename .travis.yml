@@ -22,11 +22,14 @@ android:
 before_install:
     - echo y | sdkmanager "ndk-bundle"
     - echo y | sdkmanager "cmake;3.6.4111459"
+    - echo no | android create avd --force -n test
+    - emulator -avd test &
+    - android-wait-for-emulator
 
 # Build gradle
 script:
     - chmod +x gradlew
-    - ./gradlew build
+    - ./gradlew clean jacocoTestReport
 
 # Cache
 before_cache:
