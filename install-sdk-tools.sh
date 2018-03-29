@@ -42,7 +42,6 @@ echo
 unzip -oq sdk-tools-linux-4333796.zip -d $ANDROID_HOME
 rm sdk-tools-linux-4333796.zip
 
-echo
 echo -e "${YELLOW}Installed SDK Tools at: ${NC}${ANDROID_HOME}"
 echo
 
