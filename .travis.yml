@@ -4,30 +4,25 @@ jdk: oraclejdk8
 env:
     global:
         - ANDROID_TARGET=android-27
-        - ANDROID_ABI=google_apis/armeabi-v7a
+        - ANDROID_ABI=x86 # x86 might run on Travis if hardware accelartion is disabled 
 
-# Install components
-android:
-    components:
-        - platform-tools
-        - build-tools-27.0.3
-        - ${ANDROID_TARGET}
-        - extra-android-m2repository
-        - sys-img-${ANDROID_ABI}-addon-google_apis-google-${ANDROID_TARGET}
+# Install SDK tools
+before_install:
+    - source ./install-sdk-tools.sh # Run script and collect environment variables
 
-# Install NDK and CMake
+# Install NDK, System Images, and other components
 install:
-    - mkdir android-sdk
-    - curl -L https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip -O
-    - unzip -oq sdk-tools-linux-3859397.zip -d ./android-sdk
-    - rm sdk-tools-linux-3859397.zip
-    - export PATH=$PWD/android-sdk/tools/:$PWD/android-sdk/tools/bin:$PATH # Override Travis tools
     - echo y | sdkmanager "ndk-bundle"
+    - echo y | sdkmanager "platform-tools" 
+    - echo y | sdkmanager "build-tools;27.0.3"
+    - echo y | sdkmanager "platforms;${ANRDOID_TARGET}"
+    - echo y | sdkmanager "extra-android-m2repository"
+    - echo y | sdkmanager "system-images;${ANDROID_TARGET};google_apis;${ANDROID_ABI}"
     - echo y | sdkmanager "cmake;3.6.4111459"
 
 before_script:
-    - echo no | avdmanager create avd --force --name test2 --package "system-images;${ANDROID_TARGET};google_apis;armeabi-v7a" --abi ${ANDROID_ABI} --device Pixel || true
-    - emulator -avd test -no-skin -no-audio -no-window & || emulator -avd test2 -no-skin -no-audio -no-window &
+    - echo no | avdmanager create avd --force --name test --package "system-images;${ANDROID_TARGET};google_apis;${ANDROID_ABI}" --abi ${ANDROID_ABI} --device pixel
+    - emulator -avd test -no-skin -no-audio -no-window -gpu off -no-accel -no-boot-anim &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
 
