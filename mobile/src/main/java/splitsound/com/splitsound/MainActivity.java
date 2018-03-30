@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e("Error: ", e.toString());
             finish();
         }
-        TestReceive testReceive = new TestReceive(this);
+        Receive testReceive = new Receive(this);
         testReceive.session = new RTPSession(rtpSocket, rtcpSocket);
         testReceive.session.naivePktReception(true);
         testReceive.session.RTPSessionRegister(testReceive, null, null);
