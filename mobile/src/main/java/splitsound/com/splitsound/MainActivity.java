@@ -76,36 +76,4 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
     }
-    public int bounce()
-    {
-        Button b = (Button)this.findViewById(R.id.connect);
-
-        if(b==null)
-        {
-            Log.e("Bounce", "Connect Button is null");
-            return 0;
-        }
-        float x = 110;
-        int flag = -1;
-        while(true)
-        {
-            if(x == -1)
-                break;
-            if(x == 0)
-                flag = 1;
-            else if(x == 100)
-                flag = -1;
-
-            b.setTranslationZ(x+=(10*flag));
-
-
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return 1;
-    }
 }
