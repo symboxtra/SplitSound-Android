@@ -1,59 +1,16 @@
+// Gradle plugins
+plugins {
+    id 'com.adarshr.test-logger' version '1.1.2'
+}
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 
+// Jacoco Configurations
 jacoco {
-    toolVersion = '0.8.0'
+    toolVersion = "$jacocoVersion"
 }
 
-android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
-    defaultConfig {
-        applicationId "splitsound.com.splitsound"
-        minSdkVersion 21
-        targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
-        externalNativeBuild {
-            cmake {
-                cppFlags "-std=c++14 -frtti -fexceptions"
-            }
-        }
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
-
-    testOptions {
-        execution 'ANDROID_TEST_ORCHESTRATOR' // Use Orchestrator for instrumented tests
-        animationsDisabled true
-
-        unitTests {
-            includeAndroidResources = true
-        }
-    }
-
-    buildTypes {
-        debug {
-            testCoverageEnabled true
-        }
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-
-    externalNativeBuild {
-        cmake {
-            path "CMakeLists.txt"
-        }
-    }
-
-    // Prevent build failures due to lint errors
-    lintOptions {
-        abortOnError false
-    }
-}
-
+// Custom Jacoco test report script (including project build and testing)
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
 
     reports {
@@ -62,16 +19,17 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
     }
 
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', 'android/**/*.*']
-    def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
-    def mainSrc = "$project.projectDir/src/main/java"
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
 
     sourceDirectories = files([mainSrc])
     classDirectories = files([debugTree])
-    executionData = fileTree(dir: project.buildDir, includes: [
-            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
+    executionData = fileTree(dir: "$buildDir", includes: [
+            "jacoco/testDebugUnitTest.exec", 'outputs/code-coverage/connected/*coverage.ec'
     ])
 }
 
+// Custom Jacoco test report script (unit tests only)
 task jacocoUnitTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
 
     reports {
@@ -90,6 +48,65 @@ task jacocoUnitTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) 
     ])
 }
 
+// Core Android builds
+android {
+
+    // Android SDK Version information
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
+
+    // Default Android SDK settings
+    defaultConfig {
+        applicationId "splitsound.com.splitsound"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        // Native programming build
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++14 -frtti -fexceptions"
+            }
+        }
+    }
+
+    // Turn off animations for Unit testing
+    testOptions {
+        execution 'ANDROID_TEST_ORCHESTRATOR' // Use Orchestrator for instrumented tests
+        animationsDisabled true
+
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
+    // Build configurations for debug and release
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // Builds dummy cpp file
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+
+    // Prevent build failures due to lint errors
+    lintOptions {
+        abortOnError false
+    }
+}
+
 // Test logging
 tasks.withType(Test) {
     testLogging {
@@ -101,18 +118,26 @@ tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
 
+// Imported dependencies
 dependencies {
+
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.google.android.gms:play-services-wearable:+'
     implementation 'com.android.support:appcompat-v7:27.1.0'
+    
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support:design:27.1.0'
+
+    implementation files('libs/rtpLib.jar')
+
+    testImplementation 'junit:junit:4.12'
+    androidTestUtil 'com.android.support.test:orchestrator:1.0.1'
+
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test:rules:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    androidTestUtil 'com.android.support.test:orchestrator:1.0.1'
-
-    testImplementation 'junit:junit:4.12'
-    implementation files('libs/rtpLib.jar')
+    testImplementation 'org.robolectric:robolectric:3.8'
 
     wearApp project(':wear')
+    
 }

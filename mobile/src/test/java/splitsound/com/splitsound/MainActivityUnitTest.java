@@ -1,6 +1,9 @@
 package splitsound.com.splitsound;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 import static org.junit.Assert.*;
 
@@ -9,9 +12,11 @@ import static org.junit.Assert.*;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class ExampleUnitTest {
+@RunWith(RobolectricTestRunner.class)
+public class MainActivityUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
+        //MainActivity activity = Robolectric.setupActivity(MainActivity.class);
         assertEquals(4, 2 + 2);
     }
 }
