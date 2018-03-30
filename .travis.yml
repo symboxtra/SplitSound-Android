@@ -1,43 +1,32 @@
 language: android
 jdk: oraclejdk8
-sudo: required
 
 env:
     global:
         - ANDROID_TARGET=android-27
-        - ANDROID_ABI=x86
-        - ANDROID_TAG=google_apis
-        - PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/emulator/bin:$ANDROID_HOME/tools/:$ANDROID_HOME/platform-tools/:$PATH
 
-# Install components
-android:
-    components:
-        - tools
-        - platform-tools
-        - tools
-        - build-tools-27.0.3
-        - ${ANDROID_TARGET}
-        - extra-android-m2repository
-
-# Install NDK and CMake
+# Install SDK tools
 before_install:
-    - echo y | sdkmanager "ndk-bundle" > /dev/null
-    - echo y | sdkmanager "cmake;3.6.4111459" > /dev/null
-    - echo y | sdkmanager "system-images;${ANDROID_TARGET};google_apis;${ANDROID_ABI}" > /dev/null
-    - echo no | avdmanager create avd --force --name test --package "system-images;${ANDROID_TARGET};google_apis;${ANDROID_ABI}" --abi ${ANDROID_ABI} --device pixel
-    - emulator -avd test -no-skin &
-    - android-wait-for-emulator
-    - adb shell input keyevent 82 &
+    - source ./install-sdk-tools.sh # Run script and collect environment variables
 
-# Build gradle
+# Install NDK and other components
+install:
+    - echo y | sdkmanager "ndk-bundle" > /dev/null
+    - echo y | sdkmanager "platform-tools"  > /dev/null
+    - echo y | sdkmanager "build-tools;27.0.3" > /dev/null
+    - echo y | sdkmanager "platforms;${ANDROID_TARGET}" > /dev/null
+    - echo y | sdkmanager "extras;android;m2repository" > /dev/null
+    - echo y | sdkmanager "cmake;3.6.4111459" > /dev/null
+
+# Run test suite
 script:
     - chmod +x gradlew
-    - ./gradlew clean jacocoTestReport
+    - ./gradlew clean jacocoUnitTestReport
 
 # Cache
 before_cache:
     - rm -r $HOME/.gradle/caches/modules-2/modules-2.lock
-    - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+    - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 cache:
     directories:
         - $HOME/.gradle/caches/
@@ -46,7 +35,6 @@ cache:
 
 # Build succeeded
 after_success:
-    - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports" # Collect coverage data
     - curl https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh > send.sh && chmod +x send.sh
     - ./send.sh success $WEBHOOK_URL # Webhook to Discord
 

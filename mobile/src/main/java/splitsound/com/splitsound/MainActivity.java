@@ -16,9 +16,11 @@ import jlibrtp.*;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Used to load the 'native-lib' library on application startup.
-    static {
-        System.loadLibrary("native-lib");
+    private static final String TAG = "MainActivity";
+
+    static public String helloWorld()
+    {
+        return "Hello World";
     }
 
     @Override
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e("Error: ", e.toString());
             finish();
         }
-        TestReceive testReceive = new TestReceive(this);
+        Receive testReceive = new Receive(this);
         testReceive.session = new RTPSession(rtpSocket, rtcpSocket);
         testReceive.session.naivePktReception(true);
         testReceive.session.RTPSessionRegister(testReceive, null, null);
@@ -73,37 +75,5 @@ public class MainActivity extends AppCompatActivity {
     {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-    }
-    public int bounce()
-    {
-        Button b = (Button)this.findViewById(R.id.connect);
-
-        if(b==null)
-        {
-            Log.e("Bounce", "Connect Button is null");
-            return 0;
-        }
-        float x = 110;
-        int flag = -1;
-        while(true)
-        {
-            if(x == -1)
-                break;
-            if(x == 0)
-                flag = 1;
-            else if(x == 100)
-                flag = -1;
-
-            b.setTranslationZ(x+=(10*flag));
-
-
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return 1;
     }
 }

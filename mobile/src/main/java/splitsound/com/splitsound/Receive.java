@@ -10,7 +10,7 @@ import jlibrtp.*;
  * Created by Neel on 2/28/2018.
  */
 
-public class TestReceive implements RTPAppIntf{
+public class Receive implements RTPAppIntf{
 
     RTPSession session = null;
     public Activity activity;
@@ -25,7 +25,7 @@ public class TestReceive implements RTPAppIntf{
         tv.append("Got myself: " + new String(frame.getConcatenatedData())+"\n");
     }
 
-    public TestReceive(Activity active)
+    public Receive(Activity active)
     {
         activity = active;
     }
