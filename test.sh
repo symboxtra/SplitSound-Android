@@ -30,7 +30,7 @@ done
 # Check that emulator was provided as an argument
 if [ -z $avd ]; then
     echo "No emulator name provided."
-    echo "Usage: test.sh emulator-name"
+    echo "Usage: test.sh -a emulator-name [-t]"
     exit 1
 fi
 
