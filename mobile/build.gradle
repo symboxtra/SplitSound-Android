@@ -1,4 +1,9 @@
 apply plugin: 'com.android.application'
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = '0.8.0'
+}
 
 android {
     compileSdkVersion 27
@@ -19,7 +24,7 @@ android {
     }
 
     testOptions {
-        execution 'ANDROID_TEST_ORCHESTRATOR' // For instrumented tests
+        execution 'ANDROID_TEST_ORCHESTRATOR' // Use Orchestrator for instrumented tests
         animationsDisabled true
 
         unitTests {
@@ -49,6 +54,24 @@ android {
     }
 }
 
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "$project.projectDir/src/main/java"
+
+    sourceDirectories = files([mainSrc])
+    classDirectories = files([debugTree])
+    executionData = fileTree(dir: project.buildDir, includes: [
+            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
+    ])
+}
+
 // Test logging
 tasks.withType(Test) {
     testLogging {
@@ -56,10 +79,12 @@ tasks.withType(Test) {
         events "started", "skipped", "passed", "failed", "standardOut", "standardError"
         showStandardStreams true
     }
+
+    jacoco.includeNoLocationClasses = true
 }
 
 dependencies {
-    implementation 'com.google.code.gson:gson:2.6.2'
+    implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.google.android.gms:play-services-wearable:+'
     implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
