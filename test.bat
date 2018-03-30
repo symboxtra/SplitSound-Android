@@ -2,10 +2,10 @@
 echo.
 
 REM -- Check that emulator was provided as an argument
-IF "%~1" == "" (echo No emulator name provided. && echo Usage: test.bat emulator-name && EXIT /B 1)
+IF "%~1" == "" (echo No emulator name provided. && echo Usage: test.bat emulator-name && goto fail)
 
 REM -- Make sure device exists in avdmanager
-avdmanager list avd | find "Name: %1" >nul 2>&1 || (echo Emulator was not a valid device in avdmanager && avdmanager list avd && EXIT/B 1)
+avdmanager list avd | find "Name: %1" >nul 2>&1 || (echo Emulator was not a valid device in avdmanager. && echo. && avdmanager list avd && goto l)
 
 echo Using AVD device: %1
 echo Starting emulator in background...
@@ -21,3 +21,5 @@ echo Starting build/test...
 echo.
 
 gradlew clean jacocoTestReport
+
+:fail
