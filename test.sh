@@ -44,7 +44,7 @@ if [ -z `avdmanager list avd | grep "Name: $avd"` ]; then
 fi
 
 echo -e "${YELLOW}Using AVD device: $avd"
-echo -e "Starting emulator in background...${NC}"
+echo -e "${YELLOW}Starting emulator in background...${NC}"
 echo
 
 # Start emulator
@@ -72,7 +72,7 @@ echo
 
 # Run test and generate coverage reports
 chmod +x ./gradlew
-./gradlew clean test jacocoTestReport
+./gradlew clean jacocoTestReport
 
 # Remove default coverage report
 # Only need merged Jacoco report
