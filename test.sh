@@ -8,6 +8,7 @@
 
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
+BLUE='\033[1;96m'
 NC='\033[0m' # No color
 echo
 
@@ -23,19 +24,21 @@ while getopts ":a:sh" opt; do
             ;;
         s)
             headless=true
-            echo "${YELLOW}Running in headless mode. Remove -s to run non-headless.${NC}"
+            echo -e "${BLUE}Running in headless mode. Remove -s to run non-headless.${NC}"
             echo
             ;;
         h)
             echo "Usage: test.sh [-a=avd device name] [-s] [-h]"
-            echo "-s    Run emulator headless."
+            echo "    -s    Run emulator headless."
+            echo
             exit 1
             ;;
     esac
 done
 
 # Check that emulator was provided as an argument
-if [ -z `avdmanager list avd | grep "Name: $avd$"` ]; then
+result=`avdmanager list avd | grep "Name: $avd$"`
+if [ -z "$result" ]; then
     echo -e "${YELLOW}Creating test AVD...${NC}"
     echo
 
@@ -55,7 +58,8 @@ if [ -z `avdmanager list avd | grep "Name: $avd$"` ]; then
 fi
 
 # Check that device exists in avdmanager
-if [ -z `avdmanager list avd | grep "Name: $avd$"` ]; then
+result=`avdmanager list avd | grep "Name: $avd$"`
+if [ -z "$result" ]; then
     echo "$avd was not a valid device in avdmanager."
     echo "Valid devices are: "
     avdmanager list avd | grep "Name:" --color=never
@@ -70,7 +74,7 @@ echo
 
 # Start emulator
 if $headless; then
-    emulator -avd "$avd" -no-skin -no-audio -no-window -gpu off -no-accel -no-boot-anim &
+    emulator -avd "$avd" -no-skin -no-audio -no-window -no-boot-anim &
 else
     emulator -avd "$avd" &
 fi
