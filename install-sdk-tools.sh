@@ -19,8 +19,8 @@ export ANDROID_HOME=$HOME/Android/Sdk
 export ANDROID_NDK_HOME=$ANDROID_HOME/ndk-bundle # Export NDK location
 
 # Emulator must have higher precedence than tools
-export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/emulator/bin:$ANDROID_HOME/platform-tools/:$ANDROID_HOME/platform-tools:$PATH
 export PATH=$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$PATH # Add SDK tools to path
+export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/emulator/bin:$ANDROID_HOME/platform-tools/:$ANDROID_HOME/platform-tools:$PATH
 
 # Check for already installed files
 if [ -d "$ANDROID_HOME" ]; then
