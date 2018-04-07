@@ -14,9 +14,9 @@ BLUE='\033[1;96m'
 NC='\033[0m' # No color
 echo
 
-# Confirm
+# Confirm packages download
 echo -e "${NC}Are you sure you want to install ALL needed packages for this project?${NC}"
-read -p "This may take awhile...       [y/n]: "
+read -p "This may take awhile...       [Y/n]: "
 echo
 
 # Exit if no
@@ -35,6 +35,7 @@ if [ -z $ANDROID_HOME ]; then
     ANDROID_HOME=$HOME/Android/Sdk
 fi
 
+# Constants
 BUILD_TOOLS_VERSION=27.0.3
 ANDROID_TARGET=android-27
 ANDROID_ABI=x86
