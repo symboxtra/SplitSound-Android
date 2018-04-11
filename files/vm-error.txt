@@ -1,0 +1,120 @@
+04-11 04:52:02.099  2205  2205 I Dialer  : VvmTaskReceiver - TaskExecutor already running
+04-11 04:52:02.099  2205  2205 I Dialer  : Task.createTask - create task:com.android.voicemail.impl.ActivationTask
+04-11 04:52:02.101  2205  2205 I Dialer  : RetryPolicy - retry #1 for com.android.voicemail.impl.ActivationTask@27489e queued, executing in 5000
+04-11 04:52:02.101  2205  2205 I Dialer  : VvmTaskExecutor - com.android.voicemail.impl.ActivationTask@27489e added
+04-11 04:52:02.101  2205  2205 I Dialer  : VvmTaskExecutor - minimal wait time:5000
+04-11 04:52:02.105  2205  2205 I Dialer  : VvmTaskExecutor - sleep for 5000 millis
+04-11 04:52:02.112  4583  4599 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+04-11 04:52:02.132  4583  4588 I zygote  : Do partial code cache collection, code=29KB, data=14KB
+04-11 04:52:02.132  4583  4588 I zygote  : After code cache collection, code=29KB, data=14KB
+04-11 04:52:02.132  4583  4588 I zygote  : Increasing code cache capacity to 128KB
+04-11 04:52:02.254  1633  2316 W ActivityManager: Permission Denial: Accessing service ComponentInfo{com.google.android.music/com.google.android.music.dial.DialMediaRouteProviderService} from pid=4280, uid=10078 that is not exported from uid 10062
+04-11 04:52:02.259  4583  4599 I MonitoringInstr: waitForActivitiesToComplete() took: 0ms
+04-11 04:52:02.259  4583  4583 I MonitoringInstr: Activities that are still in CREATED to STOPPED: 0
+04-11 04:52:02.314  1843  1843 D CarrierSvcBindHelper: No carrier app for: 0
+04-11 04:52:02.314  1843  1843 D ImsResolver: maybeAddedImsService, packageName: com.google.android.youtube
+04-11 04:52:02.314  1633  2316 I ActivityManager: Force stopping splitsound.com.splitsound appid=10079 user=0: finished inst
+04-11 04:52:02.314  1633  2316 I ActivityManager: Killing 4583:splitsound.com.splitsound/u0a79 (adj 0): stop splitsound.com.splitsound
+04-11 04:52:02.334  1633  1633 I Telecom : DefaultDialerCache: Refreshing default dialer for user 0: now com.google.android.dialer: DDC.oR@AH8
+04-11 04:52:02.336  1633  4604 I chatty  : uid=1000 system_server expire 3 lines
+04-11 04:52:02.398  4574  4574 D AndroidRuntime: Shutting down VM
+04-11 04:52:02.412  1633  4604 I ActivityManager: Failure reporting to instrumentation watcher: comp=ComponentInfo{splitsound.com.splitsound.test/android.support.test.runner.AndroidJUnitRunner} results=Bundle[EMPTY_PARCEL]
+04-11 04:52:02.634  4605  4605 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+04-11 04:52:02.719  4605  4605 W app_process: Unexpected CPU variant for X86 using defaults: x86
+04-11 04:52:02.722  4605  4605 I app_process: The ClassLoaderContext is a special shared library.
+04-11 04:52:02.751  4605  4605 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+04-11 04:52:02.753  1633  2316 I ActivityManager: Force stopping splitsound.com.splitsound appid=10079 user=0: start instr
+04-11 04:52:02.758  4614  4614 I zygote  : Not late-enabling -Xcheck:jni (already on)
+04-11 04:52:02.769  1633  2316 I ActivityManager: Start proc 4614:splitsound.com.splitsound/u0a79 for added application splitsound.com.splitsound
+04-11 04:52:02.773  4614  4614 W zygote  : Unexpected CPU variant for X86 using defaults: x86
+04-11 04:52:02.793  4614  4614 I zygote  : The ClassLoaderContext is a special shared library.
+04-11 04:52:02.794  4614  4614 I zygote  : The ClassLoaderContext is a special shared library.
+04-11 04:52:02.794  4614  4614 W zygote  : ClassLoaderContext classpath element mismatch for position 0. expected=/system/framework/android.test.mock.jar, found=/system/framework/android.test.runner.jar (PCL[/system/framework/android.test.mock.jar*1065265343:/system/framework/android.test.runner.jar*1742119008] | PCL[/system/framework/android.test.runner.jar*1742119008:/system/framework/android.test.mock.jar*1065265343])
+04-11 04:52:02.797  4614  4614 W zygote  : Found duplicate classes, falling back to extracting from APK : /data/app/splitsound.com.splitsound.test-wAa7-SR5k4Lzp_XwxB-2Bg==/base.apk
+04-11 04:52:02.797  4614  4614 W zygote  : NOTE: This wastes RAM and hurts startup performance.
+04-11 04:52:02.797  4614  4614 W zygote  : Found duplicated class when checking oat files: 'Ljunit/runner/BaseTestRunner;' in /data/app/splitsound.com.splitsound.test-wAa7-SR5k4Lzp_XwxB-2Bg==/base.apk and /system/framework/android.test.runner.jar
+04-11 04:52:02.797  4614  4614 W zygote  : 
+04-11 04:52:02.854  4614  4614 W zygote  : ClassLoaderContext classpath size mismatch for position 0. expected=0, found=3 (PCL[] | PCL[/system/framework/android.test.runner.jar*1742119008:/system/framework/android.test.mock.jar*1065265343:/data/app/splitsound.com.splitsound.test-wAa7-SR5k4Lzp_XwxB-2Bg==/base.apk*1855234379])
+04-11 04:52:02.859  4614  4614 W System  : ClassLoader referenced unknown path: 
+04-11 04:52:02.867  4614  4614 I MonitoringInstr: Instrumentation started on process splitsound.com.splitsound
+04-11 04:52:02.869  4614  4614 I MonitoringInstr: Setting context classloader to 'dalvik.system.PathClassLoader[DexPathList[[zip file "/system/framework/android.test.runner.jar", zip file "/system/framework/android.test.mock.jar", zip file "/data/app/splitsound.com.splitsound.test-wAa7-SR5k4Lzp_XwxB-2Bg==/base.apk", zip file "/data/app/splitsound.com.splitsound-isW4yJ3JXr0BQR-YmD8w8w==/base.apk"],nativeLibraryDirectories=[/data/app/splitsound.com.splitsound.test-wAa7-SR5k4Lzp_XwxB-2Bg==/lib/x86, /data/app/splitsound.com.splitsound-isW4yJ3JXr0BQR-YmD8w8w==/lib/x86, /data/app/splitsound.com.splitsound.test-wAa7-SR5k4Lzp_XwxB-2Bg==/base.apk!/lib/x86, /data/app/splitsound.com.splitsound-isW4yJ3JXr0BQR-YmD8w8w==/base.apk!/lib/x86, /system/lib, /vendor/lib]]]', Original: 'dalvik.system.PathClassLoader[DexPathList[[zip file "/system/framework/android.test.runner.jar", zip file "/system/framework/android.test.mock.jar", zip file "/data/app/splitsound.com.splitsound.test-wAa7-SR5k4Lzp_XwxB-2Bg==/base.apk", zip file "/data/app/splitsound.com.splitsound-isW4yJ3JXr0BQR-YmD8w8w==/base.apk"],nativeLibraryDirectories=[/data/app/splitsound.com.splitsound.test-wAa7-SR5k4Lzp_XwxB-2Bg==/lib/x86, /data/app/splitsound.com.splitsound-isW4yJ3JXr0BQR-YmD8w8w==/lib/x86, /data/app/splitsound.com.splitsound.test-wAa7-SR5k4Lzp_XwxB-2Bg==/base.apk!/lib/x86, /data/app/splitsound.com.splitsound-isW4yJ3JXr0BQR-YmD8w8w==/base.apk!/lib/x86, /system/lib, /vendor/lib]]]'
+04-11 04:52:02.871  4614  4614 I OrchestrationListener: OrchestrationListener connected to service
+--
+04-11 04:52:03.142  4614  4614 W System.err: 	at android.os.Handler.dispatchMessage(Handler.java:106)
+04-11 04:52:03.142  4614  4614 W System.err: 	at android.os.Looper.loop(Looper.java:164)
+04-11 04:52:03.142  4614  4614 W System.err: 	at android.app.ActivityThread.main(ActivityThread.java:6494)
+04-11 04:52:03.142  4614  4614 W System.err: 	at java.lang.reflect.Method.invoke(Native Method)
+04-11 04:52:03.142  4614  4614 W System.err: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:438)
+04-11 04:52:03.142  4614  4614 W System.err: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:807)
+04-11 04:52:03.153  4614  4614 D LifecycleMonitor: Lifecycle status change: splitsound.com.splitsound.MainActivity@beb1e8a in: PRE_ON_CREATE
+04-11 04:52:03.224  1633  1649 W Looper  : Dispatch took 185ms on android.ui, h=Handler (com.android.server.am.ActivityManagerService$UiHandler) {7fd11d0} cb=null msg=53
+04-11 04:52:03.236  4614  4614 D LifecycleMonitor: Lifecycle status change: splitsound.com.splitsound.MainActivity@beb1e8a in: CREATED
+04-11 04:52:03.237  4614  4614 D LifecycleMonitor: Lifecycle status change: splitsound.com.splitsound.MainActivity@beb1e8a in: STARTED
+04-11 04:52:03.239  4614  4614 D LifecycleMonitor: Lifecycle status change: splitsound.com.splitsound.MainActivity@beb1e8a in: RESUMED
+04-11 04:52:03.253  1388  2238 E SurfaceFlinger: ro.sf.lcd_density must be defined as a build property
+04-11 04:52:03.254  4614  4634 I System.out: !!!!!!! Beginning SSRC conflict resolution !!!!!!!!!
+04-11 04:52:03.254  4614  4634 I System.out: SSRC conflict resolution complete
+04-11 04:52:03.255  4614  4638 D OpenGLRenderer: HWUI GL Pipeline
+04-11 04:52:03.278  4614  4614 W RenderThread: type=1400 audit(0.0:15): avc: denied { search } for name="graphics" dev="tmpfs" ino=4627 scontext=u:r:untrusted_app:s0:c512,c768 tcontext=u:object_r:graphics_device:s0 tclass=dir permissive=0
+04-11 04:52:03.323  4614  4638 I zygote  : android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::hasWideColorDisplay retrieved: 0
+04-11 04:52:03.323  4614  4638 I OpenGLRenderer: Initialized EGL, version 1.4
+04-11 04:52:03.323  4614  4638 D OpenGLRenderer: Swap behavior 1
+04-11 04:52:03.339  1388  2238 E SurfaceFlinger: ro.sf.lcd_density must be defined as a build property
+--------- beginning of crash
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: FATAL EXCEPTION: Thread-4
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: Process: splitsound.com.splitsound, PID: 4614
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: android.view.ViewRootImpl$CalledFromWrongThreadException: Only the original thread that created a view hierarchy can touch its views.
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.view.ViewRootImpl.checkThread(ViewRootImpl.java:7313)
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.view.ViewRootImpl.requestLayout(ViewRootImpl.java:1161)
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.view.View.requestLayout(View.java:21995)
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.view.View.requestLayout(View.java:21995)
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.view.View.requestLayout(View.java:21995)
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.view.View.requestLayout(View.java:21995)
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.view.View.requestLayout(View.java:21995)
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.view.View.requestLayout(View.java:21995)
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.view.View.requestLayout(View.java:21995)
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.widget.TextView.checkForResize(TextView.java:8472)
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.widget.TextView.updateAfterEdit(TextView.java:9419)
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.widget.TextView.handleTextChanged(TextView.java:9437)
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.widget.TextView$ChangeWatcher.onTextChanged(TextView.java:11926)
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.text.SpannableStringBuilder.sendTextChanged(SpannableStringBuilder.java:1252)
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.text.SpannableStringBuilder.replace(SpannableStringBuilder.java:573)
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.text.SpannableStringBuilder.append(SpannableStringBuilder.java:290)
+04-11 04:52:03.361  4614  4635 E AndroidRuntime: 	at android.text.SpannableStringBuilder.append(SpannableStringBuilder.java:287)
+--
+04-11 04:52:03.665  1633  1657 W ActivityManager: setHasOverlayUi called on unknown pid: 4614
+04-11 04:52:03.707  2376  2376 I zygote  : Deoptimizing void android.support.v7.widget.q.bindViewHolder(android.support.v7.widget.j, int) due to JIT inline cache
+04-11 04:52:03.707  2376  2376 I zygote  : Deoptimizing android.support.v7.widget.j android.support.v7.widget.s.KV(int, boolean, long) due to JIT inline cache
+04-11 04:52:03.707  2376  2376 I zygote  : Deoptimizing void android.support.v7.widget.M.assignSpans(android.support.v7.widget.s, android.support.v7.widget.e, int, int, boolean) due to JIT inline cache
+04-11 04:52:03.707  2376  2376 I zygote  : Deoptimizing void android.support.v7.widget.p.addViewInt(android.view.View, int, boolean) due to JIT inline cache
+04-11 04:52:03.707  2376  2376 I zygote  : Deoptimizing void android.support.v7.widget.RecyclerView.dispatchChildAttached(android.view.View) due to JIT inline cache
+04-11 04:52:03.707  2376  2376 I zygote  : Deoptimizing void com.android.launcher3.anim.SpringAnimationHandler.add(android.view.View, java.lang.Object) due to JIT inline cache
+04-11 04:52:03.707  2376  2376 I zygote  : Deoptimizing android.graphics.Rect android.support.v7.widget.RecyclerView.getItemDecorInsetsForChild(android.view.View) due to JIT inline cache
+04-11 04:52:03.707  2376  2376 I zygote  : Deoptimizing void android.support.v7.widget.M.measureChild(android.view.View, int, boolean) due to JIT inline cache
+04-11 04:52:03.707  2376  2376 I zygote  : Deoptimizing boolean android.support.v7.widget.p.shouldMeasureChild(android.view.View, int, int, android.support.v7.widget.i) due to JIT inline cache
+04-11 04:52:03.707  2376  2376 I zygote  : Deoptimizing void android.support.v7.widget.M.layoutChunk(android.support.v7.widget.s, android.support.v7.widget.e, android.support.v7.widget.R, android.support.v7.widget.T) due to JIT inline cache
+04-11 04:52:03.707  2376  2376 I zygote  : Deoptimizing void android.support.v7.widget.p.layoutDecoratedWithMargins(android.view.View, int, int, int, int) due to JIT inline cache
+04-11 04:52:03.711  2376  2376 I zygote  : Deoptimizing void android.support.v7.widget.RecyclerView.findMinMaxChildLayoutPositions(int[]) due to JIT inline cache
+04-11 04:52:03.723  2272  2798 W GCoreFlp: No location to return for getLastLocation()
+04-11 04:52:03.764  2376  2376 I zygote  : Deoptimizing android.support.v7.widget.j android.support.v7.widget.RecyclerView.getChildViewHolderInt(android.view.View) due to JIT inline cache
+04-11 04:52:03.764  2376  2376 I zygote  : Deoptimizing void android.support.v7.widget.RecyclerView.clearOldPositions() due to JIT inline cache
+04-11 04:52:03.764  2376  2376 I zygote  : Deoptimizing void android.support.v7.widget.p.scrapOrRecycleView(android.support.v7.widget.s, int, android.view.View) due to JIT inline cache
+04-11 04:52:03.764  2376  2376 I zygote  : Deoptimizing void android.support.v7.widget.aC.PF(int) due to JIT inline cache
+04-11 04:52:03.764  2376  2376 I zygote  : Deoptimizing void android.support.v7.widget.s.KH(android.view.View) due to JIT inline cache
+04-11 04:52:03.764  2376  2376 I zygote  : Deoptimizing void android.support.v7.widget.aC.PH(android.view.View, int, android.view.ViewGroup$LayoutParams) due to JIT inline cache
+04-11 04:52:03.897  1633  4604 I ActivityManager: Failure reporting to instrumentation watcher: comp=ComponentInfo{splitsound.com.splitsound.test/android.support.test.runner.AndroidJUnitRunner} results=Bundle[{shortMsg=Process crashed.}]
+04-11 04:52:03.914  4530  4573 I OrchestrationXmlTestRunListener: Created xml report file at /storage/emulated/0/odo/test_result_5332721810990391853.xml
+04-11 04:52:03.916  4530  4573 I OrchestrationXmlTestRunListener: XML test result file generated at /storage/emulated/0/odo/test_result_5332721810990391853.xml. Total tests 1, failure 1, 
+04-11 04:52:03.925  4530  4573 D NetworkSecurityConfig: No Network Security Config specified, using platform default
+04-11 04:52:04.024  4530  4573 I MonitoringInstr: waitForActivitiesToComplete() took: 0ms
+04-11 04:52:04.025  4530  4530 I MonitoringInstr: Activities that are still in CREATED to STOPPED: 0
+04-11 04:52:04.025  1633  2316 I ActivityManager: Force stopping android.support.test.orchestrator appid=10080 user=0: finished inst
+04-11 04:52:04.027  4510  4510 D AndroidRuntime: Shutting down VM
+04-11 04:52:04.029  1633  2316 I ActivityManager: Killing 4530:android.support.test.orchestrator/u0a80 (adj 0): stop android.support.test.orchestrator
+04-11 04:52:04.057  4482  4482 I app_process: System.exit called, status: 0
+04-11 04:52:04.057  4482  4482 I AndroidRuntime: VM exiting with result code 0.
+04-11 04:52:04.073  1633  1871 I ActivityManager: Killing 3697:com.google.android.setupwizard/u0a26 (adj 906): empty #17
+04-11 04:52:04.220  2376  2551 W OpenGLRenderer: Incorrectly called buildLayer on View: ShortcutAndWidgetContainer, destroying layer...
+04-11 04:52:04.454  4659  4659 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+04-11 04:52:04.556  4659  4659 W app_process: Unexpected CPU variant for X86 using defaults: x86
+04-11 04:52:04.559  4659  4659 I app_process: The ClassLoaderConte
