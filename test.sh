@@ -67,7 +67,7 @@ if [ -z "$result" ]; then
     exit 1
 fi
 
-echo -e "${YELLOW}Using AVD device: $avd"
+echo -e "${YELLOW}Using AVD device: $avd${NC}"
 echo
 echo -e "${YELLOW}=== Starting emulator in background... ===${NC}"
 echo
