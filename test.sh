@@ -74,7 +74,7 @@ echo
 
 # Start emulator
 if $headless; then
-    emulator -avd "$avd" -no-skin -no-audio -no-window -no-boot-anim &
+    emulator -avd "$avd" -no-audio -no-window -no-boot-anim &
 else
     emulator -avd "$avd" &
 fi
