@@ -7,7 +7,7 @@ env:
 
 # Install SDK tools
 before_install:
-    - source ./install-sdk-tools.sh # Run script and collect environment variables
+    - echo y | source ./install-sdk-tools.sh # Run script and collect environment variables
 
 # Install NDK and other components
 install:
