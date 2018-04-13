@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        enableStrictMode();
+       // enableStrictMode();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
         tv.setText("Wassup!");
 
 
-        DatagramSocket rtpSocket = null;
-        DatagramSocket rtcpSocket = null;
+        /*DatagramSocket rtpSocket = null;
+        //DatagramSocket rtcpSocket = null;
 
         try {
             rtpSocket = new DatagramSocket(6003);
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         {
             String str = "Test number " + i;
             testReceive.session.sendData(str.getBytes());
-        }
+        }*/
 
         
     }

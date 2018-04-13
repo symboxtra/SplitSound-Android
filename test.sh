@@ -67,14 +67,14 @@ if [ -z "$result" ]; then
     exit 1
 fi
 
-echo -e "${YELLOW}Using AVD device: $avd"
+echo -e "${YELLOW}Using AVD device: $avd${NC}"
 echo
 echo -e "${YELLOW}=== Starting emulator in background... ===${NC}"
 echo
 
 # Start emulator
 if $headless; then
-    emulator -avd "$avd" -no-skin -no-audio -no-window -no-boot-anim &
+    emulator -avd "$avd" -no-audio -no-window -no-boot-anim &
 else
     emulator -avd "$avd" &
 fi
@@ -93,8 +93,10 @@ echo -e "${YELLOW}=== Starting build/test... ===${NC}"
 echo
 
 # Run test and generate coverage reports
-chmod +x ./gradlew
+error=0
 ./gradlew clean jacocoTestReport
+error=$?
+
 
 echo
 echo -e "${YELLOW}Shutting down emulator...${NC}"
@@ -105,3 +107,5 @@ adb kill-server
 
 echo
 
+# Exit with error code from build
+exit $error
