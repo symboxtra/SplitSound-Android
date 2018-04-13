@@ -93,8 +93,10 @@ echo -e "${YELLOW}=== Starting build/test... ===${NC}"
 echo
 
 # Run test and generate coverage reports
-chmod +x ./gradlew
+error=0
 ./gradlew clean jacocoTestReport
+error=$?
+
 
 echo
 echo -e "${YELLOW}Shutting down emulator...${NC}"
@@ -105,3 +107,5 @@ adb kill-server
 
 echo
 
+# Exit with error code from build
+exit $error
