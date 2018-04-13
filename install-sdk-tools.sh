@@ -27,7 +27,7 @@ if [ -d "$ANDROID_HOME" ]; then
     echo -e "${BLUE}Folder '$HOME/Android/Sdk' already exists."
     echo -e "${BLUE}Exported environment variables with reference to '$HOME/Android/Sdk'.${NC}"
     echo
-    echo -e "To install required SDK Packages, run 'source ./install-sdk-packages'."
+    echo -e "To install required SDK Packages, run './install-sdk-packages'."
     echo
     return 0 2> /dev/null # If sourced
     exit 0 # If run as script
@@ -57,4 +57,7 @@ echo -e "${YELLOW}Version:${NC} `sdkmanager --version`"
 echo
 
 # Install packages (prompts first)
-source ./install-sdk-packages.sh
+# Include argument to override package installation on CI servers
+if [ "$1" = "" ] || [ ! $1 = "--no-packages" ]; then
+    ./install-sdk-packages.sh
+fi
