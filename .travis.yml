@@ -36,10 +36,10 @@ cache:
 
 # Build succeeded
 after_success:
-    - curl https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh > send.sh && chmod +x send.sh
+    - curl https://raw.githubusercontent.com/symboxtra/travis-ci-discord-webhook/master/send.sh > send.sh && chmod +x send.sh
     - ./send.sh success $WEBHOOK_URL # Webhook to Discord
 
 # Build failed
 after_failure:
-    - curl https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh > send.sh && chmod +x send.sh
+    - curl https://raw.githubusercontent.com/symboxtra/travis-ci-discord-webhook/master/send.sh > send.sh && chmod +x send.sh
     - ./send.sh failure $WEBHOOK_URL # Webhook to Discord
