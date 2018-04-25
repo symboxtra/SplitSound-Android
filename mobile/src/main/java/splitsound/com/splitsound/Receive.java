@@ -2,7 +2,10 @@ package splitsound.com.splitsound;
 
 
 import android.app.Activity;
+import android.util.Log;
 import android.widget.TextView;
+
+import java.net.DatagramSocket;
 
 import jlibrtp.*;
 
@@ -14,24 +17,34 @@ public class Receive implements RTPAppIntf{
 
     RTPSession session = null;
     public Activity activity;
+    String receiveText = "";
+    int pktCount = 0;
+
+    public Receive(DatagramSocket rtpSocket, DatagramSocket rtcpSocket)
+    {
+        session = new RTPSession(rtpSocket, rtcpSocket);
+        session.naivePktReception(true);
+        session.RTPSessionRegister(this, null, null);
+
+
+    }
+
+    @Override
     public int frameSize(int payloadType)
     {
         return 1;
     }
 
+    @Override
     public void receiveData(DataFrame frame, Participant p)
     {
-        TextView tv = (TextView) activity.findViewById(R.id.sample_text);
-        tv.append("Got myself: " + new String(frame.getConcatenatedData())+"\n");
+        byte[] data = frame.getConcatenatedData();
+        pktCount++;
+        //Log.e("Test: ", "Got myself: " + new String(frame.getConcatenatedData())+"\n");
     }
 
-    public Receive(Activity active)
-    {
-        activity = active;
-    }
-
+    @Override
     public void userEvent(int type, Participant[] participants)
     {
-
     }
 }

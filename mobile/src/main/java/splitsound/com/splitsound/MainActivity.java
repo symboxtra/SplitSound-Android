@@ -42,33 +42,7 @@ public class MainActivity extends AppCompatActivity {
         tv.setText("Wassup!");
 
 
-        /*DatagramSocket rtpSocket = null;
-        //DatagramSocket rtcpSocket = null;
-
-        try {
-            rtpSocket = new DatagramSocket(6003);
-            rtcpSocket = new DatagramSocket(6004);
-        }catch(Exception e)
-        {
-            Log.e("Datagram Socket", "RTPSession failed to obtain port");
-            Log.e("Error: ", e.toString());
-            finish();
-        }
-        Receive testReceive = new Receive(this);
-        testReceive.session = new RTPSession(rtpSocket, rtcpSocket);
-        testReceive.session.naivePktReception(true);
-        testReceive.session.RTPSessionRegister(testReceive, null, null);
-
-        Participant p = new Participant("127.0.0.1", 6003, 6004);
-        testReceive.session.addParticipant(p);
-
-        for(int i = 0;i < 10;i++)
-        {
-            String str = "Test number " + i;
-            testReceive.session.sendData(str.getBytes());
-        }*/
-
-        
+        new RTPSessionTask().execute();
     }
 
     public void enableStrictMode()
