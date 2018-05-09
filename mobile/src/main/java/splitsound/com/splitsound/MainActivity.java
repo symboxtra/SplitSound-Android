@@ -42,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
         tv.setText("Wassup!");
 
 
-        new RTPSessionTask().execute();
+        // Start networking thread
+        new Thread(new RTPSessionTask()).start();
     }
 
     public void enableStrictMode()

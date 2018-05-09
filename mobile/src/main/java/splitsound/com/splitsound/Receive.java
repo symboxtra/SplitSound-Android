@@ -40,7 +40,7 @@ public class Receive implements RTPAppIntf{
     {
         byte[] data = frame.getConcatenatedData();
         pktCount++;
-        //Log.e("Test: ", "Got myself: " + new String(frame.getConcatenatedData())+"\n");
+        Log.e("Test: ", "Packet Count: " + pktCount+"\n");
     }
 
     @Override

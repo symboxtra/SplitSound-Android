@@ -13,16 +13,16 @@ import jlibrtp.RTPSession;
  * Created by Neel on 4/25/2018.
  */
 
-class RTPSessionTask extends AsyncTask<Void, Integer, Boolean>
+class RTPSessionTask implements Runnable
 {
     @Override
-    protected Boolean doInBackground(Void... params)
+    public void run()
     {
         DatagramSocket rtpSocket = null;
         DatagramSocket rtcpSocket = null;
 
         try {
-            rtpSocket = new DatagramSocket(6003);
+            rtpSocket = new DatagramSocket(8000);
             rtcpSocket = new DatagramSocket(6004);
         }catch(Exception e)
         {
@@ -31,16 +31,5 @@ class RTPSessionTask extends AsyncTask<Void, Integer, Boolean>
         }
 
         Receive testReceive = new Receive(rtpSocket, rtcpSocket);
-
-        return true;
-    }
-
-    @Override
-    protected void onProgressUpdate(Integer... progress)
-    {
-    }
-
-    protected void onPostExecute(Boolean result)
-    {
     }
 }
