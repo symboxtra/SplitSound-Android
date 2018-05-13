@@ -1,5 +1,6 @@
 package splitsound.com.splitsound;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -69,10 +70,14 @@ public class DrawerActivityTest extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        System.out.println(id);
         if (id == R.id.available_sessions) {
             // Handle the camera action
-        } /*else if (id == R.id.nav_gallery) {
+        }
+        else if(id == R.id.settings) {
+            Intent startSettings = new Intent(this, SettingsActivity.class);
+            startActivity(startSettings);
+        }/*else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
 

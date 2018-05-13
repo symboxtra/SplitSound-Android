@@ -7,9 +7,12 @@
         <item
             android:id="@+id/available_sessions"
             android:icon="@drawable/ic_speaker_group_black_24dp"
-            android:title="@string/available_sessions" />
+            android:title="@string/available_sessions"/>
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/settings"/>
     </group>
-
     <!--
     <item android:title="Communicate">
         <menu>

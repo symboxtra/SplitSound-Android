@@ -21,8 +21,8 @@ public class Receive implements RTPAppIntf{
 
     public void receiveData(DataFrame frame, Participant p)
     {
-        TextView tv = (TextView) activity.findViewById(R.id.sample_text);
-        tv.append("Got myself: " + new String(frame.getConcatenatedData())+"\n");
+        //TextView tv = (TextView) activity.findViewById(R.id.sample_text);
+        //tv.append("Got myself: " + new String(frame.getConcatenatedData())+"\n");
     }
 
     public Receive(Activity active)
