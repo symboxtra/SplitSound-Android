@@ -9,6 +9,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
+import splitsound.com.net.RTPNetworking;
+
 import java.net.DatagramSocket;
 
 import jlibrtp.*;
@@ -25,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Start networking thread (RTPReciever, RTCPSender, RTCPReceiver)
+        new Thread(new RTPNetworking()).start();
+        Log.e("test", helloWorld());
+
        // enableStrictMode();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -36,14 +42,10 @@ public class MainActivity extends AppCompatActivity {
         // Example of a call to a native method
         TextView tv = (TextView) this.findViewById(R.id.sample_text);
         Button b = (Button)this.findViewById(R.id.connect);
-        Animation bounce = AnimationUtils.loadAnimation(this, R.anim.bounce);
-        bounce.setRepeatCount(Animation.INFINITE);
-        b.startAnimation(bounce);
+        //Animation bounce = AnimationUtils.loadAnimation(this, R.anim.bounce);
+        //bounce.setRepeatCount(Animation.INFINITE);
+        //b.startAnimation(bounce);
         tv.setText("Wassup!");
-
-
-        // Start networking thread
-        new Thread(new RTPSessionTask()).start();
     }
 
     public void enableStrictMode()
