@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 public class MainActivityTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<DrawerActivityTest> rule = new ActivityTestRule<>(DrawerActivityTest.class);
 
 
     @Test
