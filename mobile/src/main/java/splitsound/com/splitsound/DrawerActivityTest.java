@@ -17,17 +17,11 @@ import android.view.MenuItem;
 import splitsound.com.ui.adapters.RecyclerAdapter;
 
 
-public class DrawerActivityTest extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class DrawerActivityTest extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-
-    public static String helloWorld()
-    {
-        return "Hello World";
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
