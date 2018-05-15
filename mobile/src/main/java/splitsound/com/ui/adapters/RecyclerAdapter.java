@@ -1,5 +1,6 @@
 package splitsound.com.ui.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +57,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         //sets the server name
         holder.serverName.setText(servers[position].getName());
         //sets the amount of people listening
-        holder.amountOfPeople.setText(servers[position].getPeopleListening());
+        holder.amountOfPeople.setText(String.valueOf(servers[position].getPeopleListening()));
         //sets the server IP address
         holder.serverIP.setText(servers[position].getIP());
     }
