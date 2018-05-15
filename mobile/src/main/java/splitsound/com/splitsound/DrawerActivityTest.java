@@ -79,7 +79,8 @@ public class DrawerActivityTest extends AppCompatActivity
         int id = item.getItemId();
         System.out.println(id);
         if (id == R.id.available_sessions) {
-            // Handle the camera action
+            View b = findViewById(R.id.connect);
+            b.setVisibility(View.GONE);
         }
         else if(id == R.id.settings) {
             Intent startSettings = new Intent(this, SettingsActivity.class);
