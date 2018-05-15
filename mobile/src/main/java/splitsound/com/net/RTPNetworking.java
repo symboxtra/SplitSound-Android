@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.net.DatagramSocket;
 
-import jlibrtp.RTCPSession;
+import jlibrtp.Participant;
 import jlibrtp.RTPSession;
 
 /**
@@ -15,6 +15,9 @@ public class RTPNetworking implements Runnable
 {
     private final int RTPPort = 8000;
     private final int RTCPPort = 6000;
+
+    public static Buffer<Participant> servers = new Buffer<Participant>();
+    public static Buffer<byte[]> networkPackets = new Buffer<byte[]>();
 
     @Override
     public void run()
@@ -43,11 +46,11 @@ public class RTPNetworking implements Runnable
         RTPSession sess = new RTPSession(rtpSocket, rtcpSocket);
         sess.naivePktReception(true);
         sess.RTPSessionRegister(sessionTask,receiveTask, null);
+        Log.e("Bandwidth", sess.sessionBandwidth()+"");
+
 
         // Start individual receive threads
         new Thread(sessionTask).start();
         new Thread(receiveTask).start();
-
-        //RTCPSession rtcpSess = new RTCPSession(sess, rtcpSocket);
     }
 }
