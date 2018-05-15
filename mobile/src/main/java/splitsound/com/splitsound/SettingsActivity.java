@@ -20,6 +20,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import splitsound.com.splitsound.R;
+
 public class SettingsActivity extends Activity {
 
     public SharedPreferences shrdPref;

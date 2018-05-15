@@ -14,5 +14,6 @@
     <string name="username">Default</string>
     <string name="people_picture">People Picture</string>
     <string name="server_with_or_without_password">Server with or without password</string>
+    <string name="user_mute_or_unmute">User is muted or not muted</string>
     <string name="headphone_button">Headphone Button</string>
 </resources>

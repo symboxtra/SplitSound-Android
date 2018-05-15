@@ -1,4 +1,4 @@
-package splitsound.com.splitsound;
+package splitsound.com.ui.adapters;
 
 public class ServerInfo {
 
