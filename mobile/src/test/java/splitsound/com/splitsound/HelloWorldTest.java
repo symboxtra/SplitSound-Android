@@ -9,6 +9,6 @@ public class HelloWorldTest {
     @Test
     public void testHelloWorld()
     {
-        assertEquals("Hello World", MainActivity.helloWorld());
+        assertEquals("Hello World", DrawerActivityTest.helloWorld());
     }
 }
