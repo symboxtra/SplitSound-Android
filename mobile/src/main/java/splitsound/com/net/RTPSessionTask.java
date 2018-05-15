@@ -10,7 +10,7 @@ import jlibrtp.RTPAppIntf;
  * Created by Neel on 4/25/2018.
  */
 
-class RTPSessionTask implements RTPAppIntf, Runnable
+public class RTPSessionTask implements RTPAppIntf, Runnable
 {
     public Activity activity;
     String receiveText = "";
