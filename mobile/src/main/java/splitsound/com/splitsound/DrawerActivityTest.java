@@ -14,8 +14,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+
+
 public class DrawerActivityTest extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    public static String helloWorld()
+    {
+        return "Hello World";
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
