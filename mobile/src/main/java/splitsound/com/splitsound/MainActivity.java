@@ -9,6 +9,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
+import splitsound.com.net.RTPNetworking;
+
 import java.net.DatagramSocket;
 
 import jlibrtp.*;
@@ -25,55 +27,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-       // enableStrictMode();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //new Thread(){
-          //  int i = bounce();
-        //}.start();
+        // Start networking thread (RTPReciever, RTCPSender, RTCPReceiver)
+        new Thread(new RTPNetworking()).start();
 
-        // Example of a call to a native method
+        // Basic UI setup
         TextView tv = (TextView) this.findViewById(R.id.sample_text);
         Button b = (Button)this.findViewById(R.id.connect);
-        Animation bounce = AnimationUtils.loadAnimation(this, R.anim.bounce);
-        bounce.setRepeatCount(Animation.INFINITE);
-        b.startAnimation(bounce);
+        //Animation bounce = AnimationUtils.loadAnimation(this, R.anim.bounce);
+        //bounce.setRepeatCount(Animation.INFINITE);
+        //b.startAnimation(bounce);
         tv.setText("Wassup!");
-
-
-        /*DatagramSocket rtpSocket = null;
-        //DatagramSocket rtcpSocket = null;
-
-        try {
-            rtpSocket = new DatagramSocket(6003);
-            rtcpSocket = new DatagramSocket(6004);
-        }catch(Exception e)
-        {
-            Log.e("Datagram Socket", "RTPSession failed to obtain port");
-            Log.e("Error: ", e.toString());
-            finish();
-        }
-        Receive testReceive = new Receive(this);
-        testReceive.session = new RTPSession(rtpSocket, rtcpSocket);
-        testReceive.session.naivePktReception(true);
-        testReceive.session.RTPSessionRegister(testReceive, null, null);
-
-        Participant p = new Participant("127.0.0.1", 6003, 6004);
-        testReceive.session.addParticipant(p);
-
-        for(int i = 0;i < 10;i++)
-        {
-            String str = "Test number " + i;
-            testReceive.session.sendData(str.getBytes());
-        }*/
-
-        
-    }
-
-    public void enableStrictMode()
-    {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
     }
 }
