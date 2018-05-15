@@ -27,6 +27,7 @@
                 android:textStyle="bold" />
 
             <Switch
+                android:id="@+id/search_start_switch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/text_padding"
@@ -37,6 +38,7 @@
                 android:text="Scan for sessions at startup" />
 
             <Switch
+                android:id="@+id/low_battery_switch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/text_padding"
