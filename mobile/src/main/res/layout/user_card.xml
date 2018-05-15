@@ -14,20 +14,20 @@
         android:gravity="center">
 
         <ImageView
-            android:id="@+id/lock_icon"
+            android:id="@+id/mute_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="25dp"
             android:contentDescription="@string/user_mute_or_unmute"
             android:src="@drawable/ic_volume_up_black_24dp" />
 
         <LinearLayout
-            android:id="@+id/server_text_layout"
+            android:id="@+id/user_text_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/lock_icon">
+            android:layout_toEndOf="@+id/mute_icon">
 
             <TextView
                 android:id="@+id/user_name"
@@ -44,19 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
-            android:layout_toEndOf="@+id/server_address">
-
-            <!--
-            <TextView
-                android:id="@+id/amount_of_people_connected"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingEnd="5dp"
-                android:paddingStart="5dp"
-                android:text="5"
-                android:textSize="20sp" />
-                -->
+            android:layout_toEndOf="@+id/device_name">
 
             <ImageView
                 android:layout_width="34dp"
@@ -67,11 +55,11 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/server_address"
+            android:id="@+id/device_name"
             android:layout_width="260dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/server_text_layout"
-            android:layout_toEndOf="@+id/lock_icon"
+            android:layout_below="@id/user_text_layout"
+            android:layout_toEndOf="@+id/mute_icon"
             android:text="Listening on Phone"
             android:textSize="18sp" />
 

@@ -28,10 +28,18 @@
         android:layout_gravity="center"
         android:paddingBottom="10dp"
         android:contentDescription="@string/headphone_button"
+        android:onClick="clicked"
         />
     <android.support.v7.widget.RecyclerView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/server_list_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="55dp"/>
+
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/user_list_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="55dp"/>
