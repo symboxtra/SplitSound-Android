@@ -11,4 +11,7 @@
     <string name="splitsound">SplitSound</string>
     <string name="settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="people_picture">People Picture</string>
+    <string name="server_with_or_without_password">Server with or without password</string>
+    <string name="headphone_button">Headphone Button</string>
 </resources>
