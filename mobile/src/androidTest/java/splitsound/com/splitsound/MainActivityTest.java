@@ -40,7 +40,7 @@ public class MainActivityTest {
 
         assertEquals("splitsound.com.splitsound", appContext.getPackageName());
     }
-
+/*
     @Test
     public void getPackets() throws Exception
     {
@@ -70,4 +70,5 @@ public class MainActivityTest {
             sess.sendData("Test Hi".getBytes());
         }
     }
+   */
 }
