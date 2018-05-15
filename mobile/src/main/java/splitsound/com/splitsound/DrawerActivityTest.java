@@ -22,6 +22,7 @@ import splitsound.com.ui.adapters.UserListAdapter;
 public class DrawerActivityTest extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private boolean avSess = false;
     private RecyclerView mRecyclerView;
     private RecyclerView uRecyclerView;
 
@@ -80,6 +81,10 @@ public class DrawerActivityTest extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if(avSess)
+        {
+            NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
+            onNavigationItemSelected(nav.getMenu().getItem(0));
         } else {
             super.onBackPressed();
         }
@@ -114,8 +119,10 @@ public class DrawerActivityTest extends AppCompatActivity
         int id = item.getItemId();
         System.out.println(id);
         if (id == R.id.available_sessions) {
+            avSess = true;
             View b = findViewById(R.id.connect);
             b.setVisibility(View.GONE);
+            uRecyclerView.setVisibility(View.INVISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
         }
         else if(id == R.id.settings) {
