@@ -106,18 +106,12 @@ public class DrawerActivityTest extends AppCompatActivity
         else if(id == R.id.settings) {
             Intent startSettings = new Intent(this, SettingsActivity.class);
             startActivity(startSettings);
-        }/*else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
-        */
+        else if(id == R.id.home_button){
+            mRecyclerView.setVisibility(View.GONE);
+            View b = findViewById(R.id.connect);
+            b.setVisibility(View.VISIBLE);
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
