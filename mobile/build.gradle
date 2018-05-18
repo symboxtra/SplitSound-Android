@@ -125,24 +125,29 @@ tasks.withType(Test) {
 // Imported dependencies
 dependencies {
 
-    implementation 'com.google.code.gson:gson:2.8.0'
-    implementation 'com.google.android.gms:play-services-wearable:+'
+    implementation 'com.google.code.gson:gson:2.8.1'
+    implementation 'com.google.android.gms:play-services-wearable:15.0.1'
     implementation 'com.android.support:appcompat-v7:27.1.1'
 
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.android.support:design:27.1.0'
-    implementation 'com.android.support:recyclerview-v7:27.0.2'
-    implementation 'com.android.support:cardview-v7:27.0.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:cardview-v7:27.1.1'
 
     implementation files('libs/rtpLib.jar')
 
     testImplementation 'junit:junit:4.12'
-    androidTestUtil 'com.android.support.test:orchestrator:1.0.1'
+    androidTestUtil 'com.android.support.test:orchestrator:1.0.2'
 
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test:rules:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     testImplementation 'org.robolectric:robolectric:3.8'
+
+    //for the swipe up menu
+    implementation "com.github.mancj:SlideUp-Android:2.2.8"
+    //implementation 'ru.ztrap:RxSlideUp2:2.x.x' //optional, for reactive listeners based on RxJava-2
+    //implementation 'ru.ztrap:RxSlideUp:1.x.x' //optional, for reactive listeners based on RxJava
 
     wearApp project(':wear')
 
