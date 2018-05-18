@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.TranslateAnimation;
+
 
 import splitsound.com.ui.adapters.RecyclerAdapter;
 import splitsound.com.ui.adapters.UserListAdapter;
@@ -48,32 +50,18 @@ public class DrawerActivityTest extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //Recycler view stuff
         mRecyclerView = findViewById(R.id.server_list_recycler_view);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // specify an adapter (see also next example)
         mRecyclerView.setAdapter(new RecyclerAdapter());
         mRecyclerView.setVisibility(View.GONE);
-
-
         uRecyclerView = findViewById(R.id.user_list_recycler_view);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         uRecyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
         uRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // specify an adapter (see also next example)
         uRecyclerView.setAdapter(new UserListAdapter());
         uRecyclerView.setVisibility(View.GONE);
+
     }
 
     @Override
