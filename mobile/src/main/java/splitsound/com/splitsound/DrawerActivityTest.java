@@ -1,9 +1,12 @@
 package splitsound.com.splitsound;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,6 +17,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import splitsound.com.ui.adapters.RecyclerAdapter;
 import splitsound.com.ui.adapters.UserListAdapter;
@@ -21,10 +30,13 @@ import splitsound.com.ui.adapters.UserListAdapter;
 
 public class DrawerActivityTest extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "DrawerActivityTest";
 
     private boolean avSess = false;
     private RecyclerView sessRV;
     private RecyclerView userRV;
+
+    private SlidingUpPanelLayout slideUp;
 
     View myView;
     boolean isUp = false;
@@ -38,6 +50,8 @@ public class DrawerActivityTest extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer_test);
+
+        // Create custom toolbar and drawer functions
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -74,17 +88,48 @@ public class DrawerActivityTest extends AppCompatActivity
 
         // specify an adapter (see also next example)
         userRV.setAdapter(new UserListAdapter());
+
+        // Setup sliding panel action listeners
+        slideUp = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout);
+        slideUp.addPanelSlideListener(new PanelSlideListener(){
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                Log.i(TAG, "onPanelSlide, offset " + slideOffset);
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
+                Log.i(TAG, "onPanelStateChanged " + newState);
+
+                ImageView arrowIcon = (ImageView)findViewById(R.id.arrow_icon);
+                TextView swipe = (TextView)findViewById(R.id.swipe);
+
+                if(newState == PanelState.EXPANDED)
+                {
+                    arrowIcon.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
+                    swipe.setText(R.string.close_drawer);
+                }
+                else if(newState == PanelState.COLLAPSED)
+                {
+                    arrowIcon.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                    swipe.setText(R.string.open_drawer);
+                }
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawer(GravityCompat.START);
-        } else if(avSess)
+        else if(slideUp != null && (slideUp.getPanelState() == PanelState.EXPANDED || slideUp.getPanelState() == PanelState.ANCHORED))
+            slideUp.setPanelState(PanelState.COLLAPSED);
+        else if(avSess)
         {
             NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
             onNavigationItemSelected(nav.getMenu().getItem(0));
+            avSess = false;
         } else {
             super.onBackPressed();
         }
@@ -122,7 +167,6 @@ public class DrawerActivityTest extends AppCompatActivity
             avSess = true;
             View b = findViewById(R.id.connect);
             b.setVisibility(View.GONE);
-            userRV.setVisibility(View.INVISIBLE);
             sessRV.setVisibility(View.VISIBLE);
         }
         else if(id == R.id.settings) {
@@ -137,30 +181,5 @@ public class DrawerActivityTest extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    // slide the view from below itself to the current position
-    public void slideUp(View view){
-        view.setVisibility(View.VISIBLE);
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                view.getHeight(),  // fromYDelta
-                0);                // toYDelta
-        animate.setDuration(5000);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
-    }
-
-    // slide the view from its current position to below itself
-    public void slideDown(View view){
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                0,                 // fromYDelta
-                view.getHeight()); // toYDelta
-        animate.setDuration(5000);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
     }
 }

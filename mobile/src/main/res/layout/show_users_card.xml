@@ -15,7 +15,7 @@
         android:background="@color/orange">
 
         <ImageView
-            android:id="@+id/up_arrow"
+            android:id="@+id/arrow_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentStart="true"
@@ -28,7 +28,7 @@
             android:id="@+id/show_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/up_arrow">
+            android:layout_toEndOf="@+id/arrow_icon">
 
             <TextView
                 android:id="@+id/other_view"
@@ -56,12 +56,12 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/device_name"
+            android:id="@+id/swipe"
             android:layout_width="260dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/show_layout"
-            android:layout_toEndOf="@+id/up_arrow"
-            android:text="Swipe up to View"
+            android:layout_toEndOf="@+id/arrow_icon"
+            android:text="@string/open_drawer"
             android:textSize="18sp" />
 
     </RelativeLayout>
