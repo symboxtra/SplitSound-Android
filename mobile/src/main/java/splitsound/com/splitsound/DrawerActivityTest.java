@@ -23,13 +23,14 @@ public class DrawerActivityTest extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private boolean avSess = false;
-    private RecyclerView mRecyclerView;
-    private RecyclerView uRecyclerView;
+    private RecyclerView sessRV;
+    private RecyclerView userRV;
 
     View myView;
     boolean isUp = false;
 
-    public static String helloWorld(){
+    public static String helloWorld()
+    {
         return "Hello World";
     }
 
@@ -48,32 +49,31 @@ public class DrawerActivityTest extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mRecyclerView = findViewById(R.id.server_list_recycler_view);
+        sessRV = findViewById(R.id.server_list_recycler_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
+        sessRV.setHasFixedSize(true);
 
         // use a linear layout manager
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        sessRV.setLayoutManager(new LinearLayoutManager(this));
 
         // specify an adapter (see also next example)
-        mRecyclerView.setAdapter(new RecyclerAdapter());
-        mRecyclerView.setVisibility(View.GONE);
+        sessRV.setAdapter(new RecyclerAdapter());
+        sessRV.setVisibility(View.GONE);
 
 
-        uRecyclerView = findViewById(R.id.user_list_recycler_view);
+        userRV = findViewById(R.id.user_list_recycler_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
-        uRecyclerView.setHasFixedSize(true);
+        userRV.setHasFixedSize(true);
 
         // use a linear layout manager
-        uRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        userRV.setLayoutManager(new LinearLayoutManager(this));
 
         // specify an adapter (see also next example)
-        uRecyclerView.setAdapter(new UserListAdapter());
-        uRecyclerView.setVisibility(View.GONE);
+        userRV.setAdapter(new UserListAdapter());
     }
 
     @Override
@@ -122,31 +122,21 @@ public class DrawerActivityTest extends AppCompatActivity
             avSess = true;
             View b = findViewById(R.id.connect);
             b.setVisibility(View.GONE);
-            uRecyclerView.setVisibility(View.INVISIBLE);
-            mRecyclerView.setVisibility(View.VISIBLE);
+            userRV.setVisibility(View.INVISIBLE);
+            sessRV.setVisibility(View.VISIBLE);
         }
         else if(id == R.id.settings) {
             Intent startSettings = new Intent(this, SettingsActivity.class);
             startActivity(startSettings);
         }
         else if(id == R.id.home_button){
-            mRecyclerView.setVisibility(View.GONE);
+            sessRV.setVisibility(View.GONE);
             View b = findViewById(R.id.connect);
             b.setVisibility(View.VISIBLE);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    public void clicked(View v)
-    {
-        if (isUp) {
-            slideDown(uRecyclerView);
-        } else {
-            slideUp(uRecyclerView);
-        }
-        isUp = !isUp;
     }
 
     // slide the view from below itself to the current position
