@@ -7,13 +7,14 @@ import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.TranslateAnimation;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
+
 
 import splitsound.com.ui.adapters.RecyclerAdapter;
 import splitsound.com.ui.adapters.UserListAdapter;
@@ -63,30 +65,16 @@ public class DrawerActivityTest extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Setup RecyclerView for userlist and serverlist
         sessRV = findViewById(R.id.server_list_recycler_view);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         sessRV.setHasFixedSize(true);
-
-        // use a linear layout manager
         sessRV.setLayoutManager(new LinearLayoutManager(this));
-
-        // specify an adapter (see also next example)
         sessRV.setAdapter(new RecyclerAdapter());
         sessRV.setVisibility(View.GONE);
-
-
+        
         userRV = findViewById(R.id.user_list_recycler_view);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         userRV.setHasFixedSize(true);
-
-        // use a linear layout manager
         userRV.setLayoutManager(new LinearLayoutManager(this));
-
-        // specify an adapter (see also next example)
         userRV.setAdapter(new UserListAdapter());
 
         // Setup sliding panel action listeners
