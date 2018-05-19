@@ -59,12 +59,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff"
         android:orientation="vertical"
         android:clickable="true"
-        android:focusable="false"
-        android:id="@+id/dragView"
-        android:backgroundTint="@color/orange">
+        android:focusable="true"
+        android:id="@+id/dragView">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -81,7 +79,6 @@
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/user_list_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="55dp"/>
+            android:layout_height="match_parent"/>
     </LinearLayout>
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

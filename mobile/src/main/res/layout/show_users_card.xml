@@ -11,22 +11,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="4dp"
-        android:gravity="center"
-        android:background="@color/orange">
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/arrow_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="25dp"
+            android:layout_marginEnd="30dp"
             android:contentDescription="@string/user_mute_or_unmute"
             android:src="@drawable/ic_keyboard_arrow_up_black_24dp" />
 
         <LinearLayout
             android:id="@+id/show_layout"
-            android:layout_width="wrap_content"
+            android:layout_width="265dp"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/arrow_icon">
 
@@ -35,7 +33,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Currently Listening..."
+                android:text="Currently Listening"
                 android:textSize="25sp" />
 
         </LinearLayout>
