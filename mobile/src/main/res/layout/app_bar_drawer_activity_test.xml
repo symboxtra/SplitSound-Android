@@ -46,12 +46,21 @@
             android:paddingBottom="10dp"
             android:contentDescription="@string/headphone_button" />
 
+        <ImageView
+            android:id="@+id/main_play_button"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/ic_play_circle_filled_black_24dp"
+            android:contentDescription="@string/play_button"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="485dp"/>
+
         <android.support.v7.widget.RecyclerView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/server_list_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="55dp"/>
+            android:paddingTop="55dp" />
 
     </android.support.design.widget.CoordinatorLayout>
 

@@ -155,6 +155,8 @@ public class DrawerActivityTest extends AppCompatActivity
             avSess = true;
             View b = findViewById(R.id.connect);
             b.setVisibility(View.GONE);
+            View play_button = findViewById(R.id.main_play_button);
+            play_button.setVisibility(View.GONE);
             sessRV.setVisibility(View.VISIBLE);
         }
         else if(id == R.id.settings) {
@@ -165,6 +167,8 @@ public class DrawerActivityTest extends AppCompatActivity
             sessRV.setVisibility(View.GONE);
             View b = findViewById(R.id.connect);
             b.setVisibility(View.VISIBLE);
+            View play_button = findViewById(R.id.main_play_button);
+            play_button.setVisibility(View.VISIBLE);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -19,4 +19,5 @@
     <string name="home">Home</string>
     <string name="close_drawer">Swipe down to close</string>
     <string name="open_drawer">Swipe up to view</string>
+    <string name="play_button">Play Button</string>
 </resources>
