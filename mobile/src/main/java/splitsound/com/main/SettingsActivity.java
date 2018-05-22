@@ -1,16 +1,12 @@
-package splitsound.com.splitsound;
+package splitsound.com.main;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Activity;
-import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,8 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-
-import splitsound.com.splitsound.R;
 
 public class SettingsActivity extends Activity {
 

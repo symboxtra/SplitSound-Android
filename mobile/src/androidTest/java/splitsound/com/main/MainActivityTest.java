@@ -1,4 +1,4 @@
-package splitsound.com.splitsound;
+package splitsound.com.main;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

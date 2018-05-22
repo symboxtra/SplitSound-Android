@@ -1,4 +1,4 @@
-package splitsound.com.splitsound;
+package splitsound.com.main;
 
 import org.junit.Test;
 
