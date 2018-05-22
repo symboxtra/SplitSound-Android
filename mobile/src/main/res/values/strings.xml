@@ -17,4 +17,7 @@
     <string name="user_mute_or_unmute">User is muted or not muted</string>
     <string name="headphone_button">Headphone Button</string>
     <string name="home">Home</string>
+    <string name="close_drawer">Swipe down to close</string>
+    <string name="open_drawer">Swipe up to view</string>
+    <string name="play_button">Play Button</string>
 </resources>

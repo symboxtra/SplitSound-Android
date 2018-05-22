@@ -1,20 +1,29 @@
 package splitsound.com.splitsound;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
-import android.view.View;
+import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 
 import splitsound.com.ui.adapters.RecyclerAdapter;
@@ -23,15 +32,19 @@ import splitsound.com.ui.adapters.UserListAdapter;
 
 public class DrawerActivityTest extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "DrawerActivityTest";
 
     private boolean avSess = false;
-    private RecyclerView mRecyclerView;
-    private RecyclerView uRecyclerView;
+    private RecyclerView sessRV;
+    private RecyclerView userRV;
+
+    private SlidingUpPanelLayout slideUp;
 
     View myView;
     boolean isUp = false;
 
-    public static String helloWorld(){
+    public static String helloWorld()
+    {
         return "Hello World";
     }
 
@@ -39,6 +52,8 @@ public class DrawerActivityTest extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer_test);
+
+        // Create custom toolbar and drawer functions
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -50,29 +65,59 @@ public class DrawerActivityTest extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //Recycler view stuff
-        mRecyclerView = findViewById(R.id.server_list_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(new RecyclerAdapter());
-        mRecyclerView.setVisibility(View.GONE);
-        uRecyclerView = findViewById(R.id.user_list_recycler_view);
-        uRecyclerView.setHasFixedSize(true);
-        uRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        uRecyclerView.setAdapter(new UserListAdapter());
-        uRecyclerView.setVisibility(View.GONE);
+        // Setup RecyclerView for userlist and serverlist
+        sessRV = findViewById(R.id.server_list_recycler_view);
+        sessRV.setHasFixedSize(true);
+        sessRV.setLayoutManager(new LinearLayoutManager(this));
+        sessRV.setAdapter(new RecyclerAdapter());
+        sessRV.setVisibility(View.GONE);
+        
+        userRV = findViewById(R.id.user_list_recycler_view);
+        userRV.setHasFixedSize(true);
+        userRV.setLayoutManager(new LinearLayoutManager(this));
+        userRV.setAdapter(new UserListAdapter());
 
+        // Setup sliding panel action listeners
+        slideUp = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout);
+        slideUp.addPanelSlideListener(new PanelSlideListener(){
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                Log.i(TAG, "onPanelSlide, offset " + slideOffset);
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
+                Log.i(TAG, "onPanelStateChanged " + newState);
+
+                ImageView arrowIcon = (ImageView)findViewById(R.id.arrow_icon);
+                TextView swipe = (TextView)findViewById(R.id.swipe);
+
+                if(newState == PanelState.EXPANDED)
+                {
+                    arrowIcon.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
+                    swipe.setText(R.string.close_drawer);
+                }
+                else if(newState == PanelState.COLLAPSED)
+                {
+                    arrowIcon.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                    swipe.setText(R.string.open_drawer);
+                }
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawer(GravityCompat.START);
-        } else if(avSess)
+        else if(slideUp != null && (slideUp.getPanelState() == PanelState.EXPANDED || slideUp.getPanelState() == PanelState.ANCHORED))
+            slideUp.setPanelState(PanelState.COLLAPSED);
+        else if(avSess)
         {
             NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
             onNavigationItemSelected(nav.getMenu().getItem(0));
+            avSess = false;
         } else {
             super.onBackPressed();
         }
@@ -110,55 +155,23 @@ public class DrawerActivityTest extends AppCompatActivity
             avSess = true;
             View b = findViewById(R.id.connect);
             b.setVisibility(View.GONE);
-            uRecyclerView.setVisibility(View.INVISIBLE);
-            mRecyclerView.setVisibility(View.VISIBLE);
+            View play_button = findViewById(R.id.main_play_button);
+            play_button.setVisibility(View.GONE);
+            sessRV.setVisibility(View.VISIBLE);
         }
         else if(id == R.id.settings) {
             Intent startSettings = new Intent(this, SettingsActivity.class);
             startActivity(startSettings);
         }
         else if(id == R.id.home_button){
-            mRecyclerView.setVisibility(View.GONE);
+            sessRV.setVisibility(View.GONE);
             View b = findViewById(R.id.connect);
             b.setVisibility(View.VISIBLE);
+            View play_button = findViewById(R.id.main_play_button);
+            play_button.setVisibility(View.VISIBLE);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    public void clicked(View v)
-    {
-        if (isUp) {
-            slideDown(uRecyclerView);
-        } else {
-            slideUp(uRecyclerView);
-        }
-        isUp = !isUp;
-    }
-
-    // slide the view from below itself to the current position
-    public void slideUp(View view){
-        view.setVisibility(View.VISIBLE);
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                view.getHeight(),  // fromYDelta
-                0);                // toYDelta
-        animate.setDuration(5000);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
-    }
-
-    // slide the view from its current position to below itself
-    public void slideDown(View view){
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                0,                 // fromYDelta
-                view.getHeight()); // toYDelta
-        animate.setDuration(5000);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
     }
 }
