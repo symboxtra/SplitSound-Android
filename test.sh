@@ -52,6 +52,8 @@ if [ -z "$result" ]; then
         exit 1
     fi
 
+	cp config.ini $HOME/.android/avd/$avd.avd/
+
 	echo -e "${YELLOW}Created AVD device: $avd${NC}"
 	echo
 
