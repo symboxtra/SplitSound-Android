@@ -1,4 +1,4 @@
-package splitsound.com.ui;
+package splitsound.com.splitsound;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -9,36 +9,23 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import splitsound.com.main.R;
-import splitsound.com.main.SettingsActivity;
+import splitsound.com.splitsound.R;
+import splitsound.com.splitsound.SettingsActivity;
 
 import static org.junit.Assert.assertEquals;
 
 // Common Espresso imports (Do not remove because auto-import does not work with Espresso)
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.*;
-import static android.support.test.espresso.Espresso.onData;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.swipeUp;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.action.ViewActions.doubleClick;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasEntry;
 
 /**
@@ -53,8 +40,10 @@ public class SettingsActivityTest {
     public ActivityTestRule<SettingsActivity> rule = new ActivityTestRule<>(SettingsActivity.class);
 
     @Test
-    public void scan_checkSwitch()
-    {
-        onView(withId(R.id.search_start_switch)).check(matches(isDisplayed()));
+    public void useAppContext() throws Exception {
+        // Context of the app under test.
+        Context appContext = InstrumentationRegistry.getTargetContext();
+
+        assertEquals("splitsound.com.splitsound", appContext.getPackageName());
     }
 }

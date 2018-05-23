@@ -42,7 +42,7 @@ Write-Host "=== Starting emulator in the background... ===" -Foreground Yellow
 ""
 
 # Start emulator in background
-Start-Job -ScriptBlock {emulator -avd $args[0]} -ArgumentList $avd > $null
+Start-Job -ScriptBlock {emulator -avd $args[0] -no-window -no-audio -no-boot-anim} -ArgumentList $avd > $null
 
 # Wait for emulator before proceeding
 Write-Host "Waiting for emulator to boot..." -ForegroundColor Yellow

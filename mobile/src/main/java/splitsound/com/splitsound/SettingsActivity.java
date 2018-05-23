@@ -1,4 +1,4 @@
-package splitsound.com.main;
+package splitsound.com.splitsound;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;

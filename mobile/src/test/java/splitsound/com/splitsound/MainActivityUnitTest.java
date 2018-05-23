@@ -1,4 +1,4 @@
-package splitsound.com.main;
+package splitsound.com.splitsound;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

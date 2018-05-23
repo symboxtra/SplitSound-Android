@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="splitsound.com.main">
+    package="splitsound.com.splitsound">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@android:style/ThemeOverlay.Material.Dark">
         <activity
-            android:name="splitsound.com.main.DrawerActivityTest"
+            android:name="splitsound.com.splitsound.DrawerActivityTest"
             android:label="@string/title_activity_drawer_test"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="splitsound.com.main.SettingsActivity"
+            android:name="splitsound.com.splitsound.SettingsActivity"
             android:label="@string/title_activity_settings"></activity>
     </application>
 

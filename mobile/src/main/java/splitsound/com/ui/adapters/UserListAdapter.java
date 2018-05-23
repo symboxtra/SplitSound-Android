@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import splitsound.com.main.R;
+import splitsound.com.splitsound.R;
 
 /**
  * Created by Neel on 5/15/2018.

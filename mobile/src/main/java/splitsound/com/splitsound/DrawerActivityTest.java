@@ -1,4 +1,4 @@
-package splitsound.com.main;
+package splitsound.com.splitsound;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -82,7 +82,7 @@ fi
 # Wait for emulator
 echo -e "${YELLOW}Waiting for emulator to boot...${NC}"
 adb wait-for-device
-while [ `adb shell getprop sys.boot_completed | tr -d '\r'` != "1" ];
+while [ "`adb shell getprop sys.boot_completed | tr -d '\r' `" != "1" ];
 do
     sleep 2
 done
