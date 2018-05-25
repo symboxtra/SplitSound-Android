@@ -7,11 +7,20 @@
 ""
 $avd = "PixelTest"
 $image = "system-images;android-27;google_apis;x86"
+$headless = $false
 
-# Check if emulator was provided as argument, set to default if not
-if("$args" -ne "")
+# Check commandline arguments
+for($i = 0; $i -lt $args.count; $i++)
 {
-    $avd = "$args"
+	if($args[$i] -eq "-a"){$avd = $args[$i + 1]}
+	if($args[$i] -eq "-s")
+	{	
+		""
+		Write-Host "Running in headless mode. Remove -s to run with GUI" -Foreground Cyan
+		""
+		$headless = $true
+	}
+	if($args[$i] -eq "-h"){Write-Host}
 }
 
 # Check if device exists in avdmanager, else
@@ -44,7 +53,14 @@ Write-Host "=== Starting emulator in the background... ===" -Foreground Yellow
 ""
 
 # Start emulator in background
-Start-Job -ScriptBlock {emulator -avd $args[0]} -ArgumentList $avd > $null
+if($headless)
+{
+	Start-Job -ScriptBlock {emulator -avd $args[0] -no-window -no-audio -no-boot-anim} -ArgumentList $avd > $null
+}
+else
+{
+	Start-Job -ScriptBlock {emulator -avd $args[0]} -ArgumentList $avd > $null
+}
 
 # Wait for emulator before proceeding
 Write-Host "Waiting for emulator to boot..." -ForegroundColor Yellow
