@@ -49,4 +49,41 @@ public class MainActivityTest {
     {
         assertEquals(2 + 2, 4);
     }
+
+    /*
+    @Test
+    public void check_play_button()
+    {
+        // Check if main play button exists
+        onView(withId(R.id.main_play_button)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void test_settings_activity()
+    {
+        // Perform activity change using navigation drawer
+
+        // Open drawer and Settings activity
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.settings));
+    }
+
+    @Test
+    public void swipe_test_user_list()
+    {
+        // Swipe up to open user list
+        onView(withId(R.id.sliding_layout)).perform(swipeUp());
+        onView(withId(R.id.sliding_layout)).perform(swipeDown());
+    }
+
+    @Test
+    public void check_available_sessions() throws InterruptedException
+    {
+        //Open available sessions tab
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.available_sessions));
+        Thread.sleep(100);
+        onView(isRoot()).perform(pressBack());
+    }
+    */
 }
