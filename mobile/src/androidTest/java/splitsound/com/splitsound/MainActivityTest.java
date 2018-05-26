@@ -9,6 +9,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 // Common Espresso imports (Do not remove because auto-import does not work with Espresso)
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressBack;
@@ -61,6 +62,11 @@ public class MainActivityTest {
         // Test settings tab
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.settings));
+
+        // Test username dialog
+        onData(anything()).inAdapterView(withId(R.id.userSettings)).atPosition(0).perform(click());
+        Thread.sleep(100);
+        onView(isRoot()).perform(pressBack());
     }
 
     /*
