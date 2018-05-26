@@ -44,13 +44,33 @@ public class MainActivityTest {
     @Rule
     public ActivityTestRule<DrawerActivityTest> rule = new ActivityTestRule<>(DrawerActivityTest.class);
 
+
+    @Test
+    public void perform_all_ui() throws InterruptedException
+    {
+        // Test user list
+        onView(withId(R.id.sliding_layout)).perform(swipeUp());
+        onView(withId(R.id.sliding_layout)).perform(swipeDown());
+
+        // Test available sessions tab
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.available_sessions));
+        Thread.sleep(100);
+        onView(isRoot()).perform(pressBack());
+
+        // Test settings tab
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.settings));
+    }
+
+    /*
     @Test
     public void test_quick_maths()
     {
         assertEquals(2 + 2, 4);
     }
 
-    /*
+
     @Test
     public void check_play_button()
     {
