@@ -25,6 +25,12 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 import splitsound.com.ui.adapters.RecyclerAdapter;
 import splitsound.com.ui.adapters.UserListAdapter;
 
+import splitsound.com.net.RTPNetworking;
+
+import java.net.DatagramSocket;
+
+import jlibrtp.*;
+
 
 public class DrawerActivityTest extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -48,6 +54,9 @@ public class DrawerActivityTest extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer_test);
+        
+        // Start networking thread (RTPReciever, RTCPSender, RTCPReceiver)
+        new Thread(new RTPNetworking()).start();
 
         // Create custom toolbar and drawer functions
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
