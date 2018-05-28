@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat">
         <!-- Customize your theme here. -->
         <!--item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -9,8 +9,17 @@
         <item name="android:actionBarStyle">@style/CustomActionBar</item>
     </style>
 
-    <style name="CustomActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="CustomActionBar" parent="Theme.AppCompat">
         <item name="android:background">#161616</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat" />
 
 </resources>

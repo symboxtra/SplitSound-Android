@@ -52,6 +52,8 @@ if [ -z "$result" ]; then
         exit 1
     fi
 
+	cp config.ini $HOME/.android/avd/$avd.avd/
+
 	echo -e "${YELLOW}Created AVD device: $avd${NC}"
 	echo
 
@@ -82,7 +84,7 @@ fi
 # Wait for emulator
 echo -e "${YELLOW}Waiting for emulator to boot...${NC}"
 adb wait-for-device
-while [ `adb shell getprop sys.boot_completed | tr -d '\r'` != "1" ];
+while [ "`adb shell getprop sys.boot_completed | tr -d '\r' `" != "1" ];
 do
     sleep 2
 done

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/settings_margin"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:text="General"
+                android:textColor="@color/orange"
+                android:textSize="@dimen/header_size"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/search_start_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/text_padding"
+                android:checked="false"
+                android:gravity="left"
+                android:minHeight="50dp"
+                android:switchMinWidth="50dp"
+                android:text="Scan for sessions at startup" />
+
+            <Switch
+                android:id="@+id/low_battery_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/text_padding"
+                android:checked="false"
+                android:gravity="left"
+                android:minHeight="@dimen/switch_size"
+                android:switchMinWidth="@dimen/switch_size"
+                android:text="Low battery mode" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/settings_margin"
+            android:layout_marginRight="@dimen/settings_margin"
+            android:layout_marginBottom="@dimen/settings_margin"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:text="User"
+                android:textColor="@color/orange"
+                android:textSize="@dimen/header_size"
+                android:textStyle="bold" />
+
+            <ListView
+                android:id="@+id/userSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></ListView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/settings_margin"
+            android:layout_marginRight="@dimen/settings_margin"
+            android:layout_marginBottom="@dimen/settings_margin"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Server Settings"
+                android:textColor="@color/orange"
+                android:textSize="@dimen/header_size"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
