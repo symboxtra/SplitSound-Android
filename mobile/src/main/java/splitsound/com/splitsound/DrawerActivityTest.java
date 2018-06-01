@@ -1,5 +1,6 @@
 package splitsound.com.splitsound;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
@@ -69,46 +72,6 @@ public class DrawerActivityTest extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        // Setup RecyclerView for userlist and serverlist
-        sessRV = findViewById(R.id.server_list_recycler_view);
-        sessRV.setHasFixedSize(true);
-        sessRV.setLayoutManager(new LinearLayoutManager(this));
-        sessRV.setAdapter(new RecyclerAdapter());
-        sessRV.setVisibility(View.GONE);
-        
-        userRV = findViewById(R.id.user_list_recycler_view);
-        userRV.setHasFixedSize(true);
-        userRV.setLayoutManager(new LinearLayoutManager(this));
-        userRV.setAdapter(new UserListAdapter());
-
-        // Setup sliding panel action listeners
-        slideUp = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout);
-        slideUp.addPanelSlideListener(new PanelSlideListener(){
-            @Override
-            public void onPanelSlide(View panel, float slideOffset) {
-                Log.i(TAG, "onPanelSlide, offset " + slideOffset);
-            }
-
-            @Override
-            public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-                Log.i(TAG, "onPanelStateChanged " + newState);
-
-                ImageView arrowIcon = (ImageView)findViewById(R.id.arrow_icon);
-                TextView swipe = (TextView)findViewById(R.id.swipe);
-
-                if(newState == PanelState.EXPANDED)
-                {
-                    arrowIcon.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
-                    swipe.setText(R.string.close_drawer);
-                }
-                else if(newState == PanelState.COLLAPSED)
-                {
-                    arrowIcon.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
-                    swipe.setText(R.string.open_drawer);
-                }
-            }
-        });
     }
 
     @Override
@@ -118,12 +81,7 @@ public class DrawerActivityTest extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         else if(slideUp != null && (slideUp.getPanelState() == PanelState.EXPANDED || slideUp.getPanelState() == PanelState.ANCHORED))
             slideUp.setPanelState(PanelState.COLLAPSED);
-        else if(avSess)
-        {
-            NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
-            onNavigationItemSelected(nav.getMenu().getItem(0));
-            avSess = false;
-        } else {
+        else {
             super.onBackPressed();
         }
     }
@@ -154,8 +112,26 @@ public class DrawerActivityTest extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        Fragment f = null;
         int id = item.getItemId();
         System.out.println(id);
+        switch (id)
+        {
+            case R.id.available_sessions:
+                f = new SessionsActivity();
+                break;
+            case R.id.settings:
+                Intent startSettings = new Intent(this, SettingsActivity.class);
+                startActivity(startSettings);
+                break;
+            case R.id.home_button:
+                f = new HomeActivity();
+                break;
+        }
+        if(f != null)
+            getSupportFragmentManager().beginTransaction().replace(R.id.test, f).commit();
+
+        /*
         if (id == R.id.available_sessions) {
             avSess = true;
             View b = findViewById(R.id.connect);
@@ -175,6 +151,7 @@ public class DrawerActivityTest extends AppCompatActivity
             View play_button = findViewById(R.id.main_play_button);
             play_button.setVisibility(View.VISIBLE);
         }
+        */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
