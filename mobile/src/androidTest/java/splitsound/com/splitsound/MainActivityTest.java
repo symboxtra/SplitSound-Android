@@ -59,24 +59,36 @@ public class MainActivityTest {
     @Test
     public void perform_all_ui() throws InterruptedException
     {
-        // Test user list
-        onView(withId(R.id.sliding_layout)).perform(swipeUp());
-        onView(withId(R.id.sliding_layout)).perform(swipeDown());
-
-        // Test available sessions tab
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.available_sessions));
-        Thread.sleep(100);
-        onView(isRoot()).perform(pressBack());
-
         // Test settings tab
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.settings));
 
         // Test username dialog
-        onData(anything()).inAdapterView(withId(R.id.userSettings)).atPosition(0).perform(click());
-        Thread.sleep(100);
+        //onData(anything()).inAdapterView(withId(R.id.userSettings)).atPosition(0).perform(click());
+        //Thread.sleep(100);
         onView(isRoot()).perform(pressBack());
+
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.home_button));
+
+        // Test user list
+        onView(withId(R.id.sliding_layout)).perform(swipeUp());
+        //Thread.sleep(100);
+        //onView(withId(R.id.sliding_layout)).perform(swipeDown());
+
+        // Test available sessions tab
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.available_sessions));
+        Thread.sleep(100);
+
+        // Test settings tab
+        //onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        //onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.settings));
+
+        // Test username dialog
+        //onData(anything()).inAdapterView(withId(R.id.userSettings)).atPosition(0).perform(click());
+        //Thread.sleep(100);
+        //onView(isRoot()).perform(pressBack());
     }
 
     /*
