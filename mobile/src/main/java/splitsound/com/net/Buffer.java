@@ -43,7 +43,7 @@ public class Buffer<T>
         return temp;
     }
 
-    public T remove()
+    public T getNext()
     {
         readLock.lock();
         T temp;
@@ -67,5 +67,10 @@ public class Buffer<T>
     public String toString()
     {
         return bufferList.size() + " " + bufferList.toString();
+    }
+
+    public boolean isEmpty()
+    {
+        return bufferList.isEmpty();
     }
 }

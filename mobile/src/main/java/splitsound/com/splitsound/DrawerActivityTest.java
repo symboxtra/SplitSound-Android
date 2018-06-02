@@ -1,10 +1,16 @@
 package splitsound.com.splitsound;
 
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.net.DhcpInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -30,7 +36,14 @@ import splitsound.com.ui.adapters.UserListAdapter;
 
 import splitsound.com.net.RTPNetworking;
 
+import java.math.BigInteger;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 import jlibrtp.*;
 
@@ -59,7 +72,16 @@ public class DrawerActivityTest extends AppCompatActivity
         setContentView(R.layout.activity_drawer_test);
         
         // Start networking thread (RTPReciever, RTCPSender, RTCPReceiver)
-        new Thread(new RTPNetworking()).start();
+        try {
+            new Thread(new RTPNetworking(getBroadcastAddress())).start();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        try {
+            Log.e("Test", getBroadcastAddress());
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
 
         // Create custom toolbar and drawer functions
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -155,5 +177,23 @@ public class DrawerActivityTest extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public static String getBroadcastAddress() throws SocketException
+    {
+        System.setProperty("java.net.preferIPv4Stack", "true");
+        for(Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces(); interfaces.hasMoreElements(); )
+        {
+            NetworkInterface nif = interfaces.nextElement();
+            if( !nif.isLoopback() )
+            {
+                for( InterfaceAddress addr : nif.getInterfaceAddresses() )
+                {
+                    if(addr.getBroadcast() != null)
+                        return addr.getBroadcast().toString().substring(1);
+                }
+            }
+        }
+        return "";
     }
 }
