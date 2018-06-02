@@ -9,11 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import splitsound.com.net.AppPacket;
+import splitsound.com.net.RTPNetworking;
 import splitsound.com.ui.adapters.UserListAdapter;
 
 /**
@@ -70,6 +74,17 @@ public class HomeActivity extends Fragment
                 }
             }
         });
+
+        ImageButton button = (ImageButton)getView().findViewById(R.id.connect);
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v)
+            {
+                RTPNetworking.requestQ.add(AppPacket.LIST_ALL);
+            }
+        });
+
         //getActivity().setTitle("Home");
         super.onViewCreated(view, savedInstanceState);
 

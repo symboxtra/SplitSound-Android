@@ -5,6 +5,7 @@ import android.app.Activity;
 import jlibrtp.DataFrame;
 import jlibrtp.Participant;
 import jlibrtp.RTPAppIntf;
+import jlibrtp.RTPSession;
 
 /**
  * Created by Neel on 4/25/2018.
@@ -12,9 +13,12 @@ import jlibrtp.RTPAppIntf;
 
 public class RTPSessionTask implements RTPAppIntf, Runnable
 {
-    public Activity activity;
-    String receiveText = "";
-    int pktCount = 0;
+    private RTPSession rtpSess;
+
+    public RTPSessionTask(RTPSession sess)
+    {
+        rtpSess = sess;
+    }
 
     @Override
     public void run()

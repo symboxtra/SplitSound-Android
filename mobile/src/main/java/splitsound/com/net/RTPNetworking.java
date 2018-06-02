@@ -18,7 +18,7 @@ public class RTPNetworking implements Runnable
     private final int RTPPort = 8000;
     private final int RTCPPort = 6000;
 
-    private String broadcastAddress;
+    public static String broadcastAddress;
 
     public static Buffer<Participant> servers = new Buffer<Participant>();
     public static Buffer<byte[]> networkPackets = new Buffer<byte[]>();
@@ -51,17 +51,16 @@ public class RTPNetworking implements Runnable
         }
 
         // Create the RTP session and setup RTP and RTCP channels
-        RTCPReceiverTask receiveTask = new RTCPReceiverTask();
-        RTPSessionTask sessionTask = new RTPSessionTask();
-
         RTPSession sess = new RTPSession(rtpSocket, rtcpSocket);
         sess.naivePktReception(true);
+
+        RTCPReceiverTask receiveTask = new RTCPReceiverTask(sess);
+        RTPSessionTask sessionTask = new RTPSessionTask(sess);
         sess.RTPSessionRegister(sessionTask,receiveTask, null);
 
         // Add broadcast IP as participant for initial log
         Participant broad = new Participant(broadcastAddress, RTPPort+2, RTCPPort+2);
         sess.addParticipant(broad);
-
 
         // Start individual receive threads
         new Thread(sessionTask).start();

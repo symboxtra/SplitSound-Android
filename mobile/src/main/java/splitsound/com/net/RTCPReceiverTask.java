@@ -2,6 +2,7 @@ package splitsound.com.net;
 
 import jlibrtp.Participant;
 import jlibrtp.RTCPAppIntf;
+import jlibrtp.RTPSession;
 
 /**
  * Created by Neel on 5/11/2018.
@@ -9,6 +10,13 @@ import jlibrtp.RTCPAppIntf;
 
 public class RTCPReceiverTask implements RTCPAppIntf, Runnable
 {
+    private RTPSession rtpSess;
+
+    public RTCPReceiverTask(RTPSession sess)
+    {
+        rtpSess = sess;
+    }
+
     @Override
     public void run()
     {
