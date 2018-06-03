@@ -94,7 +94,6 @@ public class SettingsActivity extends Activity {
                                             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
                                         }
                                     });
-
                     // create alert dialog
                     AlertDialog alertDialog = alertDialogBuilder.create();
 

@@ -86,7 +86,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/home/polak69/Programs/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/av/ic_play_circle_filled_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/home/polak69/Programs/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/av/ic_skip_previous_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -96,7 +96,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_play_circle_filled_black_24dp" />
+                            <entry key="outputName" value="ic_skip_previous_black_24dp" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="$USER_HOME$/Downloads/Sound-Wave-Headphones(1).svg" />
                           </map>
