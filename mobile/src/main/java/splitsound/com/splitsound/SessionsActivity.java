@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,11 +60,13 @@ public class SessionsActivity extends Fragment
                 // Stop and remove animation and show the generated list
                 gifImage.stopAnimation();
                 gifImage.setVisibility(View.GONE);
-
-                sessRV = (RecyclerView) getView().findViewById(R.id.server_list_recycler_view);
-                sessRV.setHasFixedSize(true);
-                sessRV.setLayoutManager(new LinearLayoutManager(getContext()));
-                sessRV.setAdapter(new RecyclerAdapter());
+                try {
+                    sessRV = (RecyclerView) getView().findViewById(R.id.server_list_recycler_view);
+                    sessRV.setHasFixedSize(true);
+                    sessRV.setLayoutManager(new LinearLayoutManager(getContext()));
+                    sessRV.setAdapter(new RecyclerAdapter());
+                }catch (NullPointerException npe){
+                }
             }
         }, new Random().nextInt(5000) + 2000);
     }

@@ -129,7 +129,7 @@ public class DrawerActivityTest extends AppCompatActivity
         // Handle navigation view item clicks here.
         Fragment f = null;
         int id = item.getItemId();
-        System.out.println(id);
+
         switch (id)
         {
             case R.id.available_sessions:
