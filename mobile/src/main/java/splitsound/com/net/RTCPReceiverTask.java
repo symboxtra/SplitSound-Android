@@ -1,8 +1,15 @@
 package splitsound.com.net;
 
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+
+import java.util.Iterator;
+
 import jlibrtp.Participant;
 import jlibrtp.RTCPAppIntf;
 import jlibrtp.RTPSession;
+import splitsound.com.ui.adapters.RecyclerAdapter;
+import splitsound.com.ui.adapters.ServerInfo;
 
 /**
  * Created by Neel on 5/11/2018.
@@ -46,5 +53,38 @@ public class RTCPReceiverTask implements RTCPAppIntf, Runnable
     @Override
     public void APPPktReceived(Participant var1, int var2, byte[] var3, byte[] var4)
     {
+        AppPacket app;
+
+        if(var3.equals("SYSS".getBytes()))
+        {
+            String[] dataString = new String(var4).split(" ");
+            String command = dataString[0];
+            String senderIP = dataString[1];
+            String senderSSRC = dataString[2];
+            String deviceName = dataString[3];
+
+            switch (command)
+            {
+                case "PROVIDE_SERVER_INFO":
+                    RTPNetworking.requestQ.add(AppPacket.INFO, Integer.parseInt(senderSSRC));
+                    break;
+                case "SERVER_INFO":
+                    if(dataString[4].equals(null))
+                        RecyclerAdapter.addServer(new ServerInfo(deviceName, senderIP, Integer.parseInt(dataString[6]), dataString[5].contains("UN")));
+                    else
+                        RecyclerAdapter.addServer(new ServerInfo(dataString[4], senderIP, Integer.parseInt(dataString[6]), dataString[5].contains("UN")));
+                    break;
+                case "LOGIN_INFO":
+                    break;
+                case "ACCEPT_USER":
+                    boolean exists = false;
+                    for(Iterator<Participant> e = rtpSess.getUnicastReceivers(); e.hasNext();)
+                        if(e.next().getSSRC() == var1.getSSRC())
+                            exists = true;
+                    if(!exists && Boolean.parseBoolean(dataString[4]))
+                        rtpSess.addParticipant(var1);
+                    break;
+            }
+        }
     }
 }

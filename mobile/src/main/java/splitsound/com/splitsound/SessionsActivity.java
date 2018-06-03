@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.util.Random;
 
 import splitsound.com.ui.adapters.RecyclerAdapter;
+import splitsound.com.ui.adapters.ServerInfo;
 
 /**
  * Created by Neel on 6/1/2018.
@@ -66,5 +67,7 @@ public class SessionsActivity extends Fragment
                 sessRV.setAdapter(new RecyclerAdapter());
             }
         }, new Random().nextInt(5000) + 2000);
+
+        RecyclerAdapter.addServer(new ServerInfo("My server", "80.108.12.11", 3, true));
     }
 }

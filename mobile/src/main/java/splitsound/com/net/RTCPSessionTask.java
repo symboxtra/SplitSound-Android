@@ -2,6 +2,7 @@ package splitsound.com.net;
 
 import android.provider.Telephony;
 import android.util.Log;
+import android.util.Pair;
 
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -32,44 +33,39 @@ public class RTCPSessionTask implements Runnable
                 int appType = 0;
                 String data = "";
 
-                AppPacket app = RTPNetworking.requestQ.getNext();
+                Pair<AppPacket, Integer> appPair = RTPNetworking.requestQ.getNext();
+                AppPacket app = appPair.first;
                 switch (app)
                 {
                     case LIST_ALL:
                         appType = 0;
-                        data = "PROVIDE_SERVER_INFO " + RTPNetworking.deviceIP + " " + rtpSess.CNAME();
+                        data = "PROVIDE_SERVER_INFO " + RTPNetworking.deviceIP + " " + rtpSess.getSsrc() + " " + rtpSess.CNAME();
                         break;
                     case INFO:
                         appType = 1;
-                        data = "SERVER_INFO " + RTPNetworking.deviceIP + " " + rtpSess.CNAME() + " LOCKED " + "# of clients"; //TODO: Determine locked/unclocked based on server settings and total number of clients
+                        data = "SERVER_INFO " + RTPNetworking.deviceIP + " " + rtpSess.getSsrc() + " " + rtpSess.CNAME() + " " + rtpSess.name + " LOCKED " + "# of clients"; //TODO: Determine locked/unclocked based on server settings and total number of clients
                         break;
                     case LOGIN:
                         appType = 2;
-                        data = "LOGIN_INFO " + RTPNetworking.deviceIP + " " + rtpSess.CNAME() + " " + "PASSWORD"; //TODO: Add hashed password entered by user
+                        data = "LOGIN_INFO " + RTPNetworking.deviceIP + " " + rtpSess.getSsrc() + " " + rtpSess.CNAME() + " " + "PASSWORD"; //TODO: Add hashed password entered by user
                         break;
                     case ACCEPT:
                         appType = 3;
-                        data = "ACCEPT_USER" + "1/0"; //TODO: Accept or deny based on return number and add server to participant list
-                        break;
-                    case RR:
-                        appType = 4;
-                        break;
-                    case SR:
-                        appType = 5;
-                        break;
-                    case BYE:
-                        appType = 6;
+                        data = "ACCEPT_USER" + RTPNetworking.deviceIP + " " + rtpSess.getSsrc() + " " + rtpSess.CNAME() + "1/0"; //TODO: Accept or deny based on return number and add server to participant list
                         break;
                 }
                 while(data.length() % 4 != 0)
                     data += " ";
 
-                for(Iterator<Participant> e = rtpSess.getUnicastReceivers(); e.hasNext();)
+                if(appPair.second == 0)
                 {
-                    rtpSess.sendRTCPAppPacket(e.next().getSSRC(), appType, "SYSS".getBytes(), data.getBytes());
-                    Log.d("Sent", "RTCP packet sent!");
+                    for (Iterator<Participant> e = rtpSess.getUnicastReceivers(); e.hasNext(); ) {
+                        rtpSess.sendRTCPAppPacket(e.next().getSSRC(), appType, "SYSS".getBytes(), data.getBytes());
+                        Log.d("Sent", "RTCP packet sent!");
+                    }
                 }
-
+                else
+                    rtpSess.sendRTCPAppPacket(appPair.second, appType, "SYSS".getBytes(), data.getBytes());
             }
 
             try {
