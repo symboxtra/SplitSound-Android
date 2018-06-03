@@ -18,11 +18,10 @@ public class RTPNetworking implements Runnable
     private final int RTPPort = 8000;
     private final int RTCPPort = 6000;
 
-    public static String broadcastAddress;
+    private String broadcastAddress;
+    public static String deviceIP;
 
-    public static Buffer<Participant> servers = new Buffer<Participant>();
     public static Buffer<byte[]> networkPackets = new Buffer<byte[]>();
-
     public static Buffer<AppPacket> requestQ = new Buffer<AppPacket>();
 
     public RTPNetworking(String broadcastAddress)
@@ -38,6 +37,8 @@ public class RTPNetworking implements Runnable
 
     public void setup()
     {
+        deviceIP = getIPAddress(true);
+
         // Create datagram ports for RTP and RTCP communication
         DatagramSocket rtpSocket = null;
         DatagramSocket rtcpSocket = null;
@@ -68,5 +69,33 @@ public class RTPNetworking implements Runnable
 
         // Start RTCP sender thread
         new Thread(new RTCPSessionTask(sess)).start();
+    }
+
+    public static String getIPAddress(boolean useIPv4)
+    {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        String sAddr = addr.getHostAddress();
+                        //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
+                        boolean isIPv4 = sAddr.indexOf(':')<0;
+
+                        if (useIPv4) {
+                            if (isIPv4)
+                                return sAddr;
+                        } else {
+                            if (!isIPv4) {
+                                int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
+                                return delim<0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ignored) { } // for now eat exceptions
+        return "";
     }
 }

@@ -108,6 +108,7 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/java'
+        main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] }
     }
 }
 
@@ -159,7 +160,9 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:3.8'
 
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
-    
+    implementation 'com.felipecsl:gifimageview:2.1.0'
+    implementation 'commons-io:commons-io:2.4'
+
     wearApp project(':wear')
 
 }

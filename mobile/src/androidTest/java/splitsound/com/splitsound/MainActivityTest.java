@@ -79,7 +79,7 @@ public class MainActivityTest {
         // Test available sessions tab
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.available_sessions));
-        Thread.sleep(100);
+        Thread.sleep(10000);
 
         // Test settings tab
         //onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());

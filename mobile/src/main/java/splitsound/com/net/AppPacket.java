@@ -6,5 +6,5 @@ package splitsound.com.net;
 
 public enum AppPacket
 {
-    LIST_ALL, INFO, LOGIN, SR, RR, BYE
+    LIST_ALL, INFO, LOGIN, ACCEPT, SR, RR, BYE
 }

@@ -1,5 +1,6 @@
 package splitsound.com.splitsound;
 
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.felipecsl.gifimageview.library.GifImageView;
+
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Random;
 
 import splitsound.com.ui.adapters.RecyclerAdapter;
 
@@ -18,6 +27,7 @@ import splitsound.com.ui.adapters.RecyclerAdapter;
 public class SessionsActivity extends Fragment
 {
     private RecyclerView sessRV;
+    private GifImageView gifImage;
 
     @Nullable
     @Override
@@ -32,10 +42,29 @@ public class SessionsActivity extends Fragment
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Available Sessions");
 
+        gifImage = (GifImageView)getView().findViewById(R.id.splash_loading);
 
-        sessRV = (RecyclerView) getView().findViewById(R.id.server_list_recycler_view);
-        sessRV.setHasFixedSize(true);
-        sessRV.setLayoutManager(new LinearLayoutManager(getContext()));
-        sessRV.setAdapter(new RecyclerAdapter());
+        try{
+            InputStream is = getContext().getAssets().open("load_trans.gif");
+            byte[] bytes = IOUtils.toByteArray(is);
+            gifImage.setBytes(bytes);
+            gifImage.startAnimation();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Stop and remove animation and show the generated list
+                gifImage.stopAnimation();
+                gifImage.setVisibility(View.GONE);
+
+                sessRV = (RecyclerView) getView().findViewById(R.id.server_list_recycler_view);
+                sessRV.setHasFixedSize(true);
+                sessRV.setLayoutManager(new LinearLayoutManager(getContext()));
+                sessRV.setAdapter(new RecyclerAdapter());
+            }
+        }, new Random().nextInt(5000) + 2000);
     }
 }

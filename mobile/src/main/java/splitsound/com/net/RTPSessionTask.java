@@ -2,6 +2,8 @@ package splitsound.com.net;
 
 import android.app.Activity;
 
+import java.util.Iterator;
+
 import jlibrtp.DataFrame;
 import jlibrtp.Participant;
 import jlibrtp.RTPAppIntf;
@@ -34,13 +36,17 @@ public class RTPSessionTask implements RTPAppIntf, Runnable
     @Override
     public void receiveData(DataFrame frame, Participant p)
     {
-        byte[] data = frame.getConcatenatedData();
-        if(!RTPNetworking.servers.exists(p))
-            RTPNetworking.servers.add(p);
+        boolean exists = false;
+        for(Iterator<Participant> e = rtpSess.getUnicastReceivers(); e.hasNext();)
+        {
+            if(e.next().getSSRC() == p.getSSRC())
+                exists = true;
+        }
+        if(!exists)
+            rtpSess.addParticipant(p);
 
-        System.out.println(RTPNetworking.servers);
-        if(RTPNetworking.servers.exists(p))
-            RTPNetworking.networkPackets.add(data);
+        byte[] data = frame.getConcatenatedData();
+        RTPNetworking.networkPackets.add(data);
         p.debugPrint();
     }
 
