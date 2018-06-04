@@ -90,9 +90,14 @@ public class SessionsActivity extends Fragment
     void onItemsLoadComplete() {
         // Update the adapter and notify data set changed
         // ...
-
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                refreshLayout = getView().findViewById(R.id.swipeRefreshLayout);
+                refreshLayout.setRefreshing(false);
+            }
+        }, 5000);
         // Stop refresh animation
-        refreshLayout = getView().findViewById(R.id.swipeRefreshLayout);
-        refreshLayout.setRefreshing(false);
+
     }
 }
