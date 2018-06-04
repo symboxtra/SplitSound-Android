@@ -22,17 +22,6 @@
         android:layout_height="match_parent"
         tools:context=".HomeActivity">
 
-        <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </android.support.design.widget.AppBarLayout>
-
         <include layout="@layout/content_drawer_activity_test" />
 
         <ImageButton
@@ -83,6 +72,17 @@
             android:layout_height="match_parent"
             android:paddingTop="55dp" />
 
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </android.support.design.widget.AppBarLayout>
+
     </android.support.design.widget.CoordinatorLayout>
 
     <!-- SLIDING LAYOUT -->
@@ -110,4 +110,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
+
+
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

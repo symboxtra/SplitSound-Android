@@ -49,7 +49,7 @@ import jlibrtp.*;
 
 
 public class DrawerActivityTest extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
     private static final String TAG = "DrawerActivityTest";
 
     private boolean avSess = false;

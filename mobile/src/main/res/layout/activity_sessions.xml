@@ -15,6 +15,8 @@
         android:id="@+id/server_list_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="55dp" />
+        android:paddingTop="55dp"
+        android:clickable="true"
+        android:focusable="true"/>
 
 </android.support.design.widget.CoordinatorLayout>
