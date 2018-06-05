@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import splitsound.com.splitsound.R;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
@@ -19,7 +21,21 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             new ServerInfo("Neel's Server", "173.9.192.172", 96, false),
             new ServerInfo("Neel's Server", "1.204.221.235", 240, true),
     };
+  
     private int selectedPosition = 0;
+
+    private static ArrayList<ServerInfo> serversA = new ArrayList<ServerInfo>();
+
+    public static void addServer(ServerInfo serv)
+    {
+        serversA.add(serv);
+    }
+
+    public static void getServer(int s)
+    {
+        serversA.get(0);
+    }
+  
     //provides the views we need to change
     class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView lockImage;
@@ -56,20 +72,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         //sets the lockimage to correspond to if there is a password
-        if(!servers[position].isHasPassword()) {
+        if(!serversA.get(position).isHasPassword()) {
             holder.lockImage.setImageResource(R.drawable.ic_lock_open_black_24dp);
         }
         //sets the server name
-        holder.serverName.setText(servers[position].getName());
+        holder.serverName.setText(serversA.get(position).getName());
         //sets the amount of people listening
-        holder.amountOfPeople.setText(String.valueOf(servers[position].getPeopleListening()));
+        holder.amountOfPeople.setText(String.valueOf(serversA.get(position).getPeopleListening()));
         //sets the server IP address
-        holder.serverIP.setText(servers[position].getIP());
+        holder.serverIP.setText(serversA.get(position).getIP());
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return servers.length;
+        return serversA.size();
     }
 }

@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.util.Random;
 
 import splitsound.com.ui.adapters.RecyclerAdapter;
+import splitsound.com.ui.adapters.ServerInfo;
 
 /**
  * Created by Neel on 6/1/2018.
@@ -70,6 +71,7 @@ public class SessionsActivity extends Fragment
                 }
             }
         }, new Random().nextInt(5000) + 2000);
+        
         refreshLayout = getView().findViewById(R.id.swipeRefreshLayout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -78,6 +80,7 @@ public class SessionsActivity extends Fragment
                 refreshItems();
             }
         });
+        RecyclerAdapter.addServer(new ServerInfo("My server", "80.108.12.11", 3, true));
     }
     void refreshItems() {
         // Load items
@@ -98,6 +101,5 @@ public class SessionsActivity extends Fragment
             }
         }, 5000);
         // Stop refresh animation
-
     }
 }

@@ -1,5 +1,7 @@
 package splitsound.com.net;
 
+import android.util.Pair;
+
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -10,7 +12,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Buffer<T>
 {
-    private ArrayList<T> bufferList = new ArrayList<T>();
+    private ArrayList<Pair<T, Integer>> bufferList = new ArrayList<Pair<T, Integer>>();
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private final Lock readLock = lock.readLock();
     private final Lock writeLock = lock.writeLock();
@@ -20,7 +22,7 @@ public class Buffer<T>
         writeLock.lock();
         try
         {
-            bufferList.add(val);
+            bufferList.add(new Pair<T, Integer>(val, 0));
         }
         finally
         {
@@ -28,10 +30,23 @@ public class Buffer<T>
         }
     }
 
-    public T get(int index)
+    public void add(T val, int ssrc)
+    {
+        writeLock.lock();
+        try
+        {
+            bufferList.add(new Pair<T, Integer>(val, ssrc));
+        }
+        finally
+        {
+            writeLock.unlock();
+        }
+    }
+
+    public Pair<T, Integer> get(int index)
     {
         readLock.lock();
-        T temp;
+        Pair<T, Integer> temp;
         try
         {
             temp = bufferList.get(index);
@@ -43,10 +58,10 @@ public class Buffer<T>
         return temp;
     }
 
-    public T getNext()
+    public Pair<T, Integer> getNext()
     {
         readLock.lock();
-        T temp;
+        Pair<T, Integer> temp;
         try
         {
             temp = bufferList.get(0);

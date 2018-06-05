@@ -16,6 +16,9 @@ import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.Iterator;
+
+import jlibrtp.Participant;
 import splitsound.com.net.AppPacket;
 import splitsound.com.net.RTPNetworking;
 import splitsound.com.ui.adapters.UserListAdapter;
