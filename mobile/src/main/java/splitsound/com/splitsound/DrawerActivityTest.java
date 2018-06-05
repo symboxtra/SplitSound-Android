@@ -49,7 +49,7 @@ import jlibrtp.*;
 
 
 public class DrawerActivityTest extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
     private static final String TAG = "DrawerActivityTest";
 
     private boolean avSess = false;
@@ -109,13 +109,6 @@ public class DrawerActivityTest extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.drawer_activity_test, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -136,11 +129,12 @@ public class DrawerActivityTest extends AppCompatActivity
         // Handle navigation view item clicks here.
         Fragment f = null;
         int id = item.getItemId();
-        System.out.println(id);
+
         switch (id)
         {
             case R.id.available_sessions:
                 f = new SessionsActivity();
+
                 break;
             case R.id.settings:
                 Intent startSettings = new Intent(this, SettingsActivity.class);
@@ -176,7 +170,7 @@ public class DrawerActivityTest extends AppCompatActivity
         */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
     public static String getBroadcastAddress() throws SocketException

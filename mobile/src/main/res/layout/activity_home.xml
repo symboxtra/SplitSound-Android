@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.sothree.slidinguppanel.SlidingUpPanelLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    sothree:umanoPanelHeight="68dp"
-    sothree:umanoShadowHeight="4dp"
-    sothree:umanoParallaxOffset="100dp"
     sothree:umanoDragView="@+id/dragView"
     sothree:umanoOverlay="true"
-    sothree:umanoScrollableView="@+id/list">
+    sothree:umanoPanelHeight="68dp"
+    sothree:umanoParallaxOffset="100dp"
+    sothree:umanoScrollableView="@+id/list"
+    sothree:umanoShadowHeight="4dp">
 
     <!-- MAIN CONTENT -->
 
@@ -23,6 +22,56 @@
         android:layout_height="match_parent"
         tools:context=".HomeActivity">
 
+        <include layout="@layout/content_drawer_activity_test" />
+
+        <ImageButton
+            android:id="@+id/connect"
+            android:layout_width="135dp"
+            android:layout_height="135dp"
+            android:layout_gravity="center"
+            android:background="@drawable/button_design"
+            android:contentDescription="@string/headphone_button"
+            android:paddingBottom="10dp"
+            android:src="@drawable/ic_sound_wave_headphones" />
+
+        <RelativeLayout
+            android:layout_width="180dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="485dp">
+
+            <ImageView
+                android:id="@+id/main_play_button"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/play_button"
+                android:src="@drawable/ic_play_arrow_black_24dp"
+                android:layout_centerHorizontal="true"
+                android:tint="@color/white"/>
+            <ImageView
+                android:id="@+id/main_skip_back_button"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/skip_back_button"
+                android:src="@drawable/ic_skip_previous_black_24dp"
+                android:layout_alignParentStart="true"
+                android:tint="@color/white"/>
+            <ImageView
+                android:id="@+id/main_skip_forward_button"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/skip_forward_button"
+                android:src="@drawable/ic_skip_next_black_24dp"
+                android:layout_alignParentEnd="true"
+                android:tint="@color/white"/>
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/server_list_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="55dp" />
+
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -30,48 +79,20 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
         </android.support.design.widget.AppBarLayout>
-
-        <include layout="@layout/content_drawer_activity_test" />
-
-        <ImageButton
-            android:src="@drawable/ic_sound_wave_headphones"
-            android:id="@+id/connect"
-            android:background="@drawable/button_design"
-            android:layout_width="135dp"
-            android:layout_height="135dp"
-            android:layout_gravity="center"
-            android:paddingBottom="10dp"
-            android:contentDescription="@string/headphone_button" />
-
-        <ImageView
-            android:id="@+id/main_play_button"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:src="@drawable/ic_play_circle_filled_black_24dp"
-            android:contentDescription="@string/play_button"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="485dp"/>
-
-        <android.support.v7.widget.RecyclerView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/server_list_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="55dp" />
 
     </android.support.design.widget.CoordinatorLayout>
 
     <!-- SLIDING LAYOUT -->
     <LinearLayout
+        android:id="@+id/dragView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:clickable="true"
         android:focusable="true"
-        android:id="@+id/dragView">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -84,10 +105,11 @@
 
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/user_list_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </LinearLayout>
+
+
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

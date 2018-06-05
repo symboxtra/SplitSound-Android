@@ -21,6 +21,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             new ServerInfo("Neel's Server", "173.9.192.172", 96, false),
             new ServerInfo("Neel's Server", "1.204.221.235", 240, true),
     };
+  
+    private int selectedPosition = 0;
 
     private static ArrayList<ServerInfo> serversA = new ArrayList<ServerInfo>();
 
@@ -33,7 +35,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     {
         serversA.get(0);
     }
-
+  
     //provides the views we need to change
     class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView lockImage;
@@ -47,6 +49,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             serverName = itemView.findViewById(R.id.server_name);
             serverIP = itemView.findViewById(R.id.server_address);
             amountOfPeople = itemView.findViewById(R.id.amount_of_people_connected);
+            view.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+
+                }
+            });
         }
 
     }

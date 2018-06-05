@@ -4,8 +4,10 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +31,7 @@ public class SessionsActivity extends Fragment
 {
     private RecyclerView sessRV;
     private GifImageView gifImage;
-
+    private SwipeRefreshLayout refreshLayout;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState)
@@ -60,14 +62,44 @@ public class SessionsActivity extends Fragment
                 // Stop and remove animation and show the generated list
                 gifImage.stopAnimation();
                 gifImage.setVisibility(View.GONE);
-
-                sessRV = (RecyclerView) getView().findViewById(R.id.server_list_recycler_view);
-                sessRV.setHasFixedSize(true);
-                sessRV.setLayoutManager(new LinearLayoutManager(getContext()));
-                sessRV.setAdapter(new RecyclerAdapter());
+                try {
+                    sessRV = (RecyclerView) getView().findViewById(R.id.server_list_recycler_view);
+                    sessRV.setHasFixedSize(true);
+                    sessRV.setLayoutManager(new LinearLayoutManager(getContext()));
+                    sessRV.setAdapter(new RecyclerAdapter());
+                }catch (NullPointerException npe){
+                }
             }
         }, new Random().nextInt(5000) + 2000);
-
+        
+        refreshLayout = getView().findViewById(R.id.swipeRefreshLayout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                refreshItems();
+            }
+        });
         RecyclerAdapter.addServer(new ServerInfo("My server", "80.108.12.11", 3, true));
+    }
+    void refreshItems() {
+        // Load items
+        // ...
+
+        // Load complete
+        onItemsLoadComplete();
+    }
+
+    void onItemsLoadComplete() {
+        // Update the adapter and notify data set changed
+        // ...
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                refreshLayout = getView().findViewById(R.id.swipeRefreshLayout);
+                refreshLayout.setRefreshing(false);
+            }
+        }, 5000);
+        // Stop refresh animation
     }
 }

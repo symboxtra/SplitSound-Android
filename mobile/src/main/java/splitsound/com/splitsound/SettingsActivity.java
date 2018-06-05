@@ -53,7 +53,7 @@ public class SettingsActivity extends Activity {
         }
     }
 
-    private void setListViewClickListener(ListView userSettings) {
+    private void setListViewClickListener(final ListView userSettings) {
         userSettings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -71,7 +71,7 @@ public class SettingsActivity extends Activity {
                     alertDialogBuilder.setView(promptsView);
 
                     final EditText userInput = (EditText) promptsView.findViewById(R.id.username);
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
                     // set dialog message
@@ -84,15 +84,16 @@ public class SettingsActivity extends Activity {
                                             // edit text
                                             spEdit.putString(getString(R.string.username), userInput.getText().toString());
                                             spEdit.apply();
+                                            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
                                         }
                                     })
                             .setNegativeButton("Cancel",
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             dialog.cancel();
+                                            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
                                         }
                                     });
-
                     // create alert dialog
                     AlertDialog alertDialog = alertDialogBuilder.create();
 
