@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 
+import splitsound.com.net.AppPacket;
+import splitsound.com.net.RTPNetworking;
 import splitsound.com.ui.adapters.RecyclerAdapter;
 import splitsound.com.ui.adapters.ServerInfo;
 
@@ -32,6 +34,9 @@ public class SessionsActivity extends Fragment
     private RecyclerView sessRV;
     private GifImageView gifImage;
     private SwipeRefreshLayout refreshLayout;
+
+    private Thread requestThread;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState)
@@ -45,8 +50,8 @@ public class SessionsActivity extends Fragment
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Available Sessions");
 
+        // Play loading animation uaing GIF
         gifImage = (GifImageView)getView().findViewById(R.id.splash_loading);
-
         try{
             InputStream is = getContext().getAssets().open("load_trans.gif");
             byte[] bytes = IOUtils.toByteArray(is);
@@ -55,6 +60,10 @@ public class SessionsActivity extends Fragment
         }catch (IOException e) {
             e.printStackTrace();
         }
+
+        // Send list_all RTCP packets while loading
+        createRequestThread();
+        requestThread.start();
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -67,39 +76,49 @@ public class SessionsActivity extends Fragment
                     sessRV.setHasFixedSize(true);
                     sessRV.setLayoutManager(new LinearLayoutManager(getContext()));
                     sessRV.setAdapter(new RecyclerAdapter());
+
+                    // Stop sending list all packets
+                    requestThread.interrupt();
                 }catch (NullPointerException npe){
                 }
             }
         }, new Random().nextInt(5000) + 2000);
-        
+
+        // Create Android pull-down refresh action
         refreshLayout = getView().findViewById(R.id.swipeRefreshLayout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 // Refresh items
-                refreshItems();
+                RTPNetworking.requestQ.add(AppPacket.LIST_ALL);
+
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        refreshLayout = getView().findViewById(R.id.swipeRefreshLayout);
+                        refreshLayout.setRefreshing(false);
+                    }
+                }, new Random().nextInt(5000) + 200);
             }
         });
         RecyclerAdapter.addServer(new ServerInfo("My server", "80.108.12.11", 3, true));
     }
-    void refreshItems() {
-        // Load items
-        // ...
 
-        // Load complete
-        onItemsLoadComplete();
-    }
-
-    void onItemsLoadComplete() {
-        // Update the adapter and notify data set changed
-        // ...
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                refreshLayout = getView().findViewById(R.id.swipeRefreshLayout);
-                refreshLayout.setRefreshing(false);
+    public void createRequestThread()
+    {
+        requestThread = new Thread(){
+            public void run()
+            {
+                while(!Thread.currentThread().isInterrupted())
+                {
+                    try {
+                        RTPNetworking.requestQ.add(AppPacket.LIST_ALL);
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
+                    }
+                }
             }
-        }, 5000);
-        // Stop refresh animation
+        };
     }
 }
