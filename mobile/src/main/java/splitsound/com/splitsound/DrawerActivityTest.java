@@ -1,6 +1,5 @@
 package splitsound.com.splitsound;
 
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +32,6 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import splitsound.com.ui.adapters.RecyclerAdapter;
 import splitsound.com.ui.adapters.UserListAdapter;
-
 import splitsound.com.net.RTPNetworking;
 
 import java.math.BigInteger;
@@ -46,7 +44,6 @@ import java.net.UnknownHostException;
 import java.util.Enumeration;
 
 import jlibrtp.*;
-
 
 public class DrawerActivityTest extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
