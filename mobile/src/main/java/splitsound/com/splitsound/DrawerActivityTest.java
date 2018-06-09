@@ -208,5 +208,6 @@ public class DrawerActivityTest extends AppCompatActivity
         lp.height = -2;
         appBarLayout.setLayoutParams(lp);
         return false;
+
     }
 }
