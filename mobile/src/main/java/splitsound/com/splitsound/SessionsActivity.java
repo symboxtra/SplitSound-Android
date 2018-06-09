@@ -44,7 +44,7 @@ public class SessionsActivity extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Available Sessions");
-
+        ((DrawerActivityTest)getActivity()).unCollapseBar();
         gifImage = (GifImageView)getView().findViewById(R.id.splash_loading);
 
         try{
