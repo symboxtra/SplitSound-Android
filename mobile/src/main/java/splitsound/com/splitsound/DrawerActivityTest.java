@@ -24,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
@@ -34,6 +35,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 
+import jp.wasabeef.blurry.Blurry;
 import splitsound.com.ui.adapters.RecyclerAdapter;
 import splitsound.com.ui.adapters.UserListAdapter;
 
@@ -208,6 +210,5 @@ public class DrawerActivityTest extends AppCompatActivity
         lp.height = -2;
         appBarLayout.setLayoutParams(lp);
         return false;
-
     }
 }
