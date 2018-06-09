@@ -3,6 +3,7 @@ package splitsound.com.splitsound;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaCas;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -71,11 +72,7 @@ public class DrawerActivityTest extends AppCompatActivity
         // Start networking thread (RTPReciever, RTCPSender, RTCPReceiver)
         try {
             new Thread(new RTPNetworking(getBroadcastAddress())).start();
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-        try {
-            Log.e("Test", getBroadcastAddress());
+            Log.i("Broadcast Address", getBroadcastAddress());
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -100,9 +97,8 @@ public class DrawerActivityTest extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         else if(slideUp != null && (slideUp.getPanelState() == PanelState.EXPANDED || slideUp.getPanelState() == PanelState.ANCHORED))
             slideUp.setPanelState(PanelState.COLLAPSED);
-        else {
+        else
             super.onBackPressed();
-        }
     }
 
     @Override
@@ -131,7 +127,6 @@ public class DrawerActivityTest extends AppCompatActivity
         {
             case R.id.available_sessions:
                 f = new SessionsActivity();
-
                 break;
             case R.id.settings:
                 Intent startSettings = new Intent(this, SettingsActivity.class);
@@ -142,7 +137,7 @@ public class DrawerActivityTest extends AppCompatActivity
                 break;
         }
         if(f != null)
-            getSupportFragmentManager().beginTransaction().replace(R.id.test, f).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.test, f).addToBackStack("test_fragment").commit();
 
         /*
         if (id == R.id.available_sessions) {

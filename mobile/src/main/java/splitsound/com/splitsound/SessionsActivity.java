@@ -34,9 +34,13 @@ import splitsound.com.ui.adapters.ServerInfo;
 
 public class SessionsActivity extends Fragment
 {
+    public String temp = "SessionsActivity";
+
     private RecyclerView sessRV;
     private GifImageView gifImage;
+
     private SwipeRefreshLayout refreshLayout;
+    private SwipeRefreshLayout.OnRefreshListener swipeListener;
 
     private Thread requestThread;
 
@@ -64,6 +68,11 @@ public class SessionsActivity extends Fragment
         {
             case R.id.action_refresh:
                 RTPNetworking.requestQ.add(AppPacket.LIST_ALL);
+                if(refreshLayout != null)
+                {
+                    refreshLayout.setRefreshing(true);
+                    swipeListener.onRefresh();
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -111,7 +120,7 @@ public class SessionsActivity extends Fragment
 
         // Create Android pull-down refresh action
         refreshLayout = getView().findViewById(R.id.swipeRefreshLayout);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 // Refresh items
@@ -124,7 +133,9 @@ public class SessionsActivity extends Fragment
                     }
                 }, new Random().nextInt(5000) + 200);
             }
-        });
+        };
+        refreshLayout.setOnRefreshListener(swipeListener);
+
         RecyclerAdapter.addServer(new ServerInfo("My server", "80.108.12.11", 3, true));
     }
 
@@ -146,4 +157,5 @@ public class SessionsActivity extends Fragment
             }
         };
     }
+
 }
