@@ -1,17 +1,38 @@
 package splitsound.com.ui.adapters;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.ArrayList;
 
+import splitsound.com.net.AppPacket;
+import splitsound.com.net.RTPNetworking;
 import splitsound.com.splitsound.R;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+
+    public SharedPreferences shrdPref;
+    public SharedPreferences.Editor spEdit;
+
+    private static MaterialDialog builder;
 
     //TODO have actual data, this is just sample data
     private ServerInfo[] servers = {
@@ -42,17 +63,39 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         public TextView serverName;
         public TextView serverIP;
         public TextView amountOfPeople;
+        public boolean locked;
 
         public ViewHolder(View view){
             super(view);
+            locked = true;
             lockImage = itemView.findViewById(R.id.lock_icon);
             serverName = itemView.findViewById(R.id.server_name);
             serverIP = itemView.findViewById(R.id.server_address);
             amountOfPeople = itemView.findViewById(R.id.amount_of_people_connected);
             view.setOnClickListener(new View.OnClickListener(){
                 @Override
-                public void onClick(View v){
+                public void onClick(final View v)
+                {
+                    if(locked)
+                    {
+                        builder = new MaterialDialog.Builder(v.getContext())
+                                .title("Session Password")
+                                .content("Enter the session password:")
+                                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
+                                .input("password", "", new MaterialDialog.InputCallback() {
 
+                                    @Override
+                                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                                        //spEdit.putString(v.getContext().getString(R.string.username), input.toString());
+                                        //spEdit.apply();
+
+                                        RTPNetworking.requestQ.add(AppPacket.LOGIN);
+                                    }
+                                })
+                                .positiveText("OK")
+                                .negativeText("Cancel")
+                                .show();
+                    }
                 }
             });
         }
@@ -74,6 +117,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         //sets the lockimage to correspond to if there is a password
         if(!serversA.get(position).isHasPassword()) {
             holder.lockImage.setImageResource(R.drawable.ic_lock_open_black_24dp);
+            holder.locked = false;
         }
         //sets the server name
         holder.serverName.setText(serversA.get(position).getName());

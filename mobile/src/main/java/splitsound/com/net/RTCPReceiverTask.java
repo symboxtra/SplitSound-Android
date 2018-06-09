@@ -1,8 +1,5 @@
 package splitsound.com.net;
 
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-
 import java.util.Iterator;
 
 import jlibrtp.Participant;

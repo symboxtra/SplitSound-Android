@@ -14,7 +14,8 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
     </android.support.design.widget.AppBarLayout>
 

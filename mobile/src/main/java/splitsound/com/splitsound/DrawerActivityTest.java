@@ -1,19 +1,12 @@
 package splitsound.com.splitsound;
 
-
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.net.DhcpInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.Formatter;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,36 +15,25 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 
 import jp.wasabeef.blurry.Blurry;
 import splitsound.com.ui.adapters.RecyclerAdapter;
 import splitsound.com.ui.adapters.UserListAdapter;
-
 import splitsound.com.net.RTPNetworking;
 
-import java.math.BigInteger;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Enumeration;
-
-import jlibrtp.*;
-
 
 public class DrawerActivityTest extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -79,11 +61,7 @@ public class DrawerActivityTest extends AppCompatActivity
         // Start networking thread (RTPReciever, RTCPSender, RTCPReceiver)
         try {
             new Thread(new RTPNetworking(getBroadcastAddress())).start();
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-        try {
-            Log.e("Test", getBroadcastAddress());
+            Log.i("Broadcast Address", getBroadcastAddress());
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -108,9 +86,8 @@ public class DrawerActivityTest extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         else if(slideUp != null && (slideUp.getPanelState() == PanelState.EXPANDED || slideUp.getPanelState() == PanelState.ANCHORED))
             slideUp.setPanelState(PanelState.COLLAPSED);
-        else {
+        else
             super.onBackPressed();
-        }
     }
 
     @Override
@@ -139,7 +116,6 @@ public class DrawerActivityTest extends AppCompatActivity
         {
             case R.id.available_sessions:
                 f = new SessionsActivity();
-
                 break;
             case R.id.settings:
                 Intent startSettings = new Intent(this, SettingsActivity.class);
@@ -150,7 +126,7 @@ public class DrawerActivityTest extends AppCompatActivity
                 break;
         }
         if(f != null)
-            getSupportFragmentManager().beginTransaction().replace(R.id.test, f).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.test, f).addToBackStack("test_fragment").commit();
 
         /*
         if (id == R.id.available_sessions) {

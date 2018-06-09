@@ -10,7 +10,8 @@
     sothree:umanoOverlay="false"
     sothree:umanoPanelHeight="68dp"
     sothree:umanoScrollableView="@+id/list"
-    sothree:umanoShadowHeight="4dp">
+    sothree:umanoShadowHeight="4dp"
+    android:tag="HomeActivity">
 
     <!-- MAIN CONTENT -->
 
