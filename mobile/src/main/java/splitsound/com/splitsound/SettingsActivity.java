@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.annotation.NonNull;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +17,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 
 public class SettingsActivity extends Activity {
 
@@ -61,7 +65,7 @@ public class SettingsActivity extends Activity {
                 String selectedItem = (String) parent.getItemAtPosition(position);
 
                 if (selectedItem.contains("username")) {
-                    LayoutInflater li = LayoutInflater.from(context);
+                    /*LayoutInflater li = LayoutInflater.from(context);
                     View promptsView = li.inflate(R.layout.input_dialog, null);
 
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -98,7 +102,22 @@ public class SettingsActivity extends Activity {
                     AlertDialog alertDialog = alertDialogBuilder.create();
 
                     // show it
-                    alertDialog.show();
+                    alertDialog.show();*/
+
+                    MaterialDialog builder = new MaterialDialog.Builder(view.getContext())
+                            .title("Username")
+                            .content("Enter a new username:")
+                            .inputType(InputType.TYPE_CLASS_TEXT)
+                            .input("username", "", new MaterialDialog.InputCallback() {
+
+                                @Override
+                                public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                                    spEdit.putString(getString(R.string.username), input.toString());
+                                    spEdit.apply();
+                                }
+                            })
+                            .positiveText("OK")
+                            .show();
                 }
             }
         });

@@ -9,16 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import java.util.Iterator;
-
-import jlibrtp.Participant;
 import splitsound.com.net.AppPacket;
 import splitsound.com.net.RTPNetworking;
 import splitsound.com.ui.adapters.UserListAdapter;

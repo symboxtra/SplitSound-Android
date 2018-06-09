@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -117,6 +116,8 @@ public class SessionsActivity extends Fragment
                 }
             }
         }, new Random().nextInt(5000) + 2000);
+
+
 
         // Create Android pull-down refresh action
         refreshLayout = getView().findViewById(R.id.swipeRefreshLayout);

@@ -1,16 +1,8 @@
 package splitsound.com.splitsound;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.media.MediaCas;
-import android.net.DhcpInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.Formatter;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,32 +11,19 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 
-import splitsound.com.ui.adapters.RecyclerAdapter;
-import splitsound.com.ui.adapters.UserListAdapter;
 import splitsound.com.net.RTPNetworking;
 
-import java.math.BigInteger;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Enumeration;
-
-import jlibrtp.*;
 
 public class DrawerActivityTest extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
