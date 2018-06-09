@@ -35,6 +35,8 @@ public class HomeActivity extends Fragment
 
     private SlidingUpPanelLayout slideUp;
 
+    private boolean isActionBarHidden;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState)
@@ -45,6 +47,7 @@ public class HomeActivity extends Fragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
+        isActionBarHidden = false;
         userRV = getView().findViewById(R.id.user_list_recycler_view);
         userRV.setHasFixedSize(true);
         userRV.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -54,8 +57,14 @@ public class HomeActivity extends Fragment
         slideUp = (SlidingUpPanelLayout)getView().findViewById(R.id.sliding_layout);
         slideUp.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener(){
             @Override
-            public void onPanelSlide(View panel, float slideOffset) {
+            public void onPanelSlide(View panel, float slideOffset) throws NullPointerException{
                 Log.i(TAG, "onPanelSlide, offset " + slideOffset);
+                if(slideOffset >= .9 && !isActionBarHidden){
+                    isActionBarHidden = ((DrawerActivityTest)getActivity()).collapseBar();
+                }
+                else if(slideOffset < .9 && isActionBarHidden){
+                    isActionBarHidden = ((DrawerActivityTest)getActivity()).unCollapseBar();
+                }
             }
 
             @Override

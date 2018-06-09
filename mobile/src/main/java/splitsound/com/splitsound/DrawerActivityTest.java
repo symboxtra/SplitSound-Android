@@ -8,6 +8,9 @@ import android.net.DhcpInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Formatter;
@@ -189,5 +192,21 @@ public class DrawerActivityTest extends AppCompatActivity
             }
         }
         return "";
+    }
+    public boolean collapseBar(){
+        AppBarLayout appBarLayout = findViewById(R.id.appBar);
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
+        Log.d("HEIGHT", lp.height + "");
+        lp.height = 0;
+        appBarLayout.setLayoutParams(lp);
+        return true;
+    }
+    public boolean unCollapseBar(){
+        AppBarLayout appBarLayout = findViewById(R.id.appBar);
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
+        Log.d("HEIGHT", lp.height + "");
+        lp.height = -2;
+        appBarLayout.setLayoutParams(lp);
+        return false;
     }
 }
