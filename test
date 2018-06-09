@@ -18,7 +18,7 @@ headless=false
 useEmulator=true
 
 # Parse args
-while getopts ":a:sh" opt; do
+while getopts ":a:sph" opt; do
     case $opt in
         a)
             avd="$OPTARG"
