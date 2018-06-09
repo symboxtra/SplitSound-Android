@@ -2,7 +2,8 @@
 
 #########################################################
 #                                                       #
-#      Run test suite and generate coverage reports     #
+#      Build and install the application on an          #
+#             emulator or attached phone                #
 #                                                       #
 #########################################################
 
@@ -18,7 +19,7 @@ headless=false
 useEmulator=true
 
 # Parse args
-while getopts ":a:sph" opt; do
+while getopts ":a:sh" opt; do
     case $opt in
         a)
             avd="$OPTARG"
@@ -103,19 +104,11 @@ echo
 echo -e "${YELLOW}=== Starting build/test... ===${NC}"
 echo
 
-# Run test and generate coverage reports
+# Build and install the APK
 error=0
-./gradlew clean jacocoTestReport
+./gradlew mobile:clean mobile:build mobile:installDebug
+#adb install -r .\mobile\build\outputs\apk\debug\mobile-debug.apk
 error=$?
-
-if $useEmulator; then
-    echo
-    echo -e "${YELLOW}Shutting down emulator...${NC}"
-
-    # Shut down emulator
-    adb -s emulator-5554 emu kill
-    adb kill-server
-fi
 
 echo
 
