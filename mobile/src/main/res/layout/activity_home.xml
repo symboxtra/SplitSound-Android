@@ -7,9 +7,8 @@
     android:layout_height="match_parent"
     android:gravity="bottom"
     sothree:umanoDragView="@+id/dragView"
-    sothree:umanoOverlay="true"
+    sothree:umanoOverlay="false"
     sothree:umanoPanelHeight="68dp"
-    sothree:umanoParallaxOffset="100dp"
     sothree:umanoScrollableView="@+id/list"
     sothree:umanoShadowHeight="4dp"
     android:tag="HomeActivity">
@@ -21,7 +20,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".HomeActivity">
+        tools:context=".HomeActivity"
+        android:id="@+id/home_layout">
 
         <include layout="@layout/content_drawer_activity_test" />
 
@@ -67,23 +67,6 @@
                 android:tint="@color/white"/>
         </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/server_list_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="55dp" />
-
-        <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </android.support.design.widget.AppBarLayout>
-
     </android.support.design.widget.CoordinatorLayout>
 
     <!-- SLIDING LAYOUT -->
@@ -95,16 +78,64 @@
         android:focusable="true"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:background="#404040">
 
-            <include
-                layout="@layout/show_users_card"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+            <ImageView
+                android:id="@+id/arrow_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="@string/user_mute_or_unmute"
+                android:src="@drawable/ic_keyboard_arrow_up_black_24dp" />
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/show_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/arrow_icon">
+
+                <TextView
+                    android:id="@+id/other_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Currently Listening"
+                    android:textSize="25sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/swipe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/show_layout"
+                android:layout_toEndOf="@+id/arrow_icon"
+                android:text="@string/open_drawer"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_alignParentEnd="true"
+                android:paddingEnd="10dp">
+
+                <ImageView
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:contentDescription="@string/people_picture"
+                    android:src="@drawable/ic_people_black_24dp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/user_list_recycler_view"

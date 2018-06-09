@@ -2,6 +2,10 @@ package splitsound.com.splitsound;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
@@ -12,12 +16,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.support.v4.app.Fragment;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 
+import jp.wasabeef.blurry.Blurry;
+import splitsound.com.ui.adapters.RecyclerAdapter;
+import splitsound.com.ui.adapters.UserListAdapter;
 import splitsound.com.net.RTPNetworking;
 
 import java.net.InterfaceAddress;
@@ -160,5 +170,21 @@ public class DrawerActivityTest extends AppCompatActivity
             }
         }
         return "";
+    }
+    public boolean collapseBar(){
+        AppBarLayout appBarLayout = findViewById(R.id.appBar);
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
+        Log.d("HEIGHT", lp.height + "");
+        lp.height = 0;
+        appBarLayout.setLayoutParams(lp);
+        return true;
+    }
+    public boolean unCollapseBar(){
+        AppBarLayout appBarLayout = findViewById(R.id.appBar);
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
+        Log.d("HEIGHT", lp.height + "");
+        lp.height = -2;
+        appBarLayout.setLayoutParams(lp);
+        return false;
     }
 }

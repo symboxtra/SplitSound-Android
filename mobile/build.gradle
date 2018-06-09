@@ -132,6 +132,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.google.android.gms:play-services-wearable:+'
     implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'jp.wasabeef:blurry:2.1.1'
 
     // Never change Version numbers unless absolutely sure!
 

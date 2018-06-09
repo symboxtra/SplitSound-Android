@@ -82,6 +82,7 @@ public class SessionsActivity extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Available Sessions");
+        ((DrawerActivityTest)getActivity()).unCollapseBar();
 
         // Play loading animation uaing GIF
         gifImage = (GifImageView)getView().findViewById(R.id.splash_loading);
@@ -139,7 +140,6 @@ public class SessionsActivity extends Fragment
 
         RecyclerAdapter.addServer(new ServerInfo("My server", "80.108.12.11", 3, true));
     }
-
     public void createRequestThread()
     {
         requestThread = new Thread(){
