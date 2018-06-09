@@ -52,7 +52,8 @@ public class RTPNetworking implements Runnable
         }
 
         // Create the RTP session and setup RTP and RTCP channels
-        RTPSession sess = new RTPSession(rtpSocket, rtcpSocket);
+        try{
+            RTPSession sess = new RTPSession(rtpSocket, rtcpSocket);
         sess.naivePktReception(true);
 
         RTCPReceiverTask receiveTask = new RTCPReceiverTask(sess);
@@ -69,6 +70,9 @@ public class RTPNetworking implements Runnable
 
         // Start RTCP sender thread
         new Thread(new RTCPSessionTask(sess)).start();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public static String getIPAddress(boolean useIPv4)
