@@ -66,7 +66,7 @@ public class SettingsActivity extends Activity {
 
                 if (selectedItem.contains("username")) {
                     /*LayoutInflater li = LayoutInflater.from(context);
-                    View promptsView = li.inflate(R.layout.input_dialog, null);
+                    View promptsView = li.inflate(R.layout.pass_dialog, null);
 
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                             context);
@@ -116,7 +116,8 @@ public class SettingsActivity extends Activity {
                                     spEdit.apply();
                                 }
                             })
-                            .positiveText("OK")
+                            .inputRange(3, 25)
+                            .positiveText("SUBMIT")
                             .show();
                 }
             }

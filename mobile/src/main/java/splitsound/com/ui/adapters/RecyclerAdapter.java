@@ -6,12 +6,16 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -80,21 +84,47 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     {
                         builder = new MaterialDialog.Builder(v.getContext())
                                 .title("Session Password")
-                                .content("Enter the session password:")
-                                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
-                                .input("password", "", new MaterialDialog.InputCallback() {
-
+                                .customView(R.layout.pass_dialog, true)
+                                .positiveText("CONNECT")
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
                                     @Override
-                                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                                        //spEdit.putString(v.getContext().getString(R.string.username), input.toString());
-                                        //spEdit.apply();
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
+                                        //TODO :: Get password from input box and store into SharedPreferences
                                         RTPNetworking.requestQ.add(AppPacket.LOGIN);
                                     }
                                 })
-                                .positiveText("OK")
-                                .negativeText("Cancel")
-                                .show();
+                                .negativeText("CANCEL")
+                                .build();
+
+                        final View positiveAction = builder.getActionButton(DialogAction.POSITIVE);
+                        //noinspection ConstantConditions
+                        final EditText passwordInput = builder.getCustomView().findViewById(R.id.password);
+                        passwordInput.addTextChangedListener(
+                                new TextWatcher() {
+                                    @Override
+                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                                    @Override
+                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                        positiveAction.setEnabled(s.toString().trim().length() > 0);
+                                    }
+
+                                    @Override
+                                    public void afterTextChanged(Editable s) {}
+                                });
+
+                        // Toggling the show password CheckBox will mask or unmask the password input EditText
+                        CheckBox checkbox = builder.getCustomView().findViewById(R.id.showPassword);
+                        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                passwordInput.setInputType(!isChecked ? InputType.TYPE_TEXT_VARIATION_PASSWORD : InputType.TYPE_CLASS_TEXT);
+                                passwordInput.setTransformationMethod(!isChecked ? PasswordTransformationMethod.getInstance() : null);
+                            }
+                        });
+                        builder.show();
+                        positiveAction.setEnabled(false);
                     }
                 }
             });
