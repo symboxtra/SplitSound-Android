@@ -1,6 +1,7 @@
 #########################################################
 #                                                       #
-#      Run test suite and generate coverage reports     #
+#      Build and install the application on an          #
+#             emulator or attached phone                #
 #                                                       #
 #########################################################
 
@@ -93,18 +94,10 @@ if($useEmulator)
 ""
 Write-Host "=== Starting build/test... ===" -Foreground Yellow
 
-./gradlew mobile:clean mobile:build mobile:jacocoTestReport
+# Build and install the APK
+./gradlew mobile:clean mobile:build mobile:installDebug
+#adb install -r .\mobile\build\outputs\apk\debug\mobile-debug.apk
 if($LastExitCode -ne 0) {$host.SetShouldExit($LastExitCode)} # Exit with test error code
-
-if($useEmulator)
-{
-    ""
-    Write-Host "Shutting down emulator..." -Foreground Yellow
-
-    # Shut down emulator
-    adb -s emulator-5554 emu kill
-    adb kill-server
-}
 
 ""
 
