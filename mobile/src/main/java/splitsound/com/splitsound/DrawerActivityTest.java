@@ -1,9 +1,14 @@
 package splitsound.com.splitsound;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,6 +50,8 @@ public class DrawerActivityTest extends AppCompatActivity
 
     private SlidingUpPanelLayout slideUp;
 
+    private static final int MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
+
     View myView;
     boolean isUp = false;
 
@@ -77,6 +84,11 @@ public class DrawerActivityTest extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        // Ask Audio permission
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.RECORD_AUDIO }, MY_PERMISSIONS_REQUEST_RECORD_AUDIO);
     }
 
     @Override
@@ -127,28 +139,7 @@ public class DrawerActivityTest extends AppCompatActivity
         }
         if(f != null)
             getSupportFragmentManager().beginTransaction().replace(R.id.test, f).addToBackStack("test_fragment").commit();
-
-        /*
-        if (id == R.id.available_sessions) {
-            avSess = true;
-            View b = findViewById(R.id.connect);
-            b.setVisibility(View.GONE);
-            View play_button = findViewById(R.id.main_play_button);
-            play_button.setVisibility(View.GONE);
-            sessRV.setVisibility(View.VISIBLE);
-        }
-        else if(id == R.id.settings) {
-            Intent startSettings = new Intent(this, SettingsActivity.class);
-            startActivity(startSettings);
-        }
-        else if(id == R.id.home_button){
-            sessRV.setVisibility(View.GONE);
-            View b = findViewById(R.id.connect);
-            b.setVisibility(View.VISIBLE);
-            View play_button = findViewById(R.id.main_play_button);
-            play_button.setVisibility(View.VISIBLE);
-        }
-        */
+        
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;
@@ -179,6 +170,7 @@ public class DrawerActivityTest extends AppCompatActivity
         appBarLayout.setLayoutParams(lp);
         return true;
     }
+
     public boolean unCollapseBar(){
         AppBarLayout appBarLayout = findViewById(R.id.appBar);
         CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
@@ -186,5 +178,19 @@ public class DrawerActivityTest extends AppCompatActivity
         lp.height = -2;
         appBarLayout.setLayoutParams(lp);
         return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults)
+    {
+        switch (requestCode)
+        {
+            case MY_PERMISSIONS_REQUEST_RECORD_AUDIO: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    // do nothing and wait
+                }
+            }
+        }
     }
 }
