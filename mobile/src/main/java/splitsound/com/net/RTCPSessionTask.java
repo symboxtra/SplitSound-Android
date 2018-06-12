@@ -60,7 +60,7 @@ public class RTCPSessionTask implements Runnable
                         break;
                     case ACCEPT:
                         appType = 3;
-                        data = "ACCEPT_USER" + RTPNetworking.deviceIP + " " + rtpSess.getSsrc() + " " + rtpSess.CNAME() + "1/0"; //TODO: Accept or deny based on return number and add server to participant list
+                        data = "ACCEPT_USER" + RTPNetworking.deviceIP + " " + rtpSess.getSsrc() + " " + rtpSess.CNAME() + "1/0"; //TODO: Accept or deny based password and client number limit
                         break;
                 }
                 while(data.length() % 4 != 0)

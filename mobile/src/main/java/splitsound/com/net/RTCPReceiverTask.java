@@ -1,10 +1,14 @@
 package splitsound.com.net;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.util.Iterator;
 
 import jlibrtp.Participant;
 import jlibrtp.RTCPAppIntf;
 import jlibrtp.RTPSession;
+import splitsound.com.splitsound.R;
+import splitsound.com.splitsound.SplitSoundApplication;
 import splitsound.com.ui.adapters.RecyclerAdapter;
 import splitsound.com.ui.adapters.ServerInfo;
 
@@ -80,6 +84,17 @@ public class RTCPReceiverTask implements RTCPAppIntf, Runnable
                             exists = true;
                     if(!exists && Boolean.parseBoolean(dataString[4]))
                         rtpSess.addParticipant(var1);
+
+                    if(!Boolean.parseBoolean(dataString[4]))
+                    {
+                        MaterialDialog builder = new MaterialDialog.Builder(SplitSoundApplication.getAppContext())
+                                .iconRes(R.mipmap.access)
+                                .limitIconToDefaultSize() // limits the displayed icon size to 48dp
+                                .title("Access Denied!")
+                                .content("Invalid password")
+                                .positiveText("OK")
+                                .show();
+                    }
                     break;
             }
         }
