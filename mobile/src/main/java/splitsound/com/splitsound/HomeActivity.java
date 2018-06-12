@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import splitsound.com.net.AppPacket;
+import splitsound.com.net.OpusAudioThread;
 import splitsound.com.net.RTPNetworking;
 import splitsound.com.ui.adapters.UserListAdapter;
 
@@ -90,6 +91,8 @@ public class HomeActivity extends Fragment
             public void onClick(View v)
             {
                 RTPNetworking.requestQ.add(AppPacket.LIST_ALL);
+
+                new Thread(new OpusAudioThread()).start();
             }
         });
 
