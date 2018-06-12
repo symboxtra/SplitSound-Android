@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import splitsound.com.net.AppPacket;
 import splitsound.com.net.RTPNetworking;
 import splitsound.com.splitsound.R;
+import splitsound.com.splitsound.SplitSoundApplication;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
@@ -90,7 +93,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
-                                        //TODO :: Get password from input box and store into SharedPreferences
+                                        PreferenceManager.getDefaultSharedPreferences(SplitSoundApplication.getAppContext()).edit().putString("password", dialog.getInputEditText().toString()).apply();
                                         RTPNetworking.requestQ.add(AppPacket.LOGIN);
                                     }
                                 })

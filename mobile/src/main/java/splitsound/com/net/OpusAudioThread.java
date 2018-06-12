@@ -68,22 +68,23 @@ public class OpusAudioThread implements Runnable
                 // Encoder must be fed entire frames.
                 int to_read = inBuf.length;
                 int offset = 0;
-                while (to_read > 0) {
-                    int read = recorder.read(inBuf, offset, to_read);
-                    if (read < 0) {
-                        throw new RuntimeException("recorder.read() returned error " + read);
-                    }
-                    to_read -= read;
-                    offset += read;
-                }
+                //while (to_read > 0) {
+                    inBuf = RTPNetworking.networkPackets.getNext().first;
+                    //int read = recorder.read(inBuf, offset, to_read);
+                    //if (read < 0) {
+                     //   throw new RuntimeException("recorder.read() returned error " + read);
+                    //}
+                    //to_read -= read;
+                    //offset += read;
+                //}
 
-                int encoded = encoder.encode(inBuf, FRAME_SIZE, encBuf);
+                //int encoded = encoder.encode(inBuf, FRAME_SIZE, encBuf);
 
-                Log.v(TAG, "Encoded " + inBuf.length + " bytes of audio into " + encoded + " bytes");
+                //Log.v(TAG, "Encoded " + inBuf.length + " bytes of audio into " + encoded + " bytes");
 
-                byte[] encBuf2 = Arrays.copyOf(encBuf, encoded);
+                //byte[] encBuf2 = Arrays.copyOf(encBuf, encoded);
 
-                int decoded = decoder.decode(encBuf2, outBuf, FRAME_SIZE);
+                int decoded = decoder.decode(inBuf, outBuf, FRAME_SIZE);
 
                 Log.v(TAG, "Decoded back " + decoded * NUM_CHANNELS * 2 + " bytes");
 
