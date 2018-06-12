@@ -7,10 +7,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -67,6 +69,18 @@ public class HomeActivity extends Fragment
             @Override
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
                 Log.i(TAG, "onPanelStateChanged " + newState);
+
+                ImageView image = (ImageView)getView().findViewById(R.id.usr_control);
+                image.setOnClickListener(new ImageView.OnClickListener(){
+
+                    @Override
+                    public void onClick(View v) {
+                        PopupMenu popup = new PopupMenu(getContext(), v);
+                        MenuInflater inflater = popup.getMenuInflater();
+                        inflater.inflate(R.menu.user_option, popup.getMenu());
+                        popup.show();
+                    }
+                });
 
                 ImageView arrowIcon = (ImageView)getView().findViewById(R.id.arrow_icon);
                 TextView swipe = (TextView)getView().findViewById(R.id.swipe);
