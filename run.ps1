@@ -95,6 +95,7 @@ if($useEmulator)
 Write-Host "=== Starting build/test... ===" -Foreground Yellow
 
 # Build and install the APK
+adb uninstall splitsound.com.splitsound
 ./gradlew mobile:clean mobile:build mobile:installDebug
 #adb install -r .\mobile\build\outputs\apk\debug\mobile-debug.apk
 if($LastExitCode -ne 0) {$host.SetShouldExit($LastExitCode)} # Exit with test error code

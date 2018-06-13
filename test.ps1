@@ -92,7 +92,7 @@ if($useEmulator)
 
 ""
 Write-Host "=== Starting build/test... ===" -Foreground Yellow
-
+adb uninstall splitsound.com.splitsound
 ./gradlew mobile:clean mobile:build mobile:jacocoTestReport
 if($LastExitCode -ne 0) {$host.SetShouldExit($LastExitCode)} # Exit with test error code
 

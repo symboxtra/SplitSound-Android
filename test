@@ -104,6 +104,7 @@ echo -e "${YELLOW}=== Starting build/test... ===${NC}"
 echo
 
 # Run test and generate coverage reports
+adb uninstall splitsound.com.splitsound
 error=0
 ./gradlew clean jacocoTestReport
 error=$?
