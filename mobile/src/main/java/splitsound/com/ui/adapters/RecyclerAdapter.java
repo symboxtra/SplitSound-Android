@@ -1,10 +1,6 @@
 package splitsound.com.ui.adapters;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -12,17 +8,14 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -34,14 +27,18 @@ import splitsound.com.net.RTPNetworking;
 import splitsound.com.splitsound.R;
 import splitsound.com.splitsound.SplitSoundApplication;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
-
-    public SharedPreferences shrdPref;
-    public SharedPreferences.Editor spEdit;
+/**
+ * Adapter to store Server Recycler View
+ *
+ * @version 0.0.1
+ * @author Emanuel
+ */
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>
+{
 
     private static MaterialDialog builder;
 
-    //TODO have actual data, this is just sample data
+    //TODO: have actual data, this is just sample data
     private ServerInfo[] servers = {
             new ServerInfo("My server", "80.108.12.11", 3, true),
             new ServerInfo("Jack's Server", "52.235.91.65", 69, true),
@@ -52,39 +49,60 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
   
     private int selectedPosition = 0;
 
+    // Structure that contains view contents
     private static ArrayList<ServerInfo> serversA = new ArrayList<ServerInfo>();
 
+    /**
+     * Add new Server to server list
+     *
+     * @param serv ServerInfo instance
+     */
     public static void addServer(ServerInfo serv)
     {
         serversA.add(serv);
     }
 
-    public static void getServer(int s)
+    /**
+     * Get Server at position s from serverlist
+     *
+     * @param s Position of Object
+     * @return ServerInfo instance
+     */
+    public static ServerInfo getServer(int s)
     {
-        serversA.get(0);
+        return serversA.get(s);
     }
-  
-    //provides the views we need to change
-    class ViewHolder extends RecyclerView.ViewHolder {
+
+    /**
+     * Provides the sub-views we need to change
+     */
+    class ViewHolder extends RecyclerView.ViewHolder
+    {
         public ImageView lockImage;
         public TextView serverName;
         public TextView serverIP;
         public TextView amountOfPeople;
         public boolean locked;
 
-        public ViewHolder(View view){
+        public ViewHolder(View view)
+        {
             super(view);
+
+            // Set resources to the variables for later use
             locked = true;
             lockImage = itemView.findViewById(R.id.lock_icon);
             serverName = itemView.findViewById(R.id.server_name);
             serverIP = itemView.findViewById(R.id.server_address);
             amountOfPeople = itemView.findViewById(R.id.amount_of_people_connected);
+
+            // Click listener for each server card
             view.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(final View v)
                 {
                     if(locked)
                     {
+                        // Display dialog to store password into shared preferences
                         builder = new MaterialDialog.Builder(v.getContext())
                                 .title("Session Password")
                                 .customView(R.layout.pass_dialog, true)
@@ -100,8 +118,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                 .negativeText("CANCEL")
                                 .build();
 
+                        // Add custom view for showing password on button press
                         final View positiveAction = builder.getActionButton(DialogAction.POSITIVE);
-                        //noinspection ConstantConditions
                         final EditText passwordInput = builder.getCustomView().findViewById(R.id.password);
                         passwordInput.addTextChangedListener(
                                 new TextWatcher() {
@@ -135,32 +153,49 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     }
 
-    // Create new views (invoked by the layout manager)
+    /**
+     * Create new recycler views (invoked by the layout manager)
+     *
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @Override
-    public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        // create a new view
+    public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
+        // Create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.server_card, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+    /**
+     * Replace the contents of a view (invoked by the layout manager)
+     *
+     * @param holder
+     * @param position
+     */
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        //sets the lockimage to correspond to if there is a password
+    public void onBindViewHolder(ViewHolder holder, int position)
+    {
+        // Sets the lockimage to correspond to if there is a password
         if(!serversA.get(position).isHasPassword()) {
             holder.lockImage.setImageResource(R.drawable.ic_lock_open_black_24dp);
             holder.locked = false;
         }
-        //sets the server name
+        // Sets the server name
         holder.serverName.setText(serversA.get(position).getName());
-        //sets the amount of people listening
+        // Sets the amount of people listening
         holder.amountOfPeople.setText(String.valueOf(serversA.get(position).getPeopleListening()));
-        //sets the server IP address
+        // Sets the server IP address
         holder.serverIP.setText(serversA.get(position).getIP());
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
+    /**
+     * Return the size of your dataset (invoked by the layout manager)
+     *
+     * @return Size of dataset
+     */
     @Override
     public int getItemCount() {
         return serversA.size();

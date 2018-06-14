@@ -28,9 +28,11 @@ import splitsound.com.ui.adapters.RecyclerAdapter;
 import splitsound.com.ui.adapters.ServerInfo;
 
 /**
- * Created by Neel on 6/1/2018.
+ * Search Sessions Actvity
+ *
+ * @version 0.0.1
+ * @author Emanuel, Neel
  */
-
 public class SessionsActivity extends Fragment
 {
     public String temp = "SessionsActivity";
@@ -43,6 +45,14 @@ public class SessionsActivity extends Fragment
 
     private Thread requestThread;
 
+    /**
+     * Executed when the view is created from the MainActivity
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState)
@@ -51,6 +61,12 @@ public class SessionsActivity extends Fragment
         return inflater.inflate(R.layout.activity_sessions, container, false);
     }
 
+    /**
+     * Creates the menu options on the toolsbar
+     *
+     * @param menu
+     * @param inflater
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
@@ -58,6 +74,12 @@ public class SessionsActivity extends Fragment
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    /**
+     * Executed when options on the toolbar are pressed
+     *
+     * @param item The item that is pressed on the toolbar
+     * @return boolean based on successful actions performed
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -77,6 +99,12 @@ public class SessionsActivity extends Fragment
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Executed after the view is created
+     *
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
@@ -84,7 +112,8 @@ public class SessionsActivity extends Fragment
         getActivity().setTitle("Available Sessions");
         ((DrawerActivityTest)getActivity()).unCollapseBar();
 
-        // Play loading animation uaing GIF
+        // Play loading animation using GIF for random during while
+        // sending RTCP list packets
         gifImage = (GifImageView)getView().findViewById(R.id.splash_loading);
         try{
             InputStream is = getContext().getAssets().open("load_trans.gif");
@@ -99,13 +128,16 @@ public class SessionsActivity extends Fragment
         createRequestThread();
         requestThread.start();
 
+        // Executed after random delay
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 // Stop and remove animation and show the generated list
                 gifImage.stopAnimation();
                 gifImage.setVisibility(View.GONE);
                 try {
+                    // Setup session list recycler view
                     sessRV = (RecyclerView) getView().findViewById(R.id.server_list_recycler_view);
                     sessRV.setHasFixedSize(true);
                     sessRV.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -118,16 +150,15 @@ public class SessionsActivity extends Fragment
             }
         }, new Random().nextInt(5000) + 2000);
 
-
-
         // Create Android pull-down refresh action
         refreshLayout = getView().findViewById(R.id.swipeRefreshLayout);
         swipeListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Refresh items
+                // Refresh by sending list all packets again
                 RTPNetworking.requestQ.add(AppPacket.LIST_ALL);
 
+                // Stop refresh animation after random delay
                 new Handler().postDelayed(new Runnable() {
                     public void run() {
                         refreshLayout = getView().findViewById(R.id.swipeRefreshLayout);
@@ -138,8 +169,14 @@ public class SessionsActivity extends Fragment
         };
         refreshLayout.setOnRefreshListener(swipeListener);
 
+        // Recycler View testing
+        //TODO:: Remove after basic transmission is setup
         RecyclerAdapter.addServer(new ServerInfo("My server", "80.108.12.11", 3, true));
     }
+
+    /**
+     * Creates temporary thread to send list all packets
+     */
     public void createRequestThread()
     {
         requestThread = new Thread(){

@@ -1,43 +1,55 @@
 package splitsound.com.splitsound;
 
 import android.app.ActionBar;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Activity;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.InputType;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
-public class SettingsActivity extends Activity {
+/**
+ * Home Play Activity
+ *
+ * @version 0.0.1
+ * @author Emanuel, Neel
+ */
+public class SettingsActivity extends Activity
+{
 
     public SharedPreferences shrdPref;
     public SharedPreferences.Editor spEdit;
+
     final Context context = this;
 
+    /**
+     * Executed when the application starts
+     * the view is created
+     *
+     * @param savedInstanceState No clue what this is! ;P
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        //add back button to action bar
+
+        // Adds back button to action bar of activity
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        // Open shared preferences instance for editing
         shrdPref = this.getPreferences(Context.MODE_PRIVATE);
         spEdit = shrdPref.edit();
 
-        // Get ListView and set values and clickListener
+        // Get ListView and set values and clickListener for User Settings
         ListView usListView = (ListView) findViewById(R.id.userSettings);
         String[] ary = {"Change username...", "Test"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_view_item, R.id.usrText, ary);
@@ -45,65 +57,44 @@ public class SettingsActivity extends Activity {
         setListViewClickListener(usListView);
     }
 
+    /**
+     * Executed when options on the toolbar are pressed
+     *
+     * @param item The item that is pressed on the toolbar
+     * @return boolean based on successful actions performed
+     */
     @Override
-    //Method to go back home from the back button
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        int id = item.getItemId();
+
+        switch (id)
+        {
             case android.R.id.home:
                 finish();
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
+
         }
+        return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Sets onItemClicked listener to the provided list view
+     *
+     * @param userSettings View that needs to be binded with item click listener
+     */
     private void setListViewClickListener(final ListView userSettings) {
         userSettings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+
                 // Get the selected item text from ListView
                 String selectedItem = (String) parent.getItemAtPosition(position);
 
-                if (selectedItem.contains("username")) {
-                    /*LayoutInflater li = LayoutInflater.from(context);
-                    View promptsView = li.inflate(R.layout.pass_dialog, null);
-
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                            context);
-
-                    // set prompts.xml to alertdialog builder
-                    alertDialogBuilder.setView(promptsView);
-
-                    final EditText userInput = (EditText) promptsView.findViewById(R.id.username);
-                    final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-
-                    // set dialog message
-                    alertDialogBuilder
-                            .setCancelable(false)
-                            .setPositiveButton("OK",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            // get user input and set it to result
-                                            // edit text
-                                            spEdit.putString(getString(R.string.username), userInput.getText().toString());
-                                            spEdit.apply();
-                                            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
-                                        }
-                                    })
-                            .setNegativeButton("Cancel",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
-                                        }
-                                    });
-                    // create alert dialog
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-
-                    // show it
-                    alertDialog.show();*/
-
+                if (selectedItem.contains("username"))
+                {
+                    // Display dialog to store username into shared preferences
                     MaterialDialog builder = new MaterialDialog.Builder(view.getContext())
                             .title("Username")
                             .content("Enter a new username:")
@@ -112,8 +103,7 @@ public class SettingsActivity extends Activity {
 
                                 @Override
                                 public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                                    spEdit.putString(getString(R.string.username), input.toString());
-                                    spEdit.apply();
+                                    PreferenceManager.getDefaultSharedPreferences(SplitSoundApplication.getAppContext()).edit().putString("username", dialog.getInputEditText().toString()).apply();
                                 }
                             })
                             .inputRange(3, 25)
