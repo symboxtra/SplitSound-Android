@@ -3,6 +3,7 @@ package splitsound.com.net;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.provider.Telephony;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.Pair;
 
@@ -17,13 +18,21 @@ import jlibrtp.RTPSession;
 import splitsound.com.splitsound.SplitSoundApplication;
 
 /**
- * Created by Neel on 6/1/2018.
+ * Handles sending RTCP packets to its receivers
+ *
+ * @version 0.0.1
+ * @author Neel
  */
-
 public class RTCPSessionTask implements Runnable
 {
+    // Instance of RTP session created in the main thread
     private RTPSession rtpSess;
 
+    /**
+     * Constructor to start the RTCP sender thread
+     *
+     * @param sess Current RTP session
+     */
     public RTCPSessionTask(RTPSession sess)
     {
         rtpSess = sess;
@@ -32,6 +41,8 @@ public class RTCPSessionTask implements Runnable
     @Override
     public void run()
     {
+        // Infinite loop to keep sending RTCP packets until available
+        // or session executed
         while(true)
         {
             if(!RTPNetworking.requestQ.isEmpty())
@@ -43,29 +54,32 @@ public class RTCPSessionTask implements Runnable
                 AppPacket app = appPair.first;
                 switch (app)
                 {
-                    case LIST_ALL:
+                    case LIST_ALL: // Send packet to list all servers in the network
                         appType = 0;
                         data = "PROVIDE_SERVER_INFO " + RTPNetworking.deviceIP + " " + rtpSess.getSsrc() + " " + rtpSess.CNAME();
                         break;
-                    case INFO:
+                    case INFO: // Send information of device if device is server
                         appType = 1;
                         int sum = 0;
                         for(Iterator<Participant> e = rtpSess.getUnicastReceivers(); e.hasNext();e.next(), sum++);
                         data = "SERVER_INFO " + RTPNetworking.deviceIP + " " + rtpSess.getSsrc() + " " + rtpSess.CNAME() + " " + rtpSess.name + " UNLOCKED " + sum; //TODO: Determine locked/unclocked based on server settings
                         break;
-                    case LOGIN:
+                    case LOGIN: // Send login information to join destination server
                         appType = 2;
                         String pass = PreferenceManager.getDefaultSharedPreferences(SplitSoundApplication.getAppContext()).getString("password", "Default");
                         data = "LOGIN_INFO " + RTPNetworking.deviceIP + " " + rtpSess.getSsrc() + " " + rtpSess.CNAME() + " " + getEncryption(pass);
                         break;
-                    case ACCEPT:
+                    case ACCEPT: // Send acceptance or denial information based on password if device is server
                         appType = 3;
                         data = "ACCEPT_USER" + RTPNetworking.deviceIP + " " + rtpSess.getSsrc() + " " + rtpSess.CNAME() + "1/0"; //TODO: Accept or deny based password and client number limit
                         break;
                 }
+
+                // Pad data with empty strings to pass modularity of 4
                 while(data.length() % 4 != 0)
                     data += " ";
 
+                // Send concatenated data on broadcast IP or specific IP based on requestQ SSRC
                 if(appPair.second == 0)
                 {
                     for (Iterator<Participant> e = rtpSess.getUnicastReceivers(); e.hasNext(); )
@@ -78,6 +92,7 @@ public class RTCPSessionTask implements Runnable
                     rtpSess.sendRTCPAppPacket(appPair.second, appType, "SYSS".getBytes(), data.getBytes());
             }
 
+            // Stall for sanity purposes
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
@@ -87,7 +102,13 @@ public class RTCPSessionTask implements Runnable
     }
 
 
-    // Password Encoding
+    /**
+     * Encodes the provided string into the designated format
+     *
+     * @param encode input string to be encoded
+     * @return Encrypted string
+     */
+    @NonNull
     public static String getEncryption(String encode)
     {
         MessageDigest digest = null;
@@ -102,6 +123,12 @@ public class RTCPSessionTask implements Runnable
         return bytesToHex(encodedHash);
     }
 
+    /**
+     * Converts byte array to hexadecimal String
+     * @param hash byte array to be converted
+     * @return hexadecimal String format
+     */
+    @NonNull
     private static String bytesToHex(byte[] hash) {
         StringBuffer hexString = new StringBuffer();
         for (int i = 0; i < hash.length; i++) {
