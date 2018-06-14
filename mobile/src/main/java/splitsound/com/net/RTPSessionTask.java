@@ -42,11 +42,10 @@ public class RTPSessionTask implements RTPAppIntf, Runnable
             if(e.next().getSSRC() == p.getSSRC())
                 exists = true;
         }
-        if(!exists)
-            rtpSess.addParticipant(p);
 
         byte[] data = frame.getConcatenatedData();
-        RTPNetworking.networkPackets.add(data);
+        if(exists)
+            RTPNetworking.networkPackets.add(data);
         p.debugPrint();
     }
 
