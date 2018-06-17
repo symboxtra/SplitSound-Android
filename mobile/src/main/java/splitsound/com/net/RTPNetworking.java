@@ -53,6 +53,7 @@ public class RTPNetworking implements Runnable {
      */
     public void setup() {
         deviceIP = getIPAddress(true);
+        Log.i("Device Address", deviceIP);
 
         // Create datagram ports for RTP and RTCP communication
         DatagramSocket rtpSocket = null;

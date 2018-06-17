@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -188,7 +189,7 @@ public class SessionsActivity extends Fragment
                         RTPNetworking.requestQ.add(AppPacket.LIST_ALL);
                         Thread.sleep(100);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        Log.i(Thread.currentThread().getName(), "Stoppped sending packets");
                         Thread.currentThread().interrupt();
                     }
                 }

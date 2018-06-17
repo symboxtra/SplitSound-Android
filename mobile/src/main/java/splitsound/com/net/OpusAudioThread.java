@@ -13,9 +13,12 @@ import com.score.rahasak.utils.OpusEncoder;
 import java.util.Arrays;
 
 /**
- * Created by Neel on 6/12/2018.
+ * Main Opus audio thread that handles
+ * audio playback and playback UI/UX interface
+ *
+ * @version 0.0.1
+ * @author Neel
  */
-
 public class OpusAudioThread implements Runnable
 {
     // Sample rate must be one supported by Opus.
@@ -42,7 +45,7 @@ public class OpusAudioThread implements Runnable
                 AudioFormat.ENCODING_PCM_16BIT,
                 minBufSize);
 
-        AudioTrack track = new AudioTrack(AudioManager.STREAM_SYSTEM,
+        AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC,
                 SAMPLE_RATE,
                 NUM_CHANNELS == 1 ? AudioFormat.CHANNEL_OUT_MONO : AudioFormat.CHANNEL_OUT_STEREO,
                 AudioFormat.ENCODING_PCM_16BIT,
@@ -59,43 +62,31 @@ public class OpusAudioThread implements Runnable
         recorder.startRecording();
         track.play();
 
-        byte[] inBuf = new byte[FRAME_SIZE * NUM_CHANNELS * 2];
-        byte[] encBuf = new byte[1024];
+        byte[] inBuf;
         short[] outBuf = new short[FRAME_SIZE * NUM_CHANNELS];
 
         try {
             while (!Thread.interrupted()) {
-                // Encoder must be fed entire frames.
-                int to_read = inBuf.length;
-                int offset = 0;
-                //while (to_read > 0) {
+                if(!RTPNetworking.networkPackets.isEmpty())
+                {
+                    Log.d("Data packet", "Sound data received and to be decoded and played");
+                    // Get encoded data from transmission
                     inBuf = RTPNetworking.networkPackets.getNext().first;
-                    //int read = recorder.read(inBuf, offset, to_read);
-                    //if (read < 0) {
-                     //   throw new RuntimeException("recorder.read() returned error " + read);
-                    //}
-                    //to_read -= read;
-                    //offset += read;
-                //}
 
-                //int encoded = encoder.encode(inBuf, FRAME_SIZE, encBuf);
+                    //int decoded = decoder.decode(inBuf, outBuf, FRAME_SIZE);
 
-                //Log.v(TAG, "Encoded " + inBuf.length + " bytes of audio into " + encoded + " bytes");
+                    //Log.v(TAG, "Decoded " + decoded * NUM_CHANNELS * 2 + " bytes");
 
-                //byte[] encBuf2 = Arrays.copyOf(encBuf, encoded);
+                    track.write(inBuf, 0, inBuf.length * NUM_CHANNELS);
 
-                int decoded = decoder.decode(inBuf, outBuf, FRAME_SIZE);
-
-                Log.v(TAG, "Decoded back " + decoded * NUM_CHANNELS * 2 + " bytes");
-
-                track.write(outBuf, 0, decoded * NUM_CHANNELS);
+                }
             }
-        } finally {
+        }
+        finally {
             recorder.stop();
             recorder.release();
             track.stop();
             track.release();
         }
-
     }
 }
