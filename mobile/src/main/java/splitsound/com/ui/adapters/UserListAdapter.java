@@ -1,18 +1,34 @@
 package splitsound.com.ui.adapters;
 
 import android.media.Image;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.util.ArrayList;
 
+import splitsound.com.net.AppPacket;
+import splitsound.com.net.RTPNetworking;
 import splitsound.com.splitsound.R;
+import splitsound.com.splitsound.SplitSoundApplication;
 
 /**
  * Adapter to store Server Recycler View
@@ -22,6 +38,7 @@ import splitsound.com.splitsound.R;
  */
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHolder>
 {
+    private EditText passwordInput;
 
     //TODO have actual data, this is just sample data
     private UserInfo[] users = {
@@ -115,10 +132,71 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         holder.userOptions.setOnClickListener(new ImageView.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 PopupMenu popup = new PopupMenu(holder.itemView.getContext(), v);
                 MenuInflater inflater = popup.getMenuInflater();
                 inflater.inflate(R.menu.user_option, popup.getMenu());
                 popup.show();
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item)
+                    {
+                        int id = item.getItemId();
+
+                        switch (id)
+                        {
+                            case R.id.kick_user:
+                            {
+                                // Display dialog to get admin password into shared preferences to kick user
+                                MaterialDialog builder = new MaterialDialog.Builder(holder.itemView.getContext())
+                                        .title("Admin Password")
+                                        .customView(R.layout.pass_dialog, true)
+                                        .positiveText("KICK")
+                                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                                                PreferenceManager.getDefaultSharedPreferences(SplitSoundApplication.getAppContext()).edit().putString("password", passwordInput.getText().toString()).apply();
+                                            }
+                                        })
+                                        .negativeText("CANCEL")
+                                        .build();
+                                // Add custom view for showing password on button press
+                                final View positiveAction = builder.getActionButton(DialogAction.POSITIVE);
+                                passwordInput = builder.getCustomView().findViewById(R.id.password);
+                                passwordInput.addTextChangedListener(
+                                        new TextWatcher() {
+                                            @Override
+                                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                                            @Override
+                                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                                positiveAction.setEnabled(s.toString().trim().length() > 0);
+                                            }
+
+                                            @Override
+                                            public void afterTextChanged(Editable s) {}
+                                        });
+
+                                // Toggling the show password CheckBox will mask or unmask the password input EditText
+                                CheckBox checkbox = builder.getCustomView().findViewById(R.id.showPassword);
+                                checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                    @Override
+                                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                        passwordInput.setInputType(!isChecked ? InputType.TYPE_TEXT_VARIATION_PASSWORD : InputType.TYPE_CLASS_TEXT);
+                                        passwordInput.setTransformationMethod(!isChecked ? PasswordTransformationMethod.getInstance() : null);
+                                    }
+                                });
+                                builder.show();
+                                positiveAction.setEnabled(false);
+                                return true;
+                            }
+                        }
+
+                        return false;
+                    }
+                });
             }
         });
     }

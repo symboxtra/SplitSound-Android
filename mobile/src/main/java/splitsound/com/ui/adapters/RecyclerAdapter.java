@@ -81,6 +81,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         public TextView amountOfPeople;
         public boolean locked;
 
+        private EditText passwordInput;
+
         public ViewHolder(View view)
         {
             super(view);
@@ -108,16 +110,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
-                                        PreferenceManager.getDefaultSharedPreferences(SplitSoundApplication.getAppContext()).edit().putString("password", dialog.getInputEditText().toString()).apply();
+                                        PreferenceManager.getDefaultSharedPreferences(SplitSoundApplication.getAppContext()).edit().putString("password", passwordInput.getText().toString()).apply();
                                         RTPNetworking.requestQ.add(AppPacket.LOGIN);
                                     }
                                 })
                                 .negativeText("CANCEL")
                                 .build();
-
                         // Add custom view for showing password on button press
                         final View positiveAction = builder.getActionButton(DialogAction.POSITIVE);
-                        final EditText passwordInput = builder.getCustomView().findViewById(R.id.password);
+                        passwordInput = builder.getCustomView().findViewById(R.id.password);
                         passwordInput.addTextChangedListener(
                                 new TextWatcher() {
                                     @Override
