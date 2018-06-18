@@ -35,9 +35,6 @@ import splitsound.com.splitsound.SplitSoundApplication;
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>
 {
-
-    private static MaterialDialog builder;
-
     //TODO: have actual data, this is just sample data
     private ServerInfo[] servers = {
             new ServerInfo("My server", "80.108.12.11", 3, true),
@@ -103,7 +100,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     if(locked)
                     {
                         // Display dialog to store password into shared preferences
-                        builder = new MaterialDialog.Builder(v.getContext())
+                        MaterialDialog builder = new MaterialDialog.Builder(v.getContext())
                                 .title("Session Password")
                                 .customView(R.layout.pass_dialog, true)
                                 .positiveText("CONNECT")

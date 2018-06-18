@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -95,7 +96,7 @@ public class SettingsActivity extends Activity
                 if (selectedItem.contains("username"))
                 {
                     // Display dialog to store username into shared preferences
-                    MaterialDialog builder = new MaterialDialog.Builder(view.getContext())
+                    new MaterialDialog.Builder(view.getContext())
                             .title("Username")
                             .content("Enter a new username:")
                             .inputType(InputType.TYPE_CLASS_TEXT)
@@ -103,7 +104,13 @@ public class SettingsActivity extends Activity
 
                                 @Override
                                 public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                                    PreferenceManager.getDefaultSharedPreferences(SplitSoundApplication.getAppContext()).edit().putString("username", dialog.getInputEditText().toString()).apply();
+                                    if(input.toString().matches("^[a-zA-Z0-9]*$"))
+                                    {
+                                        PreferenceManager.getDefaultSharedPreferences(SplitSoundApplication.getAppContext()).edit().putString("username", input.toString()).apply();
+                                        Toast.makeText(context, "Username changed: " + PreferenceManager.getDefaultSharedPreferences(SplitSoundApplication.getAppContext()).getString("username", "NULL"), Toast.LENGTH_SHORT).show();
+                                    }
+                                    else
+                                        Toast.makeText(context, "Invalid username", Toast.LENGTH_SHORT).show();
                                 }
                             })
                             .inputRange(3, 25)
