@@ -1,10 +1,13 @@
 package splitsound.com.ui.adapters;
 
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -61,6 +64,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         public ImageView muteImage;
         public TextView userName;
         public TextView userDevice;
+        public ImageView userOptions;
 
         public ViewHolder(View view)
         {
@@ -70,6 +74,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
             muteImage = itemView.findViewById(R.id.mute_icon);
             userName = itemView.findViewById(R.id.user_name);
             userDevice = itemView.findViewById(R.id.device_name);
+            userOptions = itemView.findViewById(R.id.usr_control);
         }
 
     }
@@ -97,7 +102,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
      * @param position
      */
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position)
+    public void onBindViewHolder(final ViewHolder holder, int position)
     {
         // Sets the lockimage to correspond to if there is a password
         if(users[position].isMuted())
@@ -106,6 +111,16 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         holder.userName.setText(users[position].getName());
         // Sets the server IP address
         holder.userDevice.setText("Listening on " + users[position].getDeviceName());
+        // Sets the listener on options
+        holder.userOptions.setOnClickListener(new ImageView.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(holder.itemView.getContext(), v);
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.user_option, popup.getMenu());
+                popup.show();
+            }
+        });
     }
 
     /**

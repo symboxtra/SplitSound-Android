@@ -93,18 +93,6 @@ public class HomeActivity extends Fragment
 
                 // Changes image and text of the info bar based on panel position
                 ImageView image = (ImageView)getView().findViewById(R.id.usr_control);
-                image.setOnClickListener(new ImageView.OnClickListener(){
-
-                    @Override
-                    public void onClick(View v)
-                    {
-                        // Pop-up menu for extra actions
-                        PopupMenu popup = new PopupMenu(getContext(), v);
-                        MenuInflater inflater = popup.getMenuInflater();
-                        inflater.inflate(R.menu.user_option, popup.getMenu());
-                        popup.show();
-                    }
-                });
 
                 // Change arrow image
                 ImageView arrowIcon = (ImageView)getView().findViewById(R.id.arrow_icon);
