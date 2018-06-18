@@ -42,11 +42,11 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
     //TODO have actual data, this is just sample data
     private UserInfo[] users = {
-            new UserInfo("Me", "Nexus 6P", true),
-            new UserInfo("Emanuel", "OnePlus69", false),
-            new UserInfo("Char*", "Test", false),
-            new UserInfo("Jack", "Some phone", true),
-            new UserInfo("Aneesh", "iPhone", false)
+            new UserInfo("Me", "Nexus 6P", true, 0),
+            new UserInfo("Emanuel", "OnePlus69", false, 0),
+            new UserInfo("Char*", "Test", false, 0),
+            new UserInfo("Jack", "Some phone", true, 0),
+            new UserInfo("Aneesh", "iPhone", false, 0)
     };
 
     // Structure that contains view contents
@@ -157,7 +157,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
                                             @Override
                                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
-                                                PreferenceManager.getDefaultSharedPreferences(SplitSoundApplication.getAppContext()).edit().putString("password", passwordInput.getText().toString()).apply();
+                                                PreferenceManager.getDefaultSharedPreferences(SplitSoundApplication.getAppContext()).edit().putString("adminPassword", passwordInput.getText().toString()).apply();
                                             }
                                         })
                                         .negativeText("CANCEL")

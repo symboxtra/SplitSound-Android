@@ -15,12 +15,14 @@ public class UserInfo
      * @param name Name of user
      * @param deviceName Name of device used
      * @param muted User's mute status
+     * @param ssrc SSRC of the user in the network
      */
-    public UserInfo(String name, String deviceName, boolean muted)
+    public UserInfo(String name, String deviceName, boolean muted, int ssrc)
     {
         this.name = name;
         this.deviceName = deviceName;
         this.muted = muted;
+        this.ssrc = ssrc;
     }
 
     /**
@@ -77,8 +79,26 @@ public class UserInfo
         this.muted = muted;
     }
 
-    // User properties
+    /**
+     * Gets the SSRC of the user in the network
+     * @return ssrc of the user
+     */
+    public int getSSRC()
+    {
+        return ssrc;
+    }
+
+    /**
+     * Sets the SSRC of the user in the network
+     * @param ssrc ssrc of the new user
+     */
+    public void setSSRC(int ssrc)
+    {
+        this.ssrc = ssrc;
+    }
+
     private String deviceName;
     private String name;
     private boolean muted;
+    private int ssrc;
 }

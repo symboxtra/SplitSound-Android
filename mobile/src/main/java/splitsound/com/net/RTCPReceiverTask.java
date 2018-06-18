@@ -1,5 +1,8 @@
 package splitsound.com.net;
 
+import android.provider.Telephony;
+import android.util.Log;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.Iterator;
@@ -104,6 +107,21 @@ public class RTCPReceiverTask implements RTCPAppIntf, Runnable
                                 .positiveText("OK")
                                 .show();
                     }
+                    break;
+                case "KICK_USER":
+                    boolean exit = false;
+                    Participant p = null;
+                    for (Iterator<Participant> e = rtpSess.getUnicastReceivers(); e.hasNext(); )
+                    {
+                        p = e.next();
+                        if(p.getSSRC() == Integer.parseInt(dataString[4]))
+                        {
+                            exit = true;
+                            break;
+                        }
+                    }
+                    if(exit)
+                        rtpSess.removeParticipant(p);
                     break;
             }
         }

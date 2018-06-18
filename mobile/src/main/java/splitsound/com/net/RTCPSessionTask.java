@@ -71,8 +71,11 @@ public class RTCPSessionTask implements Runnable
                         break;
                     case ACCEPT: // Send acceptance or denial information based on password if device is server
                         appType = 3;
-                        data = "ACCEPT_USER" + RTPNetworking.deviceIP + " " + rtpSess.getSsrc() + " " + rtpSess.CNAME() + "1/0"; //TODO: Accept or deny based password and client number limit
+                        data = "ACCEPT_USER " + RTPNetworking.deviceIP + " " + rtpSess.getSsrc() + " " + rtpSess.CNAME() + "1/0"; //TODO: Accept or deny based password and client number limit
                         break;
+                    case KICK:
+                        appType = 4;
+                        data = "KICK_USER " + RTPNetworking.deviceIP + " " + rtpSess.getSsrc() + " " + rtpSess.CNAME() + " "; //TODO: Get kicked user ssrc
                 }
 
                 // Pad data with empty strings to pass modularity of 4
