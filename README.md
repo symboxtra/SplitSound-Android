@@ -160,6 +160,6 @@ Code coverage can be acquired using the custom gradle task `jacocoTestReport`.
 
 The XML and HTML reports can be found at `mobile/build/reports/jacoco/jacocoTestReport`.
 
-Coverage data is uploaded to and tracked on [CodeCov.io](https://codecov.io/gh/symboxtra/SplitSound-Android).
+Coverage data is uploaded to and tracked on [codecov.io](https://codecov.io/gh/symboxtra/SplitSound-Android).
 The CI server performs the upload after successfully running the test suite.
 
