@@ -1,4 +1,4 @@
-[![Jenkins Server Status](https://img.shields.io/badge/dynamic/json.svg?label=Jenkins%20Server&url=http%3A%2F%2Fsymboxtra.dynu.net%2Fjenkins%2Fapi/json&query=description&colorB=0b7cbd)](http://jenkins.symboxtra.tk "Jenkins Server Status")
+[![Jenkins Server Status](https://img.shields.io/badge/dynamic/json.svg?label=Jenkins%20Server&url=http%3A%2F%2Fsymboxtra.tk%2Fjenkins%2F/status_badge.php&query=status&colorB=0b7cbd)](http://jenkins.symboxtra.tk "Jenkins Server Status")
 [![](http://jenkins.symboxtra.tk/buildStatus/icon?job=SplitSound-Android)](http://jenkins.symboxtra.tk/job/SplitSound-Android "Jenkins Build Status")
 [![Travis Build Status](https://travis-ci.org/symboxtra/SplitSound-Android.svg?branch=master)](https://travis-ci.org/symboxtra/SplitSound-Android/builds "Travis Build Status (unit tests only)")
 [![Coverage Status](https://codecov.io/gh/symboxtra/SplitSound-Android/branch/master/graph/badge.svg)](https://codecov.io/gh/symboxtra/SplitSound-Android)
@@ -12,10 +12,19 @@ We welcome contributions from outside collaborators. Feel free to fork and open 
 
 ## Branching ##
 
-Every feature/line of development should have it's own branch.
+Every feature/line of development should have it's own branch. 
+Unless you know what you're doing, this branch should typically be a direct child of the `master` branch (see example below).
 Releases accumulate in release branches before being merged into master.
 
-Merging to master requires passing at least Jenkins CI and a review from at least one person on the team.
+Merging to master requires passing at least Jenkins CI (see [CI](#continuous-integration)) and a review from at least one member of the team.
+
+#### Example: ####
+```
+git checkout master                     # Switch to the master branch
+git pull origin master                  # Pull down latest changes
+git checkout -b add-crazy-new-feature   # Create your new branch
+                                        # do werk
+```
 
 ## Development ##
 
@@ -46,15 +55,17 @@ To simplify building and testing, a number of platform specific scripts are incl
 
 ### Build/Test Scripts ###
 
-The commands `./run` and `./test` can be used to run (installs on emulator or attached device) and test the application. 
+The commands `./run` and `./test` can be used to run (install the application on an emulator and/or attached device) and test the application. 
 `./test` is definitely the go-to for most of us. It's also what the CI server uses and again is a pretty good indication of whether or not anything broke before you push.
 
-Gradle tasks (ex. build, clean, test, installDebug) can always be run on the project using `./gradlew task_name` from the project root.
+Gradle tasks (ex. build, clean, test, installDebug) can always be run using `./gradlew task_name` from the project root.
 This is essentially what's happening under the hood of the other scripts.
 
- ### Install script ###
+More information on testing and the test script can be found [here](#testing).
+
+### Install script ###
  
- #### Unix/Unix-like ####
+#### Unix/Unix-like ####
  
 If you don't want to worry about packages and they're associated nonsense, executing `source install-sdk-tools.sh` will install the Android SDK and required packages (listed below) to `$HOME/Android/Sdk`. 
 The `source` part of the command ensures that any exported variables are brought into your current shell session. This means that the installed tools will be on `PATH` and usable for the rest of your shell session.
@@ -106,4 +117,49 @@ This is a copy of our installed sdkmanager packages (updated 6/9/2018). If yours
 Note: `system-images;android-27;google_apis;x86` is architecture dependent in the above configuration.
 If you don't have an x86 based computer, you might be out of luck.
 Google stopped distributing ARM based images at API level 25.
+
+
+
+## Testing ##
+
+Unit tests can be found under `mobile/src/test/`.
+
+Instrumented tests can be found under `mobile/src/androidTest`. 
+We're currently working through an issue where separating our instrumentation tests into more than one file causes our test orchestrator process to crash.
+For the time being, all instrumented tests are stored in a single file.
+
+Test can be run on all platforms using the command `./test`. 
+With no options, the script will create an avd image, start an emulator using that avd image, and run the test suite on both the emulator and any connected devices.
+The following options are currently available:
+
+```
+Usage: test [-a=avd device name] [-s] [-h]
+   -a Use the provided avd image instead of the default
+   -s Run emulator with no visible window (headless).
+   -p Use an attached phone. Don't start the emulator.
+```
+
+
+
+## Continuous Integration ##
+
+The two CI services for this project, Jenkins and Travis, handle the automated building and testing of the application after every push to GitHub.
+
+Travis handles only unit tests and is a shared service hosted at https://travis-ci.org/symboxtra/SplitSound-Android/builds.
+
+Jenkins handles both unit and integration tests and is our own service hosted at http://jenkins.symboxtra.tk.
+
+The Jenkins server has two separate pipelines. One serves the `master` branch while the other handles all other branches.
+Because of the way Jenkins handles badging, this ensures that the status of the `master` is not obfuscated by any experimental development.
+
+
+
+## Code Coverage ##
+
+Code coverage can be acquired using the custom gradle task `jacocoTestReport`. 
+
+The XML and HTML reports can be found at `mobile/build/reports/jacoco/jacocoTestReport`.
+
+Coverage data is uploaded to and tracked on [CodeCov.io](https://codecov.io/gh/symboxtra/SplitSound-Android).
+The CI server performs the upload after successfully running the test suite.
 
