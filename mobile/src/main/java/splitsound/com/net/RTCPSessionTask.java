@@ -76,6 +76,7 @@ public class RTCPSessionTask implements Runnable
                     case KICK:
                         appType = 4;
                         data = "KICK_USER " + RTPNetworking.deviceIP + " " + rtpSess.getSsrc() + " " + rtpSess.CNAME() + " "; //TODO: Get kicked user ssrc
+                        break;
                 }
 
                 // Pad data with empty strings to pass modularity of 4
