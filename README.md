@@ -12,7 +12,7 @@ We welcome contributions from outside collaborators. Feel free to fork and open 
 
 ## Branching ##
 
-Every feature/line of development should have it's own branch. 
+Every feature/line of development should have its own branch. 
 Unless you know what you're doing, this branch should typically be a direct child of the `master` branch (see example below).
 Releases accumulate in release branches before being merged into master.
 
@@ -67,7 +67,7 @@ More information on testing and the test script can be found [here](#testing).
  
 #### Unix/Unix-like ####
  
-If you don't want to worry about packages and they're associated nonsense, executing `source install-sdk-tools.sh` will install the Android SDK and required packages (listed below) to `$HOME/Android/Sdk`. 
+If you don't want to worry about packages and their associated nonsense, executing `source install-sdk-tools.sh` will install the Android SDK and required packages (listed below) to `$HOME/Android/Sdk`. 
 The `source` part of the command ensures that any exported variables are brought into your current shell session. This means that the installed tools will be on `PATH` and usable for the rest of your shell session.
 
 Before installing anything, the script also checks if `$HOME/Android/Sdk` already exists.
