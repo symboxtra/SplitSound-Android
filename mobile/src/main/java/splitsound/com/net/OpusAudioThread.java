@@ -21,6 +21,9 @@ import java.util.Arrays;
  */
 public class OpusAudioThread implements Runnable
 {
+
+    public static final String Broadcast_PLAY_NEW_AUDIO = "androidpodcast.com.audioapp.PlayNewAudio";
+
     // Sample rate must be one supported by Opus.
     static final int SAMPLE_RATE = 44100;
 

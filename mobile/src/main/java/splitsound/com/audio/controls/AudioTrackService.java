@@ -14,7 +14,9 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.AudioTrack;
+import android.media.MediaMetadata;
 import android.media.MediaPlayer;
+import android.media.session.MediaController;
 import android.media.session.MediaSession;
 import android.media.session.MediaSessionManager;
 import android.os.Binder;
@@ -24,12 +26,12 @@ import android.provider.MediaStore;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.app.NotificationCompat;
 import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 import java.util.ArrayList;
 
+import splitsound.com.net.OpusAudioThread;
 import splitsound.com.splitsound.R;
 
 /**
@@ -57,9 +59,6 @@ public class AudioTrackService extends Service implements
     private PhoneStateListener phoneStateListener;
     private TelephonyManager telephonyManager;
 
-    //Sets the type of media (Stream/Storage)
-    public boolean stream = true;
-
     // Sample rate must be one supported by Opus.
     static final int SAMPLE_RATE = 44100;
 
@@ -70,27 +69,26 @@ public class AudioTrackService extends Service implements
     // 1 or 2
     static final int NUM_CHANNELS = 1;
 
-    /*Sets the type of data source*/
-    public void setStreamType(boolean stream){this.stream = stream;}
-
     public void initAudioTrack()
     {
-
+        // Get the most minimum buffer size based on channel and encoding
         int minBufSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, NUM_CHANNELS == 1 ? AudioFormat.CHANNEL_IN_MONO : AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT);
 
+        // Initialize audioTrack
         audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
                 SAMPLE_RATE,
                 NUM_CHANNELS == 1 ? AudioFormat.CHANNEL_OUT_MONO : AudioFormat.CHANNEL_OUT_STEREO,
                 AudioFormat.ENCODING_PCM_16BIT,
                 minBufSize,
                 AudioTrack.MODE_STREAM);
-
-
     }
 
     public void onCreate()
     {
         super.onCreate();
+        callStateListener();
+        registerBecomingNoisyReceiver();
+        register_playNewAudio();
     }
 
     @Override
@@ -156,6 +154,7 @@ public class AudioTrackService extends Service implements
             }
             buildNotification(PlaybackStatus.PLAYING);
         }
+
         handleIncomingActions(intent);
 
         return super.onStartCommand(intent, flags, startId);
@@ -200,7 +199,7 @@ public class AudioTrackService extends Service implements
     /*Stops media*/
     public void stopMedia()
     {
-        if(mediaPlayer == null)return;
+        if(audioTrack == null)return;
         if(audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING)
             audioTrack.stop();
     }
@@ -242,7 +241,7 @@ public class AudioTrackService extends Service implements
 
     private void register_playNewAudio()
     {
-        IntentFilter filter = new IntentFilter(MainActivity.Broadcast_PLAY_NEW_AUDIO);
+        IntentFilter filter = new IntentFilter(OpusAudioThread.Broadcast_PLAY_NEW_AUDIO);
         registerReceiver(playNewAudio, filter);
     }
 
@@ -296,8 +295,8 @@ public class AudioTrackService extends Service implements
 
     //Initialize media session
     private MediaSessionManager mediaSessionManager;
-    private MediaSessionCompat mediaSession;
-    private MediaControllerCompat.TransportControls transportControls;
+    private MediaSession mediaSession;
+    private MediaController.TransportControls transportControls;
 
     //AudioPlayer notification ID
     private static final int NOTIFICATION_ID = 101;
@@ -307,15 +306,15 @@ public class AudioTrackService extends Service implements
         if(mediaSession!= null)return;
 
         mediaSessionManager = (MediaSessionManager)getSystemService(Context.MEDIA_SESSION_SERVICE);
-        mediaSession = new MediaSessionCompat(getApplicationContext(),"AudioPlayer");
+        mediaSession = new MediaSession(getApplicationContext(),"AudioPlayer");
         transportControls = mediaSession.getController().getTransportControls();
         mediaSession.setActive(true);
-        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        mediaSession.setFlags(MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
         updateMetaData();
 
 
         //Attach Callback to recieve MediaSession Updates
-        mediaSession.setCallback(new MediaSessionCompat.Callback()
+        mediaSession.setCallback(new MediaSession.Callback()
         {
             @Override
             public void onPlay()
@@ -370,11 +369,11 @@ public class AudioTrackService extends Service implements
     {
         Bitmap albumArt = BitmapFactory.decodeResource(getResources(), R.drawable.image);
 
-        mediaSession.setMetadata(new MediaMetadataCompat.Builder()
-                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, albumArt)
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, "Artisite")
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, "Where is this?")
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, "Am I player?")
+        mediaSession.setMetadata(new MediaMetadata.Builder()
+                .putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, albumArt)
+                .putString(MediaMetadata.METADATA_KEY_ARTIST, "Artisite")
+                .putString(MediaMetadata.METADATA_KEY_ALBUM, "Where is this?")
+                .putString(MediaMetadata.METADATA_KEY_TITLE, "Am I player?")
                 .build());
     }
 
