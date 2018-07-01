@@ -22,7 +22,7 @@ import java.util.Arrays;
 public class OpusAudioThread implements Runnable
 {
     // Sample rate must be one supported by Opus.
-    static final int SAMPLE_RATE = 8000;
+    static final int SAMPLE_RATE = 44100;
 
     // Number of samples per frame is not arbitrary,
     // it must match one of the predefined values, specified in the standard.
@@ -39,11 +39,6 @@ public class OpusAudioThread implements Runnable
 
         // Testing: Initialize Recorder
         int minBufSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, NUM_CHANNELS == 1 ? AudioFormat.CHANNEL_IN_MONO : AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT);
-        AudioRecord recorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
-                SAMPLE_RATE,
-                NUM_CHANNELS == 1 ? AudioFormat.CHANNEL_IN_MONO : AudioFormat.CHANNEL_IN_STEREO,
-                AudioFormat.ENCODING_PCM_16BIT,
-                minBufSize);
 
         AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC,
                 SAMPLE_RATE,
@@ -52,39 +47,26 @@ public class OpusAudioThread implements Runnable
                 minBufSize,
                 AudioTrack.MODE_STREAM);
 
-
-        OpusEncoder encoder = new OpusEncoder();
-        encoder.init(SAMPLE_RATE, NUM_CHANNELS, OpusEncoder.OPUS_APPLICATION_VOIP);
-
-        OpusDecoder decoder = new OpusDecoder();
-        decoder.init(SAMPLE_RATE, NUM_CHANNELS);
-
-        recorder.startRecording();
         track.play();
 
         byte[] inBuf;
         short[] outBuf = new short[FRAME_SIZE * NUM_CHANNELS];
 
+        int packetsPlayed = 0;
+
         try {
             while (!Thread.interrupted()) {
                 if(!RTPNetworking.networkPackets.isEmpty())
                 {
-                    Log.d("Data packet", "Sound data received and to be decoded and played");
                     // Get encoded data from transmission
                     inBuf = RTPNetworking.networkPackets.getNext().first;
 
-                    //int decoded = decoder.decode(inBuf, outBuf, FRAME_SIZE);
-
-                    //Log.v(TAG, "Decoded " + decoded * NUM_CHANNELS * 2 + " bytes");
-
                     track.write(inBuf, 0, inBuf.length * NUM_CHANNELS);
-
+                    Log.d("Data packet", ++packetsPlayed + " packets played. Sound data received and to be decoded and played");
                 }
             }
         }
         finally {
-            recorder.stop();
-            recorder.release();
             track.stop();
             track.release();
         }
