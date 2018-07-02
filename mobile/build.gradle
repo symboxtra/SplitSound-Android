@@ -71,6 +71,8 @@ android {
                 cppFlags "-std=c++14 -frtti -fexceptions"
             }
         }
+
+        buildConfigField 'String', 'REVISION', "\"$gitVersionName\""
     }
 
     // Turn off animations for Unit testing

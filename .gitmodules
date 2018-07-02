@@ -1,0 +1,3 @@
+[submodule "gradle-GitVersioner"]
+	path = gradle-GitVersioner
+	url = https://github.com/symboxtra/gradle-GitVersioner

@@ -26,3 +26,14 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext.gitVersioner = [
+        defaultBranch            : "master",
+        stableBranches           : ["release"],
+        localChangesCountEnabled : true,
+        snapshotEnabled          : false
+]
+apply from: 'gradle-GitVersioner/git-versioner.gradle'
+
+println("Build Number: $gitVersionName")
+
