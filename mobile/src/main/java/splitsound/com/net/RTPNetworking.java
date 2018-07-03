@@ -18,6 +18,9 @@ import jlibrtp.RTPSession;
  * @author Neel
  */
 public class RTPNetworking implements Runnable {
+
+    private static final String TAG = "RTPNetworking";
+
     private final int RTPPort = 8000;
     private final int RTCPPort = 6000;
 
@@ -52,6 +55,9 @@ public class RTPNetworking implements Runnable {
      * setting up necessary RTP/RTCP sessions or threads
      */
     public void setup() {
+
+        Log.i(TAG, "Main networking thread initiated");
+
         deviceIP = getIPAddress(true);
         Log.i("Device Address", deviceIP);
 
@@ -62,8 +68,8 @@ public class RTPNetworking implements Runnable {
             rtpSocket = new DatagramSocket(RTPPort);
             rtcpSocket = new DatagramSocket(RTCPPort);
         } catch (Exception e) {
-            Log.e("Datagram Socket", "RTPSession failed to obtain port");
-            Log.e("Error: ", e.toString());
+            Log.e(TAG, "Datagram Socket: RTPSession failed to obtain port");
+            Log.e(TAG, e.toString());
         }
 
         // Create the RTP session and setup RTP and RTCP channels
@@ -86,8 +92,10 @@ public class RTPNetworking implements Runnable {
             // Start RTCP sender thread
             new Thread(new RTCPSessionTask(sess)).start();
 
+            Log.i(TAG, "All sub-threads initiated");
+
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, e.toString());
         }
     }
 

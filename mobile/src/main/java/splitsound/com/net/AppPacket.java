@@ -5,7 +5,6 @@ package splitsound.com.net;
  *
  * @version 0.0.1
  * @author Neel
- * Created by Neel on 6/1/2018.
  */
 public enum AppPacket
 {

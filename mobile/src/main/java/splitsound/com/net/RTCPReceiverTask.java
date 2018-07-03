@@ -23,6 +23,8 @@ import splitsound.com.ui.adapters.ServerInfo;
  */
 public class RTCPReceiverTask implements RTCPAppIntf, Runnable
 {
+    private static final String TAG = "RTCPReceiverTask";
+
     // Instance of RTP session created in the main thread
     private RTPSession rtpSess;
 
@@ -37,7 +39,10 @@ public class RTCPReceiverTask implements RTCPAppIntf, Runnable
     }
 
     @Override
-    public void run() {}
+    public void run()
+    {
+        Log.i(TAG, "Thread initiated");
+    }
 
     @Override
     public void SRPktReceived(long ssrc, long ntpHighOrder, long ntpLowOrder, long rtpTimestamp, long packetCount, long octetCount, long[] reporteeSsrc, int[] lossFraction, int[] cumulPacketsLost, long[] extHighSeq, long[] interArrivalJitter, long[] lastSRTimeStamp, long[] delayLastSR)

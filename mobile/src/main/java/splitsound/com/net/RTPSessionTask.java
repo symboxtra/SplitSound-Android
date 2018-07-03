@@ -1,6 +1,7 @@
 package splitsound.com.net;
 
 import android.app.Activity;
+import android.util.Log;
 
 import java.util.Iterator;
 
@@ -17,6 +18,9 @@ import jlibrtp.RTPSession;
  */
 public class RTPSessionTask implements RTPAppIntf, Runnable
 {
+
+    private static final String TAG = "RTPSessionTask";
+
     // Instance of RTP session created in the main thread
     private RTPSession rtpSess;
 
@@ -31,7 +35,10 @@ public class RTPSessionTask implements RTPAppIntf, Runnable
     }
 
     @Override
-    public void run() {}
+    public void run()
+    {
+        Log.i(TAG, "Thread initiated");
+    }
 
     @Override
     public int frameSize(int payloadType)

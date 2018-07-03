@@ -25,6 +25,8 @@ import splitsound.com.splitsound.SplitSoundApplication;
  */
 public class RTCPSessionTask implements Runnable
 {
+    private static final String TAG = "RTCPSessionTask";
+
     // Instance of RTP session created in the main thread
     private RTPSession rtpSess;
 
@@ -41,6 +43,8 @@ public class RTCPSessionTask implements Runnable
     @Override
     public void run()
     {
+        Log.i(TAG, "Thread initiated");
+
         // Infinite loop to keep sending RTCP packets until available
         // or session executed
         while(true)
