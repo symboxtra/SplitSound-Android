@@ -24,4 +24,5 @@
     <string name="play_button">Play Button</string>
     <string name="skip_back_button">skip back button</string>
     <string name="skip_forward_button">skip forward button</string>
+    <string name="stream_text">Streaming from [comp. name]...</string>
 </resources>
