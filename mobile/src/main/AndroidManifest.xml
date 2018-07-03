@@ -3,6 +3,8 @@
     package="splitsound.com.splitsound">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <permission android:name="android.permission.MEDIA_CONTENT_CONTROL"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
@@ -14,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@android:style/ThemeOverlay.Material.Dark">
+        <service android:name="splitsound.com.audio.controls.AudioTrackService"/>
         <activity
             android:name="splitsound.com.splitsound.DrawerActivityTest"
             android:label="@string/title_activity_drawer_test"

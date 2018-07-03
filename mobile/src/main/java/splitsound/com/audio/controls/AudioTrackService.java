@@ -1,5 +1,7 @@
 package splitsound.com.audio.controls;
 
+import android.app.NotificationChannel;
+import android.os.Build;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -23,16 +25,20 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.provider.MediaStore;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.app.NotificationCompat;
 import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import java.util.ArrayList;
 
 import splitsound.com.net.OpusAudioThread;
 import splitsound.com.splitsound.R;
+import splitsound.com.splitsound.SplitSoundApplication;
 
 /**
  * Created by Neel on 7/1/2018.
@@ -81,10 +87,13 @@ public class AudioTrackService extends Service implements
                 AudioFormat.ENCODING_PCM_16BIT,
                 minBufSize,
                 AudioTrack.MODE_STREAM);
+
+        Log.e("Init", "Audio initialized");
     }
 
     public void onCreate()
     {
+        Log.e("Sup", "HOHOHO");
         super.onCreate();
         callStateListener();
         registerBecomingNoisyReceiver();
@@ -125,7 +134,7 @@ public class AudioTrackService extends Service implements
     /*Requests the audio focus from the Android service*/
     private boolean requestAudioFocus()
     {
-        audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        audioManager = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
     }
@@ -133,6 +142,8 @@ public class AudioTrackService extends Service implements
     /*Removes the audio focus and provides it back to the android service*/
     private boolean removeAudioFocus()
     {
+        if(audioManager == null)
+            Log.e("Haha", "Temp");
         return AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioManager.abandonAudioFocus(this);
     }
 
@@ -147,6 +158,7 @@ public class AudioTrackService extends Service implements
             try {
                 initMediaSession();
                 initAudioTrack();
+                Log.e("Here", "Test");
             } catch(RemoteException e)
             {
                 e.printStackTrace();
@@ -231,7 +243,6 @@ public class AudioTrackService extends Service implements
     private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
             stopMedia();
             initAudioTrack();
             updateMetaData();
@@ -248,7 +259,7 @@ public class AudioTrackService extends Service implements
     /*Handle incoming phone calls*/
     private void callStateListener() {
         // Get the telephony manager
-        telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
         //Starting listening for PhoneState changes
         phoneStateListener = new PhoneStateListener()
         {
@@ -299,13 +310,13 @@ public class AudioTrackService extends Service implements
     private MediaController.TransportControls transportControls;
 
     //AudioPlayer notification ID
-    private static final int NOTIFICATION_ID = 101;
+    private static final int NOTIFICATION_ID = 102;
 
     private void initMediaSession() throws RemoteException
     {
         if(mediaSession!= null)return;
 
-        mediaSessionManager = (MediaSessionManager)getSystemService(Context.MEDIA_SESSION_SERVICE);
+        mediaSessionManager = (MediaSessionManager)getApplicationContext().getSystemService(Context.MEDIA_SESSION_SERVICE);
         mediaSession = new MediaSession(getApplicationContext(),"AudioPlayer");
         transportControls = mediaSession.getController().getTransportControls();
         mediaSession.setActive(true);
@@ -379,6 +390,7 @@ public class AudioTrackService extends Service implements
 
     private void buildNotification(PlaybackStatus playbackStatus)
     {
+        Log.e("Notif", "Building notif");
         int notificationAction = android.R.drawable.ic_media_pause;//needs to be initialized
         PendingIntent play_pauseAction = null;
 
@@ -397,9 +409,9 @@ public class AudioTrackService extends Service implements
                 R.drawable.image); //replace with your own image
 
         // Create a new Notification
-        Notification.Builder notificationBuilder = (Notification.Builder)new Notification.Builder(this)
+        /*NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(SplitSoundApplication.getAppContext(), "notify_001")
                 .setShowWhen(false)
-                .setStyle(new Notification.MediaStyle()
+                .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
                         .setMediaSession(mediaSession.getSessionToken())
                         .setShowActionsInCompactView(0, 1, 2))
                 .setColor(getResources().getColor(R.color.colorPrimary))
@@ -412,12 +424,62 @@ public class AudioTrackService extends Service implements
                 .addAction(notificationAction, "pause", play_pauseAction)
                 .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2));
 
-        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notificationBuilder.build());
+
+        NotificationManager mNotificationManager = (NotificationManager) SplitSoundApplication.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("notify_001",
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            mNotificationManager.createNotificationChannel(channel);
+        }
+
+        mNotificationManager.notify(11, notifBuilder.build());*/
+        // Create a new Notification
+        Notification.Builder notificationBuilder = (Notification.Builder) new Notification.Builder(getApplicationContext(), "notify_001")
+                .setShowWhen(false)
+                .setVibrate(new long[]{0L})
+                .setStyle(new Notification.MediaStyle()
+                        .setMediaSession(mediaSession.getSessionToken())
+                        .setShowActionsInCompactView(0, 1, 2))
+                .setColor(getResources().getColor(R.color.colorPrimary))
+                .setLargeIcon(largeIcon)
+                .setSmallIcon(android.R.drawable.stat_sys_headset)
+                .setContentText("Artisite")
+                .setContentTitle("activeAudio.getAlbum()")
+                .setContentInfo("activeAudio.getTitle()")
+                .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
+                .addAction(notificationAction, "pause", play_pauseAction)
+                .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2));
+        /*NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                .setShowWhen(false)
+                .setStyle(new NotificationCompat.MediaStyle()
+                        .setMediaSession(mediaSession.getSessionToken())
+                        .setShowActionsInCompactView(0, 1, 2))
+                .setColor(getResources().getColor(R.color.colorPrimary))
+                .setLargeIcon(largeIcon)
+                .setSmallIcon(android.R.drawable.stat_sys_headset)
+                .setContentText("Artisite")
+                .setContentTitle("activeAudio.getAlbum()")
+                .setContentInfo("activeAudio.getTitle()")
+                .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
+                .addAction(notificationAction, "pause", play_pauseAction)
+                .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2));*/
+
+        NotificationManager mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("notify_001",
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            mNotificationManager.createNotificationChannel(channel);
+        }
+
+        mNotificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
 
     private void removeNotification()
     {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
     }
 
