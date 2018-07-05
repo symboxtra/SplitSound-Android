@@ -62,7 +62,7 @@ public class AudioTrackService extends Service implements
     private final IBinder iBinder = new LocalBinder();
 
     // Creates Media player instance
-    public AudioTrack audioTrack;
+    public static AudioTrack audioTrack;
 
     private AudioManager audioManager;
 
@@ -94,7 +94,14 @@ public class AudioTrackService extends Service implements
                 minBufSize,
                 AudioTrack.MODE_STREAM);
 
+        audioTrack.play();
+
         Log.i(TAG, "AudioTrack initialized");
+    }
+
+    public static AudioTrack getTrack()
+    {
+        return audioTrack;
     }
 
     public void onCreate()

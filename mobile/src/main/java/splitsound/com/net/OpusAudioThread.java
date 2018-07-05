@@ -52,6 +52,8 @@ public class OpusAudioThread implements Runnable
     @Override
     public void run()
     {
+        //TODO: Set thread priority
+
         if(!serviceBound)
         {
             Intent playerIntent = new Intent(SplitSoundApplication.getAppContext(), AudioTrackService.class);
@@ -65,46 +67,26 @@ public class OpusAudioThread implements Runnable
             SplitSoundApplication.getAppContext().sendBroadcast(broadcastIntent);
         }
 
-        /*
-        //TODO: Set thread priority
-
-        // Testing: Initialize Recorder
-        int minBufSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, NUM_CHANNELS == 1 ? AudioFormat.CHANNEL_IN_MONO : AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT);
-
-        AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC,
-                SAMPLE_RATE,
-                NUM_CHANNELS == 1 ? AudioFormat.CHANNEL_OUT_MONO : AudioFormat.CHANNEL_OUT_STEREO,
-                AudioFormat.ENCODING_PCM_16BIT,
-                minBufSize,
-                AudioTrack.MODE_STREAM);
-
-        track.play();
-
         byte[] inBuf;
-        short[] outBuf = new short[FRAME_SIZE * NUM_CHANNELS];
 
-        int packetsPlayed = 0;
 
         try {
-            while (!Thread.interrupted()) {
-                if(!RTPNetworking.networkPackets.isEmpty())
+            while(!Thread.interrupted())
+            {
+                if(!RTPNetworking.networkPackets.isEmpty() && AudioTrackService.getTrack() != null)
                 {
-                    // Get encoded data from transmission
                     inBuf = RTPNetworking.networkPackets.getNext().first;
 
-                    track.write(inBuf, 0, inBuf.length * NUM_CHANNELS);
-                    Log.d("Data packet", ++packetsPlayed + " packets played. Sound data received and to be decoded and played");
+                    // Add audio data to play queue
+                    AudioTrackService.getTrack().write(inBuf, 0, inBuf.length * NUM_CHANNELS);
+                    Log.d(TAG, "Data packet added to audio queue");
                 }
             }
+        }finally {
         }
-        finally {
-            track.stop();
-            track.release();
-        }
-        */
-
-
     }
+
+    /********************************** Initiate Service and connect Client *********************************/
 
     private ServiceConnection serviceConnection = new ServiceConnection()
     {
@@ -123,6 +105,4 @@ public class OpusAudioThread implements Runnable
             serviceBound = false;
         }
     };
-
-    /********************************** Initiate Service and connect Client *********************************/
 }
