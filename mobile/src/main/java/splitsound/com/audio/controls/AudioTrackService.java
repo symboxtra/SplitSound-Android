@@ -2,7 +2,6 @@ package splitsound.com.audio.controls;
 
 import android.annotation.TargetApi;
 import android.app.NotificationChannel;
-import android.nfc.Tag;
 import android.os.Build;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -19,16 +18,13 @@ import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.AudioTrack;
 import android.media.MediaMetadata;
-import android.media.MediaPlayer;
 import android.media.session.MediaController;
 import android.media.session.MediaSession;
 import android.media.session.MediaSessionManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -36,13 +32,9 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import java.util.ArrayList;
-
-import splitsound.com.net.OpusAudioThread;
+import splitsound.com.audio.opus.OpusAudioThread;
 import splitsound.com.splitsound.R;
 import splitsound.com.splitsound.SplitSoundApplication;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by Neel on 7/1/2018.
@@ -72,14 +64,14 @@ public class AudioTrackService extends Service implements
     private TelephonyManager telephonyManager;
 
     // Sample rate must be one supported by Opus.
-    static final int SAMPLE_RATE = 44100;
+    public static final int SAMPLE_RATE = 44100;
 
     // Number of samples per frame is not arbitrary,
     // it must match one of the predefined values, specified in the standard.
-    static final int FRAME_SIZE = 160;
+    public static final int FRAME_SIZE = 160;
 
     // 1 or 2
-    static final int NUM_CHANNELS = 1;
+    public static final int NUM_CHANNELS = 1;
 
     public void initAudioTrack()
     {
@@ -146,7 +138,7 @@ public class AudioTrackService extends Service implements
     /*Requests the audio focus from the Android service*/
     private boolean requestAudioFocus()
     {
-        audioManager = (AudioManager)SplitSoundApplication.getAppContext().getSystemService(Context.AUDIO_SERVICE);
+        audioManager = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         if(audioManager == null)
             Log.e(TAG, "Audio manager unitialized");
         int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
@@ -185,7 +177,6 @@ public class AudioTrackService extends Service implements
         }
 
         handleIncomingActions(intent);
-
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -333,8 +324,8 @@ public class AudioTrackService extends Service implements
 
     //Initialize media session
     private MediaSessionManager mediaSessionManager;
-    private MediaSession mediaSession;
-    private MediaController.TransportControls transportControls;
+    private MediaSessionCompat mediaSession;
+    private MediaControllerCompat.TransportControls transportControls;
 
     //AudioPlayer notification ID
     private static final int NOTIFICATION_ID = 102;
@@ -343,22 +334,22 @@ public class AudioTrackService extends Service implements
     {
         if(mediaSession!= null)return;
 
-        mediaSessionManager = (MediaSessionManager)SplitSoundApplication.getAppContext().getSystemService(Context.MEDIA_SESSION_SERVICE);
-        mediaSession = new MediaSession(SplitSoundApplication.getAppContext(),"AudioPlayer");
+        mediaSessionManager = (MediaSessionManager)getApplicationContext().getSystemService(Context.MEDIA_SESSION_SERVICE);
+        mediaSession = new MediaSessionCompat(getApplicationContext(),"AudioPlayer");
         transportControls = mediaSession.getController().getTransportControls();
         mediaSession.setActive(true);
         mediaSession.setFlags(MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
         updateMetaData();
 
-
         //Attach Callback to recieve MediaSession Updates
-        mediaSession.setCallback(new MediaSession.Callback()
+        mediaSession.setCallback(new MediaSessionCompat.Callback()
         {
             @Override
             public void onPlay()
             {
                 super.onPlay();
                 resumeMedia();
+                Log.d(TAG, "Here2?");
                 buildNotification(PlaybackStatus.PLAYING);
             }
 
@@ -367,6 +358,7 @@ public class AudioTrackService extends Service implements
             {
                 super.onPause();
                 pauseMedia();
+                Log.d(TAG, "Here?");
                 buildNotification(PlaybackStatus.PAUSED);
             }
 
@@ -408,11 +400,11 @@ public class AudioTrackService extends Service implements
     {
         Bitmap albumArt = BitmapFactory.decodeResource(getResources(), R.drawable.image);
 
-        mediaSession.setMetadata(new MediaMetadata.Builder()
-                .putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, albumArt)
-                .putString(MediaMetadata.METADATA_KEY_ARTIST, "Artisite")
-                .putString(MediaMetadata.METADATA_KEY_ALBUM, "Where is this?")
-                .putString(MediaMetadata.METADATA_KEY_TITLE, "Am I player?")
+        mediaSession.setMetadata(new MediaMetadataCompat.Builder()
+                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, albumArt)
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, "Artisite")
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, "Where is this?")
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, "Am I player?")
                 .build());
     }
 
@@ -437,10 +429,10 @@ public class AudioTrackService extends Service implements
                 R.drawable.image); //replace with your own image
 
         // Create a new Notification
-        Notification.Builder notificationBuilder = (Notification.Builder) new Notification.Builder(SplitSoundApplication.getAppContext(), "notify_001")
+        NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext(), "notify_001")
                 .setShowWhen(false)
                 .setOngoing(true)
-                .setStyle(new Notification.MediaStyle()
+                .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
                         .setMediaSession(mediaSession.getSessionToken())
                         .setShowActionsInCompactView(0, 1, 2))
                 .setColor(getResources().getColor(R.color.colorPrimary))
@@ -453,7 +445,7 @@ public class AudioTrackService extends Service implements
                 .addAction(notificationAction, "pause", play_pauseAction)
                 .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2));
 
-        NotificationManager mNotificationManager = (NotificationManager) SplitSoundApplication.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("notify_001",
                     "Channel human readable title",
@@ -468,7 +460,7 @@ public class AudioTrackService extends Service implements
 
     private void removeNotification()
     {
-        NotificationManager notificationManager = (NotificationManager) SplitSoundApplication.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
 
         Log.i(TAG, "Notification removed");
@@ -481,10 +473,12 @@ public class AudioTrackService extends Service implements
             case 0:
                 // Play
                 playbackAction.setAction(ACTION_PLAY);
+                Log.d(TAG, "I'm here1");
                 return PendingIntent.getService(this, actionNumber, playbackAction, 0);
             case 1:
                 // Pause
                 playbackAction.setAction(ACTION_PAUSE);
+                Log.d(TAG, "I'm here2");
                 return PendingIntent.getService(this, actionNumber, playbackAction, 0);
             case 2:
                 // Next track
@@ -502,6 +496,7 @@ public class AudioTrackService extends Service implements
 
     private void handleIncomingActions(Intent playbackAction)
     {
+        Log.d(TAG, playbackAction.toString());
         if (playbackAction == null || playbackAction.getAction() == null) return;
 
         String actionString = playbackAction.getAction();

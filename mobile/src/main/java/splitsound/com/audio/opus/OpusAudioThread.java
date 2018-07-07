@@ -1,4 +1,4 @@
-package splitsound.com.net;
+package splitsound.com.audio.opus;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -20,6 +20,7 @@ import com.score.rahasak.utils.OpusEncoder;
 import java.util.Arrays;
 
 import splitsound.com.audio.controls.AudioTrackService;
+import splitsound.com.net.RTPNetworking;
 import splitsound.com.splitsound.SplitSoundApplication;
 
 /**
@@ -38,15 +39,6 @@ public class OpusAudioThread implements Runnable
     private AudioTrackService track;
     boolean serviceBound = false;
 
-    // Sample rate must be one supported by Opus.
-    static final int SAMPLE_RATE = 44100;
-
-    // Number of samples per frame is not arbitrary,
-    // it must match one of the predefined values, specified in the standard.
-    static final int FRAME_SIZE = 160;
-
-    // 1 or 2
-    static final int NUM_CHANNELS = 1;
     private static final String TAG = "OpusAudioThread";
 
     @Override
@@ -78,7 +70,7 @@ public class OpusAudioThread implements Runnable
                     inBuf = RTPNetworking.networkPackets.getNext().first;
 
                     // Add audio data to play queue
-                    AudioTrackService.getTrack().write(inBuf, 0, inBuf.length * NUM_CHANNELS);
+                    AudioTrackService.getTrack().write(inBuf, 0, inBuf.length * AudioTrackService.NUM_CHANNELS);
                     Log.d(TAG, "Data packet added to audio queue");
                 }
             }
