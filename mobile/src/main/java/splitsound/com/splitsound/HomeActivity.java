@@ -3,6 +3,8 @@ package splitsound.com.splitsound;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,16 +25,17 @@ import splitsound.com.ui.adapters.UserListAdapter;
 /**
  * Home Play Activity
  *
- * @version 0.0.1
  * @author Emanuel, Neel
+ * @version 0.0.1
  */
-public class HomeActivity extends Fragment
-{
+public class HomeActivity extends Fragment {
     private static final String TAG = "HomeActivity";
 
     private RecyclerView userRV;
 
     private SlidingUpPanelLayout slideUp;
+
+    private boolean isPlay;
 
     private boolean isActionBarHidden;
 
@@ -46,8 +49,7 @@ public class HomeActivity extends Fragment
      */
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.activity_home, container, false);
     }
 
@@ -58,8 +60,36 @@ public class HomeActivity extends Fragment
      * @param savedInstanceState
      */
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        //Click listeners for the main buttons
+        ImageView prev = getView().findViewById(R.id.main_skip_back_button);
+        prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        ImageView next = getView().findViewById(R.id.main_skip_forward_button);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        isPlay = true;
+        final ImageView playPause = getView().findViewById(R.id.main_play_button);
+        playPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isPlay) {
+                    playPause.setImageResource(R.drawable.ic_pause_black_24dp);
+                } else {
+                    playPause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+                }
+                isPlay = !isPlay;
+            }
+        });
+
         isActionBarHidden = false;
 
         // Set the recycler view of the user list
@@ -69,40 +99,35 @@ public class HomeActivity extends Fragment
         userRV.setAdapter(new UserListAdapter());
 
         // Setup sliding panel action listeners
-        slideUp = (SlidingUpPanelLayout)getView().findViewById(R.id.sliding_layout);
-        slideUp.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener(){
+        slideUp = (SlidingUpPanelLayout) getView().findViewById(R.id.sliding_layout);
+        slideUp.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
 
             @Override
-            public void onPanelSlide(View panel, float slideOffset) throws NullPointerException
-            {
+            public void onPanelSlide(View panel, float slideOffset) throws NullPointerException {
                 Log.i(TAG, "onPanelSlide, offset " + slideOffset);
 
                 // Collapse/Uncollapse the toolbar based on panel location/offset
-                if(slideOffset >= .9 && !isActionBarHidden)
-                    isActionBarHidden = ((DrawerActivityTest)getActivity()).collapseBar();
-                else if(slideOffset < .9 && isActionBarHidden)
-                    isActionBarHidden = ((DrawerActivityTest)getActivity()).unCollapseBar();
+                if (slideOffset >= .9 && !isActionBarHidden)
+                    isActionBarHidden = ((DrawerActivityTest) getActivity()).collapseBar();
+                else if (slideOffset < .9 && isActionBarHidden)
+                    isActionBarHidden = ((DrawerActivityTest) getActivity()).unCollapseBar();
             }
 
             @Override
-            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState)
-            {
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
                 Log.i(TAG, "onPanelStateChanged " + newState);
 
                 // Changes image and text of the info bar based on panel position
-                ImageView image = (ImageView)getView().findViewById(R.id.usr_control);
+                ImageView image = (ImageView) getView().findViewById(R.id.usr_control);
 
                 // Change arrow image
-                ImageView arrowIcon = (ImageView)getView().findViewById(R.id.arrow_icon);
-                TextView swipe = (TextView)getView().findViewById(R.id.swipe);
+                ImageView arrowIcon = (ImageView) getView().findViewById(R.id.arrow_icon);
+                TextView swipe = (TextView) getView().findViewById(R.id.swipe);
 
-                if(newState == SlidingUpPanelLayout.PanelState.EXPANDED)
-                {
+                if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
                     arrowIcon.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
                     swipe.setText(R.string.close_drawer);
-                }
-                else if(newState == SlidingUpPanelLayout.PanelState.COLLAPSED)
-                {
+                } else if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     arrowIcon.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
                     swipe.setText(R.string.open_drawer);
                 }
@@ -111,20 +136,19 @@ public class HomeActivity extends Fragment
 
         // RTCP transmission testing
         //TODO: Remove after basic transmission is setup
-        ImageButton button = (ImageButton)getView().findViewById(R.id.connect);
+        ImageButton button = (ImageButton) getView().findViewById(R.id.connect);
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 RTPNetworking.requestQ.add(AppPacket.LIST_ALL);
 
                 new Thread(new OpusAudioThread()).start();
             }
         });
-
         getActivity().setTitle("Home");
         super.onViewCreated(view, savedInstanceState);
 
     }
+
 }

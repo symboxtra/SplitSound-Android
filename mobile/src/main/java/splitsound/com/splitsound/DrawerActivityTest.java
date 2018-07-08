@@ -12,6 +12,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v4.app.Fragment;
 import android.support.design.widget.NavigationView;
@@ -23,6 +24,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.MenuItem;
 import android.util.Log;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
@@ -100,6 +103,7 @@ public class DrawerActivityTest extends AppCompatActivity implements NavigationV
         // Ask Audio permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.RECORD_AUDIO }, MY_PERMISSIONS_REQUEST_RECORD_AUDIO);
+
     }
 
     /**

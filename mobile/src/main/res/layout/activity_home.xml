@@ -43,6 +43,8 @@
 
             <ImageView
                 android:id="@+id/main_play_button"
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/play_button"
@@ -51,6 +53,8 @@
                 android:tint="@color/white"/>
             <ImageView
                 android:id="@+id/main_skip_back_button"
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/skip_back_button"
@@ -59,6 +63,8 @@
                 android:tint="@color/white"/>
             <ImageView
                 android:id="@+id/main_skip_forward_button"
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/skip_forward_button"
