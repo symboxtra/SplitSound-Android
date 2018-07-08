@@ -2,6 +2,7 @@ package splitsound.com.audio.controls;
 
 import android.annotation.TargetApi;
 import android.app.NotificationChannel;
+import android.content.ComponentName;
 import android.os.Build;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -33,6 +34,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import splitsound.com.audio.opus.OpusAudioThread;
+import splitsound.com.splitsound.DrawerActivityTest;
 import splitsound.com.splitsound.R;
 import splitsound.com.splitsound.SplitSoundApplication;
 
@@ -183,6 +185,7 @@ public class AudioTrackService extends Service implements
     @Override
     public void onDestroy()
     {
+
         super.onDestroy();
         requestAudioFocus();
         if(audioTrack != null)
@@ -201,6 +204,7 @@ public class AudioTrackService extends Service implements
 
         unregisterReceiver(becomingNoisy);
         unregisterReceiver(playNewAudio);
+        stopSelf();
     }
 
     /********************************** Media Player control functions*********************************/
@@ -208,6 +212,7 @@ public class AudioTrackService extends Service implements
     /*Plays media*/
     public void playMedia()
     {
+
         if(audioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING)
             audioTrack.play();
     }
@@ -257,6 +262,7 @@ public class AudioTrackService extends Service implements
     private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.e(TAG, "onReceive: ");
             stopMedia();
             initAudioTrack();
             updateMetaData();
@@ -338,12 +344,18 @@ public class AudioTrackService extends Service implements
         mediaSession = new MediaSessionCompat(getApplicationContext(),"AudioPlayer");
         transportControls = mediaSession.getController().getTransportControls();
         mediaSession.setActive(true);
-        mediaSession.setFlags(MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        mediaSession.setFlags(MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
         updateMetaData();
-
+        Log.e(TAG, "initMediaSession: ");
         //Attach Callback to recieve MediaSession Updates
         mediaSession.setCallback(new MediaSessionCompat.Callback()
         {
+            @Override
+            public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
+                Log.e(TAG, "onMediaButtonEvent: " + mediaButtonEvent.toString());
+                return super.onMediaButtonEvent(mediaButtonEvent);
+            }
+
             @Override
             public void onPlay()
             {
@@ -428,6 +440,11 @@ public class AudioTrackService extends Service implements
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
                 R.drawable.image); //replace with your own image
 
+        //Code so when you tap outside the buttons it goes back to the app
+        Intent intent = new Intent(this, DrawerActivityTest.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
         // Create a new Notification
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext(), "notify_001")
                 .setShowWhen(false)
@@ -443,7 +460,9 @@ public class AudioTrackService extends Service implements
                 .setContentInfo("Streaming audio...")
                 .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
                 .addAction(notificationAction, "pause", play_pauseAction)
-                .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2));
+                .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
 
         NotificationManager mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -494,23 +513,32 @@ public class AudioTrackService extends Service implements
         return null;
     }
 
-    private void handleIncomingActions(Intent playbackAction)
-    {
+    private void handleIncomingActions(Intent playbackAction) {
         Log.d(TAG, playbackAction.toString());
         if (playbackAction == null || playbackAction.getAction() == null) return;
-
         String actionString = playbackAction.getAction();
-        switch (actionString.toUpperCase())
-        {
-            case ACTION_PLAY:
-                transportControls.play();
-                break;
-            case ACTION_PAUSE:
-                transportControls.pause();
-                break;
-            case ACTION_STOP:
-                transportControls.stop();
-                break;
+        if (actionString.contains("ACTION_PLAY")){
+            Log.e(TAG, "handleIncomingActions: play");
+            transportControls.play();
         }
+        else if (actionString.contains("ACTION_PAUSE")){
+            Log.e(TAG, "handleIncomingActions: pause");
+            transportControls.pause();
+        }
+        else if(actionString.contains("ACTION_NEXT")) {
+            Log.e(TAG, "handleIncomingActions: next");
+            transportControls.skipToNext();
+        }
+        else if(actionString.contains("ACTION_PREVIOUS")) {
+            Log.e(TAG, "handleIncomingActions: previous");
+            transportControls.skipToPrevious();
+        }
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        Log.e(TAG, "onTaskRemoved: called");
+        super.onTaskRemoved(rootIntent);
+        onDestroy();
     }
 }

@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@android:style/ThemeOverlay.Material.Dark">
-        <service android:name="splitsound.com.audio.controls.AudioTrackService"/>
+        <service android:name="splitsound.com.audio.controls.AudioTrackService"
+            android:stopWithTask="false"/>
         <activity
             android:name="splitsound.com.splitsound.DrawerActivityTest"
             android:label="@string/title_activity_drawer_test"
