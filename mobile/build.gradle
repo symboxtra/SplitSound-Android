@@ -159,6 +159,7 @@ dependencies {
     implementation 'com.felipecsl:gifimageview:2.1.0'
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
     implementation 'commons-io:commons-io:2.4'
-    api 'com.github.martoreto:opuscodec:v1.2.1.2'
+    implementation 'com.github.martoreto:opuscodec:v1.2.1.2'
+    implementation 'com.github.apl-devs:appintro:v4.2.3'
     wearApp project(':wear')
 }

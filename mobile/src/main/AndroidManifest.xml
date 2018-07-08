@@ -30,6 +30,9 @@
         <activity
             android:name="splitsound.com.splitsound.SettingsActivity"
             android:label="@string/title_activity_settings"></activity>
+        <activity android:name="splitsound.com.splitsound.IntroActivity"
+            android:theme="@style/Theme.AppCompat"
+            android:label="@string/app_intro" />
     </application>
 
 </manifest>

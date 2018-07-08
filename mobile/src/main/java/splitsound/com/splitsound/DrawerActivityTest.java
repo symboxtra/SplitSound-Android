@@ -1,9 +1,12 @@
 package splitsound.com.splitsound;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -66,7 +69,16 @@ public class DrawerActivityTest extends AppCompatActivity implements NavigationV
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer_test);
-        
+
+        SharedPreferences sp = getSharedPreferences("firstBool",MODE_PRIVATE);
+        if (!sp.getBoolean("first", false)) {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putBoolean("first", true);
+            editor.apply();
+            Intent intent = new Intent(this, IntroActivity.class); // Call the AppIntro java class
+            startActivity(intent);
+        }
+
         // Start main networking thread (RTPReciever, RTCPSender, RTCPReceiver)
         new Thread(new RTPNetworking(getBroadcastAddress())).start();
         Log.i("Broadcast Address", getBroadcastAddress());
