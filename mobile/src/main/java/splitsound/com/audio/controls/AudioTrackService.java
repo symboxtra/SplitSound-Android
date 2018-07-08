@@ -89,8 +89,6 @@ public class AudioTrackService extends Service implements
                 AudioTrack.MODE_STREAM);
 
         audioTrack.play();
-
-        Log.i(TAG, "AudioTrack initialized");
     }
 
     public static AudioTrack getTrack()
@@ -262,7 +260,6 @@ public class AudioTrackService extends Service implements
     private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.e(TAG, "onReceive: ");
             stopMedia();
             initAudioTrack();
             updateMetaData();
@@ -346,13 +343,11 @@ public class AudioTrackService extends Service implements
         mediaSession.setActive(true);
         mediaSession.setFlags(MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
         updateMetaData();
-        Log.e(TAG, "initMediaSession: ");
         //Attach Callback to recieve MediaSession Updates
         mediaSession.setCallback(new MediaSessionCompat.Callback()
         {
             @Override
             public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
-                Log.e(TAG, "onMediaButtonEvent: " + mediaButtonEvent.toString());
                 return super.onMediaButtonEvent(mediaButtonEvent);
             }
 
@@ -361,7 +356,6 @@ public class AudioTrackService extends Service implements
             {
                 super.onPlay();
                 resumeMedia();
-                Log.d(TAG, "Here2?");
                 buildNotification(PlaybackStatus.PLAYING);
             }
 
@@ -370,7 +364,6 @@ public class AudioTrackService extends Service implements
             {
                 super.onPause();
                 pauseMedia();
-                Log.d(TAG, "Here?");
                 buildNotification(PlaybackStatus.PAUSED);
             }
 
@@ -423,16 +416,16 @@ public class AudioTrackService extends Service implements
     @TargetApi(Build.VERSION_CODES.O)
     private void buildNotification(PlaybackStatus playbackStatus)
     {
-        int notificationAction = android.R.drawable.ic_media_pause;//needs to be initialized
+        int notificationAction = R.drawable.ic_pause_black_40dp;//needs to be initialized
         PendingIntent play_pauseAction = null;
 
         //Build a new notification according to the current state of the MediaPlayer
         if (playbackStatus == PlaybackStatus.PLAYING) {
-            notificationAction = android.R.drawable.ic_media_pause;
+            notificationAction = R.drawable.ic_pause_black_40dp;
             //create the pause action
             play_pauseAction = playbackAction(1);
         } else if (playbackStatus == PlaybackStatus.PAUSED) {
-            notificationAction = android.R.drawable.ic_media_play;
+            notificationAction = R.drawable.ic_play_arrow_black_40dp;
             //create the play action
             play_pauseAction = playbackAction(0);
         }
@@ -454,13 +447,13 @@ public class AudioTrackService extends Service implements
                         .setShowActionsInCompactView(0, 1, 2))
                 .setColor(getResources().getColor(R.color.colorPrimary))
                 .setLargeIcon(largeIcon)
-                .setSmallIcon(android.R.drawable.stat_sys_headset)
+                .setSmallIcon(R.drawable.ic_headset_mic_black_24dp)
                 .setContentText("")
                 .setContentTitle(getString(R.string.stream_text))
                 .setContentInfo("Streaming audio...")
-                .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
+                .addAction(R.drawable.ic_skip_previous_black_40dp, "previous", playbackAction(3))
                 .addAction(notificationAction, "pause", play_pauseAction)
-                .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2))
+                .addAction(R.drawable.ic_skip_next_black_40dp, "next", playbackAction(2))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
@@ -492,12 +485,10 @@ public class AudioTrackService extends Service implements
             case 0:
                 // Play
                 playbackAction.setAction(ACTION_PLAY);
-                Log.d(TAG, "I'm here1");
                 return PendingIntent.getService(this, actionNumber, playbackAction, 0);
             case 1:
                 // Pause
                 playbackAction.setAction(ACTION_PAUSE);
-                Log.d(TAG, "I'm here2");
                 return PendingIntent.getService(this, actionNumber, playbackAction, 0);
             case 2:
                 // Next track
@@ -514,30 +505,24 @@ public class AudioTrackService extends Service implements
     }
 
     private void handleIncomingActions(Intent playbackAction) {
-        Log.d(TAG, playbackAction.toString());
         if (playbackAction == null || playbackAction.getAction() == null) return;
         String actionString = playbackAction.getAction();
         if (actionString.contains("ACTION_PLAY")){
-            Log.e(TAG, "handleIncomingActions: play");
             transportControls.play();
         }
         else if (actionString.contains("ACTION_PAUSE")){
-            Log.e(TAG, "handleIncomingActions: pause");
             transportControls.pause();
         }
         else if(actionString.contains("ACTION_NEXT")) {
-            Log.e(TAG, "handleIncomingActions: next");
             transportControls.skipToNext();
         }
         else if(actionString.contains("ACTION_PREVIOUS")) {
-            Log.e(TAG, "handleIncomingActions: previous");
             transportControls.skipToPrevious();
         }
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        Log.e(TAG, "onTaskRemoved: called");
         super.onTaskRemoved(rootIntent);
         onDestroy();
     }
