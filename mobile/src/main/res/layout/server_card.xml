@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="My Server"
-                android:textSize="25sp" />
+                android:textSize="25sp"/>
         </LinearLayout>
 
         <TextView
@@ -49,7 +49,7 @@
             android:layout_below="@id/server_text_layout"
             android:layout_toEndOf="@+id/lock_icon"
             android:text="173.239.240.149"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"
