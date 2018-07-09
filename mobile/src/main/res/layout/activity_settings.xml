@@ -24,7 +24,8 @@
                 android:text="General"
                 android:textColor="@color/orange"
                 android:textSize="@dimen/header_size"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="@font/karla"/>
 
             <Switch
                 android:id="@+id/search_start_switch"
@@ -64,7 +65,8 @@
                 android:text="User"
                 android:textColor="@color/orange"
                 android:textSize="@dimen/header_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:fontFamily="@font/karla"/>
 
             <ListView
                 android:id="@+id/userSettings"
@@ -87,7 +89,8 @@
                 android:text="Server Settings"
                 android:textColor="@color/orange"
                 android:textSize="@dimen/header_size"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="@font/karla"/>
         </LinearLayout>
 
     </LinearLayout>

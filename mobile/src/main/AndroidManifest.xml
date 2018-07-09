@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
@@ -18,14 +19,9 @@
         android:supportsRtl="true"
         android:theme="@android:style/ThemeOverlay.Material.Dark">
 
-        <service android:name=".MediaPlaybackService"
-            android:stopWithTask="false"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.media.browse.MediaBrowserService" />
-            </intent-filter>
-        </service>
-
+        <service android:name="splitsound.com.audio.controls.AudioTrackService"
+            android:stopWithTask="false"/>
+      
         <activity
             android:name="splitsound.com.splitsound.DrawerActivityTest"
             android:label="@string/title_activity_drawer_test"
@@ -39,6 +35,9 @@
         <activity
             android:name="splitsound.com.splitsound.SettingsActivity"
             android:label="@string/title_activity_settings"></activity>
+        <activity android:name="splitsound.com.splitsound.IntroActivity"
+            android:theme="@style/Theme.AppCompat"
+            android:label="@string/app_intro" />
     </application>
 
 </manifest>
