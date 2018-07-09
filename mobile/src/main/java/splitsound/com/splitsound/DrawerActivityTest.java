@@ -127,7 +127,7 @@ public class DrawerActivityTest extends AppCompatActivity implements NavigationV
                     MediaControllerCompat.setMediaController(DrawerActivityTest.this, mediaController);
 
                     // Finish building the UI
-                    //buildTransportControls();
+                    buildTransportControls();
                 }
 
                 @Override
@@ -144,7 +144,7 @@ public class DrawerActivityTest extends AppCompatActivity implements NavigationV
 
     public void buildTransportControls()
     {
-        ImageButton button = (ImageButton)findViewById(R.id.connect);
+        /*ImageButton button = (ImageButton)findViewById(R.id.connect);
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -160,7 +160,7 @@ public class DrawerActivityTest extends AppCompatActivity implements NavigationV
 
                 new Thread(new OpusAudioThread()).start();
             }
-        });
+        });*/
         MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(DrawerActivityTest.this);
 
         // Display the initial state
@@ -169,6 +169,8 @@ public class DrawerActivityTest extends AppCompatActivity implements NavigationV
 
         // Register a Callback to stay in sync
         mediaController.registerCallback(controllerCallback);
+        MediaControllerCompat.getMediaController(DrawerActivityTest.this).getTransportControls().pause();
+
     }
 
     MediaControllerCompat.Callback controllerCallback = new MediaControllerCompat.Callback() {
@@ -176,7 +178,10 @@ public class DrawerActivityTest extends AppCompatActivity implements NavigationV
                 public void onMetadataChanged(MediaMetadataCompat metadata) {}
 
                 @Override
-                public void onPlaybackStateChanged(PlaybackStateCompat state) {}
+                public void onPlaybackStateChanged(PlaybackStateCompat state)
+                {
+                    Log.i(TAG, state.toString());
+                }
             };
 
     /**
