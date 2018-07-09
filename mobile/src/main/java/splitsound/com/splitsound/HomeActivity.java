@@ -111,7 +111,7 @@ public class HomeActivity extends Fragment
 
         // RTCP transmission testing
         //TODO: Remove after basic transmission is setup
-        ImageButton button = (ImageButton)getView().findViewById(R.id.connect);
+        /*ImageButton button = (ImageButton)getView().findViewById(R.id.connect);
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -121,7 +121,7 @@ public class HomeActivity extends Fragment
 
                 new Thread(new OpusAudioThread()).start();
             }
-        });
+        });*/
 
         getActivity().setTitle("Home");
         super.onViewCreated(view, savedInstanceState);
