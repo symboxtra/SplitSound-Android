@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:name=".SplitSoundApplication"
@@ -17,8 +18,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@android:style/ThemeOverlay.Material.Dark">
+
         <service android:name="splitsound.com.audio.controls.AudioTrackService"
             android:stopWithTask="false"/>
+      
         <activity
             android:name="splitsound.com.splitsound.DrawerActivityTest"
             android:label="@string/title_activity_drawer_test"

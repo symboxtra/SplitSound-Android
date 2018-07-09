@@ -11,6 +11,7 @@ import android.media.AudioTrack;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.score.rahasak.utils.OpusEncoder;
 
 import java.util.Arrays;
 
+import splitsound.com.audio.controls.AudioService;
 import splitsound.com.audio.controls.AudioTrackService;
 import splitsound.com.net.RTPNetworking;
 import splitsound.com.splitsound.SplitSoundApplication;
@@ -36,7 +38,7 @@ public class OpusAudioThread implements Runnable
     public static final String Broadcast_PLAY_NEW_AUDIO = "splitsound.com.audio.PlayNewAudio";
     //public static final String Broadcast_PLAY_NEW_AUDIO = "androidpodcast.com.audioapp.PlayNewAudio";
 
-    private AudioTrackService track;
+    private AudioService track;
     boolean serviceBound = false;
 
     private static final String TAG = "OpusAudioThread";
@@ -48,7 +50,7 @@ public class OpusAudioThread implements Runnable
 
         if(!serviceBound)
         {
-            Intent playerIntent = new Intent(SplitSoundApplication.getAppContext(), AudioTrackService.class);
+            Intent playerIntent = new Intent(SplitSoundApplication.getAppContext(), AudioService.class);
             SplitSoundApplication.getAppContext().startService(playerIntent);
             boolean boo = SplitSoundApplication.getAppContext().bindService(playerIntent, serviceConnection, Context.BIND_AUTO_CREATE);
             Log.d("Status", boo+"");
@@ -61,7 +63,7 @@ public class OpusAudioThread implements Runnable
 
         byte[] inBuf;
 
-
+/*
         try {
             while(!Thread.interrupted())
             {
@@ -76,6 +78,8 @@ public class OpusAudioThread implements Runnable
             }
         }finally {
         }
+
+       */
     }
 
     /********************************** Initiate Service and connect Client *********************************/
@@ -85,7 +89,7 @@ public class OpusAudioThread implements Runnable
         @Override
         public void onServiceConnected(ComponentName name, IBinder service)
         {
-            AudioTrackService.LocalBinder binder = (AudioTrackService.LocalBinder)service;
+            AudioService.LocalBinder binder = (AudioService.LocalBinder)service;
             track = binder.getService();
             serviceBound = true;
             Toast.makeText(SplitSoundApplication.getAppContext(), "Service Bound",Toast.LENGTH_SHORT).show();

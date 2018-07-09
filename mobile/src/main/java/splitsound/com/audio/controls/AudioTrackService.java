@@ -341,7 +341,9 @@ public class AudioTrackService extends Service implements
         mediaSession = new MediaSessionCompat(getApplicationContext(),"AudioPlayer");
         transportControls = mediaSession.getController().getTransportControls();
         mediaSession.setActive(true);
-        mediaSession.setFlags(MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
+
+        mediaSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS | MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
+
         updateMetaData();
         //Attach Callback to recieve MediaSession Updates
         mediaSession.setCallback(new MediaSessionCompat.Callback()

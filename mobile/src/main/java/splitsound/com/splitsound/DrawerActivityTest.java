@@ -2,11 +2,13 @@ package splitsound.com.splitsound;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -14,6 +16,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v7.widget.RecyclerView;
+import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.app.Fragment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -30,6 +37,8 @@ import android.widget.ImageView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
+import splitsound.com.audio.opus.OpusAudioThread;
+import splitsound.com.net.AppPacket;
 import splitsound.com.net.RTPNetworking;
 
 import java.net.InterfaceAddress;
@@ -50,6 +59,8 @@ public class DrawerActivityTest extends AppCompatActivity implements NavigationV
     private static final int MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
 
     public SlidingUpPanelLayout slideUp;
+
+    private MediaBrowserCompat mediaBrowser;
 
     /**
      * Test function for unit testing purposes
@@ -104,7 +115,85 @@ public class DrawerActivityTest extends AppCompatActivity implements NavigationV
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.RECORD_AUDIO }, MY_PERMISSIONS_REQUEST_RECORD_AUDIO);
 
+        //mediaBrowser = new MediaBrowserCompat(SplitSoundApplication.getAppContext(), new ComponentName(this, MediaPlaybackService.class)), mConnectionCallbacks, null);
+        //mediaBrowser.connect();
+        mediaBrowser = new MediaBrowserCompat(getApplicationContext(), new ComponentName(this, MediaPlaybackService.class), mConnectionCallbacks, null);
+        mediaBrowser.connect();
     }
+
+    private final MediaBrowserCompat.ConnectionCallback mConnectionCallbacks = new MediaBrowserCompat.ConnectionCallback() {
+                @Override
+                public void onConnected() {
+
+                    // Get the token for the MediaSession
+                    MediaSessionCompat.Token token = mediaBrowser.getSessionToken();
+
+                    // Create a MediaControllerCompat
+                    MediaControllerCompat mediaController =
+                            null;
+                    try {
+                        mediaController = new MediaControllerCompat(DrawerActivityTest.this, // Context
+                                token);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+
+                    // Save the controller
+                    MediaControllerCompat.setMediaController(DrawerActivityTest.this, mediaController);
+
+                    // Finish building the UI
+                    //buildTransportControls();
+                }
+
+                @Override
+                public void onConnectionSuspended() {
+                    // The Service has crashed. Disable transport controls until it automatically reconnects
+                }
+
+                @Override
+                public void onConnectionFailed() {
+                    // The Service has refused our connection
+                    Log.i(TAG, "Test");
+                }
+            };
+
+    public void buildTransportControls()
+    {
+        ImageButton button = (ImageButton)findViewById(R.id.connect);
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v)
+            {
+                int pbState = MediaControllerCompat.getMediaController(DrawerActivityTest.this).getPlaybackState().getState();
+                if (pbState == PlaybackStateCompat.STATE_PLAYING) {
+                    MediaControllerCompat.getMediaController(DrawerActivityTest.this).getTransportControls().pause();
+                } else {
+                    MediaControllerCompat.getMediaController(DrawerActivityTest.this).getTransportControls().play();
+                }
+                RTPNetworking.requestQ.add(AppPacket.LIST_ALL);
+
+                new Thread(new OpusAudioThread()).start();
+            }
+        });
+        MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(DrawerActivityTest.this);
+
+        // Display the initial state
+        MediaMetadataCompat metadata = mediaController.getMetadata();
+        PlaybackStateCompat pbState = mediaController.getPlaybackState();
+
+        // Register a Callback to stay in sync
+        mediaController.registerCallback(controllerCallback);
+
+    }
+
+    MediaControllerCompat.Callback controllerCallback = new MediaControllerCompat.Callback() {
+                @Override
+                public void onMetadataChanged(MediaMetadataCompat metadata) {}
+
+                @Override
+                public void onPlaybackStateChanged(PlaybackStateCompat state) {}
+            };
 
     /**
      * Executed when back button on device is pressed
@@ -247,5 +336,15 @@ public class DrawerActivityTest extends AppCompatActivity implements NavigationV
                 }
             }
         }
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        if (MediaControllerCompat.getMediaController(DrawerActivityTest.this) != null) {
+            MediaControllerCompat.getMediaController(DrawerActivityTest.this).unregisterCallback(controllerCallback);
+        }
+        mediaBrowser.disconnect();
     }
 }
