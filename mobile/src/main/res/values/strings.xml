@@ -26,4 +26,5 @@
     <string name="skip_forward_button">skip forward button</string>
     <string name="stream_text">Streaming from [comp. name]...</string>
     <string name="app_intro">App Intro</string>
+    <string name="currently_listening">Currently Listening</string>
 </resources>
