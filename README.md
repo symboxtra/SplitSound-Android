@@ -26,6 +26,15 @@ git checkout -b add-crazy-new-feature   # Create your new branch
                                         # do werk
 ```
 
+We also periodically pull updates into our submodules. This will usually coincide with a major or minor release.
+If you prefer, you can manually update the submodules on your branch with the latest commits on the remote using the command:
+```
+git submodule update --remote --merge
+```
+This will fetch any missing commits in all submodules and checkout the latest revision.
+These changes can be staged and committed by anyone, but we prefer that someone on the team verify that the submodule is ready to go.
+
+
 ## Development ##
 
 Building the Android application does not require installation of Android Studio. 
