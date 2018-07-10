@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/user_text_layout"
             android:layout_toEndOf="@+id/mute_icon"
-            android:text="Listening on Phone"
+            android:text="@string/listening_on_phone"
             android:textSize="20sp"/>
 
         <LinearLayout

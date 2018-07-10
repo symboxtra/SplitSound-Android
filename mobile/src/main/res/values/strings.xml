@@ -27,4 +27,12 @@
     <string name="stream_text">Streaming from [comp. name]...</string>
     <string name="app_intro">App Intro</string>
     <string name="currently_listening">Currently Listening</string>
+    <string name="show_password">Show Password</string>
+    <string name="listening_on_phone">Listening on Phone</string>
+    <string name="kick_user">Kick user</string>
+    <string name="general">General</string>
+    <string name="scan_for_sessions_at_startup">Scan for sessions at startup</string>
+    <string name="low_battery_mode">Low battery mode</string>
+    <string name="user">User</string>
+    <string name="server_settings">Server Settings</string>
 </resources>

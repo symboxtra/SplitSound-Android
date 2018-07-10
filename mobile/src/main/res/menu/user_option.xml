@@ -4,7 +4,7 @@
     <item
         android:id="@+id/kick_user"
         android:orderInCategory="100"
-        android:title="Kick user"
+        android:title="@string/kick_user"
         android:iconTint="#FFFFFF"
         app:showAsAction="never" />
 

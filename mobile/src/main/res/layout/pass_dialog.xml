@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:inputType="textPassword"
-        android:hint="password"
+        android:hint="@string/password"
         android:textColor="#FFFFFF" />
 
     <CheckBox
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-        android:text="Show Password"
+        android:text="@string/show_password"
         android:textColor="#FFFFFF" />
 
 </LinearLayout>
