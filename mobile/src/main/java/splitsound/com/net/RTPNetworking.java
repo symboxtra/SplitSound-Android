@@ -1,7 +1,13 @@
 package splitsound.com.net;
 
+import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import com.google.android.gms.common.util.ArrayUtils;
+
+import java.math.BigInteger;
 import java.net.DatagramSocket;
 import java.net.*;
 import java.util.*;
@@ -10,6 +16,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import jlibrtp.Participant;
 import jlibrtp.RTPSession;
+import splitsound.com.splitsound.SplitSoundApplication;
 
 /**
  * RTP Main Thread
@@ -105,33 +112,26 @@ public class RTPNetworking implements Runnable {
      * @param useIPv4 true if IPv4 or false if IPv6 format is to be returned
      * @return device IP address in the specified format
      */
-    public static String getIPAddress(boolean useIPv4) {
-
+    public static String getIPAddress(boolean useIPv4)
+    {
+        WifiManager wm = (WifiManager) SplitSoundApplication.getAppContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiinfo = wm.getConnectionInfo();
+        byte[] myIPAddress = BigInteger.valueOf(wifiinfo.getIpAddress()).toByteArray();
+// you must reverse the byte array before conversion. Use Apache's commons library
+        //ArrayUtils.reverse(myIPAddress);
+        for(int i = 0; i < myIPAddress.length / 2; i++)
+        {
+            byte temp = myIPAddress[i];
+            myIPAddress[i] = myIPAddress[myIPAddress.length - i - 1];
+            myIPAddress[myIPAddress.length - i - 1] = temp;
+        }
+        InetAddress myInetIP = null;
         try {
-            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
-            for (NetworkInterface intf : interfaces) {
-                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
-                for (InetAddress addr : addrs) {
-                    if (!addr.isLoopbackAddress()) {
-                        String sAddr = addr.getHostAddress();
-                        //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
-                        boolean isIPv4 = sAddr.indexOf(':') < 0;
-
-                        if (useIPv4) {
-                            if (isIPv4)
-                                return sAddr;
-                        } else {
-                            if (!isIPv4) {
-                                int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
-                                return delim < 0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception ignored) {
-        } // for now eat exceptions
-        return "";
+            myInetIP = InetAddress.getByAddress(myIPAddress);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return myInetIP.getHostAddress();
     }
 
     /**

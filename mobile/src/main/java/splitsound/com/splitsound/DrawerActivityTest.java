@@ -109,8 +109,8 @@ public class DrawerActivityTest extends AppCompatActivity implements NavigationV
 
         //mediaBrowser = new MediaBrowserCompat(SplitSoundApplication.getAppContext(), new ComponentName(this, MediaPlaybackService.class)), mConnectionCallbacks, null);
         //mediaBrowser.connect();
-        mediaBrowser = new MediaBrowserCompat(getApplicationContext(), new ComponentName(this, MediaPlaybackService.class), mConnectionCallbacks, null);
-        mediaBrowser.connect();
+        //mediaBrowser = new MediaBrowserCompat(getApplicationContext(), new ComponentName(this, MediaPlaybackService.class), mConnectionCallbacks, null);
+        //mediaBrowser.connect();
     }
 
     private final MediaBrowserCompat.ConnectionCallback mConnectionCallbacks = new MediaBrowserCompat.ConnectionCallback() {
@@ -338,9 +338,9 @@ public class DrawerActivityTest extends AppCompatActivity implements NavigationV
     public void onDestroy()
     {
         super.onDestroy();
-        if (MediaControllerCompat.getMediaController(DrawerActivityTest.this) != null) {
+        /*if (MediaControllerCompat.getMediaController(DrawerActivityTest.this) != null) {
             MediaControllerCompat.getMediaController(DrawerActivityTest.this).unregisterCallback(controllerCallback);
         }
-        mediaBrowser.disconnect();
+        mediaBrowser.disconnect();*/
     }
 }

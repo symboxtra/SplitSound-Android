@@ -92,7 +92,7 @@ public class OpusAudioThread implements Runnable
            // AudioTrackService.LocalBinder binder = (AudioTrackService.LocalBinder)service;
             //track = binder.getService();
             serviceBound = true;
-            Toast.makeText(SplitSoundApplication.getAppContext(), "Service Bound",Toast.LENGTH_SHORT).show();
+            Toast.makeText(SplitSoundApplication.getAppContext(), "Connected",Toast.LENGTH_SHORT).show();
         }
 
         @Override
