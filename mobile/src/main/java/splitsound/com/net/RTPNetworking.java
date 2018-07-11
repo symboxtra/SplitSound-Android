@@ -117,8 +117,6 @@ public class RTPNetworking implements Runnable {
         WifiManager wm = (WifiManager) SplitSoundApplication.getAppContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiinfo = wm.getConnectionInfo();
         byte[] myIPAddress = BigInteger.valueOf(wifiinfo.getIpAddress()).toByteArray();
-// you must reverse the byte array before conversion. Use Apache's commons library
-        //ArrayUtils.reverse(myIPAddress);
         for(int i = 0; i < myIPAddress.length / 2; i++)
         {
             byte temp = myIPAddress[i];

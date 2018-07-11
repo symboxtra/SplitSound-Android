@@ -26,6 +26,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -99,8 +100,8 @@ public class AudioTrackService extends Service implements
         if(mediaSessionManager == null)
         {
             try {
-                initMediaSession();
                 initAudioTrack();
+                initMediaSession();
             } catch(RemoteException e)
             {
                 e.printStackTrace();
@@ -173,6 +174,7 @@ public class AudioTrackService extends Service implements
         if(mediaSession!= null)return;
 
         mediaSessionManager = (MediaSessionManager)getApplicationContext().getSystemService(Context.MEDIA_SESSION_SERVICE);
+
         mediaSession = new MediaSessionCompat(getApplicationContext(),"SplitSound Player");
         transportControls = mediaSession.getController().getTransportControls();
         mediaSession.setActive(true);
@@ -235,6 +237,7 @@ public class AudioTrackService extends Service implements
                 super.onSeekTo(position);
             }
         });
+
         Log.i(TAG, "Media session initialized and callbacks set");
     }
 
@@ -270,21 +273,25 @@ public class AudioTrackService extends Service implements
     private void buildNotification(PlaybackStatus playbackStatus)
     {
         int notificationAction = R.drawable.ic_pause_black_40dp;//needs to be initialized
+        String notificationText = "Pause";
         PendingIntent play_pauseAction = null;
 
         //Build a new notification according to the current state of the MediaPlayer
         if (playbackStatus == PlaybackStatus.PLAYING) {
             notificationAction = R.drawable.ic_pause_black_40dp;
-            //create the pause action
+            notificationText = "Pause";
             play_pauseAction = playbackAction(1);
         } else if (playbackStatus == PlaybackStatus.PAUSED) {
             notificationAction = R.drawable.ic_play_arrow_black_40dp;
-            //create the play action
+            notificationText = "Play";
             play_pauseAction = playbackAction(0);
         }
 
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
-                R.drawable.image); //replace with your own image
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.image); //replace with your own image
+
+        MediaControllerCompat controller = mediaSession.getController();
+        MediaMetadataCompat mediaMetadata = controller.getMetadata();
+        MediaDescriptionCompat description = mediaMetadata.getDescription();
 
         //Code so when you tap outside the buttons it goes back to the app
         Intent intent = new Intent(this, DrawerActivityTest.class);
@@ -293,27 +300,29 @@ public class AudioTrackService extends Service implements
 
         // Create a new Notification
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext(), "notify_001")
+                .setContentTitle(description.getTitle())
+                .setContentText(description.getSubtitle())
+                .setSubText(description.getDescription())
+                .setLargeIcon(description.getIconBitmap())
+                .setSmallIcon(R.drawable.ic_headset_mic_black_24dp)
+                .setContentIntent(controller.getSessionActivity())
                 .setShowWhen(false)
                 .setOngoing(true)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
                         .setMediaSession(mediaSession.getSessionToken())
-                        .setShowActionsInCompactView(0, 1, 2))
+                        .setShowActionsInCompactView(0))
                 .setColor(getResources().getColor(R.color.colorPrimary))
-                .setLargeIcon(largeIcon)
-                .setSmallIcon(R.drawable.ic_headset_mic_black_24dp)
-                .setContentText("")
-                .setContentTitle(getString(R.string.stream_text))
                 .setContentInfo("Streaming audio...")
-                .addAction(R.drawable.ic_skip_previous_black_40dp, "previous", playbackAction(3))
-                .addAction(notificationAction, "pause", play_pauseAction)
-                .addAction(R.drawable.ic_skip_next_black_40dp, "next", playbackAction(2))
-                .setContentIntent(pendingIntent)
+                //.addAction(R.drawable.ic_skip_previous_black_40dp, "previous", playbackAction(3))
+                .addAction(notificationAction, notificationText, play_pauseAction)
+                .addAction(android.R.drawable.ic_menu_send, "Leave", playbackAction(2))
                 .setAutoCancel(true);
 
         NotificationManager mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("notify_001",
-                    "Channel human readable title",
+                    "SplitSound",
                     NotificationManager.IMPORTANCE_LOW);
             mNotificationManager.createNotificationChannel(channel);
         }
