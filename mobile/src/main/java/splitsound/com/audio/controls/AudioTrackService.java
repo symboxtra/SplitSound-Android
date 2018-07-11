@@ -55,9 +55,8 @@ public class AudioTrackService extends Service implements
     // Binder given to clients
     private final IBinder iBinder = new LocalBinder();
 
-    // Creates Media player instance
+    // Audio instances to manage audio data
     public static AudioTrack audioTrack;
-
     private AudioManager audioManager;
 
     // Help handle incoming calls
@@ -75,64 +74,64 @@ public class AudioTrackService extends Service implements
     // 1 or 2
     public static final int NUM_CHANNELS = 1;
 
-    public void initAudioTrack()
-    {
-        // Get the most minimum buffer size based on channel and encoding
-        int minBufSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, NUM_CHANNELS == 1 ? AudioFormat.CHANNEL_IN_MONO : AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT);
+    // Pending Intent actions triggerd by the Media Session listener
+    public static final String ACTION_PLAY = "splitsound.com.audio.ACTION_PLAY";
+    public static final String ACTION_PAUSE = "splitsound.com.audio.ACTION_PAUSE";
+    public static final String ACTION_PREVIOUS = "splitsound.com.audio.ACTION_PREVIOUS";
+    public static final String ACTION_NEXT = "splitsound.com.audio.ACTION_NEXT";
+    public static final String ACTION_STOP = "splitsound.com.audio.ACTION_STOP";
 
-        // Initialize audioTrack
-        audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
-                SAMPLE_RATE,
-                NUM_CHANNELS == 1 ? AudioFormat.CHANNEL_OUT_MONO : AudioFormat.CHANNEL_OUT_STEREO,
-                AudioFormat.ENCODING_PCM_16BIT,
-                minBufSize,
-                AudioTrack.MODE_STREAM);
+    //Initialize media session
+    private MediaSessionManager mediaSessionManager;
+    private MediaSessionCompat mediaSession;
+    private MediaControllerCompat.TransportControls transportControls;
 
-        audioTrack.play();
-    }
+    //AudioPlayer notification ID
+    private static final int NOTIFICATION_ID = 101;
 
-    public static AudioTrack getTrack()
-    {
-        return audioTrack;
-    }
+    /********************************** Initialization *********************************/
 
+    @Override
     public void onCreate()
     {
         super.onCreate();
+
+        if(mediaSessionManager == null)
+        {
+            try {
+                initMediaSession();
+                initAudioTrack();
+            } catch(RemoteException e)
+            {
+                e.printStackTrace();
+                stopSelf();
+            }
+            buildNotification(PlaybackStatus.PLAYING);
+        }
+
+        initNoisyReceiver();
         callStateListener();
-        registerBecomingNoisyReceiver();
-        register_playNewAudio();
+        initPlayNewAudio();
+
+        Log.i(TAG, "Audio service initiated and audio focus acquired");
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
+        if(!requestAudioFocus()) {
+            Log.e(TAG, "Could not obtain audio focus....exiting");
+            stopSelf();
+        }
+
+        handleIncomingActions(intent);
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public IBinder onBind(Intent intent)
     {
         return iBinder;
-    }
-
-    /*Invoked when the audio focus of the system is updated*/
-    @Override
-    public void onAudioFocusChange(int focusChange)
-    {
-        switch(focusChange)
-        {
-            case AudioManager.AUDIOFOCUS_GAIN:
-                if(audioTrack == null) initAudioTrack();
-                else playMedia();
-                audioTrack.setVolume(1.0f);
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS:
-                stopMedia();
-                audioTrack.release();
-                audioTrack = null;
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                pauseMedia();
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                if(audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING)audioTrack.setVolume(0.1f);
-                break;
-        }
     }
 
     /*Requests the audio focus from the Android service*/
@@ -153,192 +152,28 @@ public class AudioTrackService extends Service implements
         return AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioManager.abandonAudioFocus(this);
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId)
+    public void initAudioTrack()
     {
-        if(!requestAudioFocus()) {
-            Log.e(TAG, "Could not obtain audio focus....exiting");
-            stopSelf();
-        }
+        // Get the most minimum buffer size based on channel and encoding
+        int minBufSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, NUM_CHANNELS == 1 ? AudioFormat.CHANNEL_IN_MONO : AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT);
 
-        Log.i(TAG, "Audio service initiated and audio focus acquired");
+        // Initialize audioTrack
+        audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
+                SAMPLE_RATE,
+                NUM_CHANNELS == 1 ? AudioFormat.CHANNEL_OUT_MONO : AudioFormat.CHANNEL_OUT_STEREO,
+                AudioFormat.ENCODING_PCM_16BIT,
+                minBufSize,
+                AudioTrack.MODE_STREAM);
 
-        if(mediaSessionManager == null)
-        {
-            try {
-                initMediaSession();
-                initAudioTrack();
-            } catch(RemoteException e)
-            {
-                e.printStackTrace();
-                stopSelf();
-            }
-            buildNotification(PlaybackStatus.PLAYING);
-        }
-
-        handleIncomingActions(intent);
-        return super.onStartCommand(intent, flags, startId);
+        audioTrack.play();
     }
-
-    @Override
-    public void onDestroy()
-    {
-
-        super.onDestroy();
-        requestAudioFocus();
-        if(audioTrack != null)
-        {
-            stopMedia();
-            audioTrack.release();
-        }
-        removeAudioFocus();
-
-        if(phoneStateListener != null) {
-            telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
-            Log.i(TAG, "Remove PhoneState listener");
-        }
-
-        removeNotification();
-
-        unregisterReceiver(becomingNoisy);
-        unregisterReceiver(playNewAudio);
-        stopSelf();
-    }
-
-    /********************************** Media Player control functions*********************************/
-
-    /*Plays media*/
-    public void playMedia()
-    {
-
-        if(audioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING)
-            audioTrack.play();
-    }
-
-    /*Pause media*/
-    public void pauseMedia()
-    {
-        if(audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING)
-            audioTrack.pause();
-    }
-
-    /*Stops media*/
-    public void stopMedia()
-    {
-        if(audioTrack == null)return;
-        if(audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING)
-            audioTrack.stop();
-    }
-
-    /*Resumes media*/
-    public void resumeMedia()
-    {
-        if(audioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING)
-            audioTrack.play();
-    }
-
-    /********************************** Broadcast Receiver *********************************/
-
-    private BroadcastReceiver becomingNoisy = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            //pause audio on ACTION_AUDIO_BECOMING_NOISY
-            pauseMedia();
-            buildNotification(PlaybackStatus.PAUSED);
-        }
-    };
-
-    private void registerBecomingNoisyReceiver()
-    {
-        IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-        if(intentFilter == null)
-            Log.e(TAG, "becomingNoisyReceiver: intent init failed");
-        registerReceiver(becomingNoisy, intentFilter);
-    }
-
-    private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            stopMedia();
-            initAudioTrack();
-            updateMetaData();
-            buildNotification(PlaybackStatus.PLAYING);
-        }
-    };
-
-    private void register_playNewAudio()
-    {
-        IntentFilter filter = new IntentFilter(OpusAudioThread.Broadcast_PLAY_NEW_AUDIO);
-        registerReceiver(playNewAudio, filter);
-    }
-
-    /*Handle incoming phone calls*/
-    private void callStateListener() {
-        // Get the telephony manager
-        telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-        //Starting listening for PhoneState changes
-        phoneStateListener = new PhoneStateListener()
-        {
-            @Override
-            public void onCallStateChanged(int state, String incomingNumber)
-            {
-                switch (state)
-                {
-                    //if at least one call exists or the phone is ringing
-                    //pause the MediaPlayer
-                    case TelephonyManager.CALL_STATE_OFFHOOK:
-                    case TelephonyManager.CALL_STATE_RINGING:
-                        if (audioTrack != null)
-                        {
-                            pauseMedia();
-                            ongoingCall = true;
-                        }
-                        break;
-                    case TelephonyManager.CALL_STATE_IDLE:
-                        // Phone idle. Start playing.
-                        if (audioTrack != null) {
-                            if (ongoingCall) {
-                                ongoingCall = false;
-                                resumeMedia();
-                            }
-                        }
-                        break;
-                }
-            }
-        };
-        // Register the listener with the telephony manager
-        // Listen for changes to the device call state.
-        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-        if(telephonyManager != null && phoneStateListener != null)
-            Log.i(TAG, "PhoneState Listener added");
-        else
-            Log.e(TAG, "PhoneState Listener Init failed");
-    }
-
-    /********************************** Media Session *********************************/
-
-    //Actions triggerd by the Media Session listener
-    public static final String ACTION_PLAY = "splitsound.com.audio.ACTION_PLAY";
-    public static final String ACTION_PAUSE = "splitsound.com.audio.ACTION_PAUSE";
-    public static final String ACTION_PREVIOUS = "splitsound.com.audio.ACTION_PREVIOUS";
-    public static final String ACTION_NEXT = "splitsound.com.audio.ACTION_NEXT";
-    public static final String ACTION_STOP = "splitsound.com.audio.ACTION_STOP";
-
-    //Initialize media session
-    private MediaSessionManager mediaSessionManager;
-    private MediaSessionCompat mediaSession;
-    private MediaControllerCompat.TransportControls transportControls;
-
-    //AudioPlayer notification ID
-    private static final int NOTIFICATION_ID = 102;
 
     private void initMediaSession() throws RemoteException
     {
         if(mediaSession!= null)return;
 
         mediaSessionManager = (MediaSessionManager)getApplicationContext().getSystemService(Context.MEDIA_SESSION_SERVICE);
-        mediaSession = new MediaSessionCompat(getApplicationContext(),"AudioPlayer");
+        mediaSession = new MediaSessionCompat(getApplicationContext(),"SplitSound Player");
         transportControls = mediaSession.getController().getTransportControls();
         mediaSession.setActive(true);
 
@@ -403,6 +238,22 @@ public class AudioTrackService extends Service implements
         Log.i(TAG, "Media session initialized and callbacks set");
     }
 
+    private void initNoisyReceiver()
+    {
+        IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        if(intentFilter == null)
+            Log.e(TAG, "becomingNoisyReceiver: intent init failed");
+        registerReceiver(becomingNoisy, intentFilter);
+    }
+
+    private void initPlayNewAudio()
+    {
+        IntentFilter filter = new IntentFilter(OpusAudioThread.Broadcast_PLAY_NEW_AUDIO);
+        registerReceiver(playNewAudio, filter);
+    }
+
+    /********************************** Session Updates *********************************/
+
     private void updateMetaData()
     {
         Bitmap albumArt = BitmapFactory.decodeResource(getResources(), R.drawable.image);
@@ -463,7 +314,7 @@ public class AudioTrackService extends Service implements
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("notify_001",
                     "Channel human readable title",
-                    NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager.IMPORTANCE_LOW);
             mNotificationManager.createNotificationChannel(channel);
         }
 
@@ -480,6 +331,8 @@ public class AudioTrackService extends Service implements
         Log.i(TAG, "Notification removed");
 
     }
+
+    /********************************** Action Intents *********************************/
 
     private PendingIntent playbackAction(int actionNumber) {
         Intent playbackAction = new Intent(this, AudioTrackService.class);
@@ -523,9 +376,164 @@ public class AudioTrackService extends Service implements
         }
     }
 
+    /*Handle incoming phone calls*/
+    private void callStateListener() {
+        // Get the telephony manager
+        telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        //Starting listening for PhoneState changes
+        phoneStateListener = new PhoneStateListener()
+        {
+            @Override
+            public void onCallStateChanged(int state, String incomingNumber)
+            {
+                switch (state)
+                {
+                    //if at least one call exists or the phone is ringing
+                    //pause the MediaPlayer
+                    case TelephonyManager.CALL_STATE_OFFHOOK:
+                    case TelephonyManager.CALL_STATE_RINGING:
+                        if (audioTrack != null)
+                        {
+                            pauseMedia();
+                            ongoingCall = true;
+                        }
+                        break;
+                    case TelephonyManager.CALL_STATE_IDLE:
+                        // Phone idle. Start playing.
+                        if (audioTrack != null) {
+                            if (ongoingCall) {
+                                ongoingCall = false;
+                                resumeMedia();
+                            }
+                        }
+                        break;
+                }
+            }
+        };
+        // Register the listener with the telephony manager
+        // Listen for changes to the device call state.
+        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        if(telephonyManager != null && phoneStateListener != null)
+            Log.i(TAG, "PhoneState Listener added");
+        else
+            Log.e(TAG, "PhoneState Listener Init failed");
+    }
+
+    /********************************** Media Callbacks *********************************/
+
+    /*Invoked when the audio focus of the system is updated*/
+    @Override
+    public void onAudioFocusChange(int focusChange)
+    {
+        switch(focusChange)
+        {
+            case AudioManager.AUDIOFOCUS_GAIN:
+                if(audioTrack == null) initAudioTrack();
+                else playMedia();
+                audioTrack.setVolume(1.0f);
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS:
+                stopMedia();
+                audioTrack.release();
+                audioTrack = null;
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                pauseMedia();
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                if(audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING)audioTrack.setVolume(0.1f);
+                break;
+        }
+    }
+
+    private BroadcastReceiver becomingNoisy = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            //pause audio on ACTION_AUDIO_BECOMING_NOISY
+            pauseMedia();
+            buildNotification(PlaybackStatus.PAUSED);
+        }
+    };
+
+    private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            stopMedia();
+            initAudioTrack();
+            updateMetaData();
+            buildNotification(PlaybackStatus.PLAYING);
+        }
+    };
+
+    @Override
+    public void onDestroy()
+    {
+
+        super.onDestroy();
+        requestAudioFocus();
+        if(audioTrack != null)
+        {
+            stopMedia();
+            audioTrack.release();
+        }
+        removeAudioFocus();
+
+        if(phoneStateListener != null) {
+            telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+            Log.i(TAG, "Remove PhoneState listener");
+        }
+
+        removeNotification();
+
+        unregisterReceiver(becomingNoisy);
+        unregisterReceiver(playNewAudio);
+        stopSelf();
+    }
+
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
         onDestroy();
+    }
+
+    /********************************** Media Controls *********************************/
+
+    /*Plays media*/
+    public void playMedia()
+    {
+
+        if(audioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING)
+            audioTrack.play();
+    }
+
+    /*Pause media*/
+    public void pauseMedia()
+    {
+        if(audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING)
+            audioTrack.pause();
+    }
+
+    /*Stops media*/
+    public void stopMedia()
+    {
+        if(audioTrack == null)return;
+        if(audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING)
+            audioTrack.stop();
+    }
+
+    /*Resumes media*/
+    public void resumeMedia()
+    {
+        if(audioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING)
+        {
+            audioTrack.flush();
+            audioTrack.play();
+        }
+    }
+
+    public static AudioTrack getTrack()
+    {
+        return audioTrack;
     }
 }

@@ -1,4 +1,4 @@
-package splitsound.com.splitsound;
+package splitsound.com.audio.controls;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;

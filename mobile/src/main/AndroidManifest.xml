@@ -19,19 +19,19 @@
         android:supportsRtl="true"
         android:theme="@android:style/ThemeOverlay.Material.Dark">
 
-        <service android:name=".MediaPlaybackService"
-            android:stopWithTask="false"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-                <action android:name="android.media.browse.MediaBrowserService" />
-            </intent-filter>
-        </service>
-        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-            </intent-filter>
-        </receiver>
+        <!--<service android:name=".MediaPlaybackService"-->
+            <!--android:stopWithTask="false"-->
+            <!--android:exported="true">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MEDIA_BUTTON" />-->
+                <!--<action android:name="android.media.browse.MediaBrowserService" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
+        <!--<receiver android:name="android.support.v4.media.session.MediaButtonReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MEDIA_BUTTON" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
         <service android:name="splitsound.com.audio.controls.AudioTrackService"
             android:stopWithTask="false"/>
