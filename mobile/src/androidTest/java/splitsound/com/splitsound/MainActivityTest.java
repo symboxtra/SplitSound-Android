@@ -66,8 +66,7 @@ public class MainActivityTest {
 
 
     // TODO: Fix this after new Google bug update
-    //@Rule
-    //public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.RECORD_AUDIO);
+    @Rule public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.RECORD_AUDIO);
 
 
     // Grant permissions
@@ -75,8 +74,10 @@ public class MainActivityTest {
     public void grantPhonePermission() {
         if (Build.VERSION.SDK_INT >= 23) {
             UiDevice device = UiDevice.getInstance(getInstrumentation());
-            UiObject allowPermissions = device.findObject(new UiSelector().text("Allow"));
+            UiObject allowPermissions = device.findObject(new UiSelector().text("ALLOW"));
+            Log.d("Test", "SDK greater than 23");
             if (allowPermissions.exists()) {
+                Log.d("Test", "I exist");
                 try {
                     allowPermissions.click();
                 } catch (UiObjectNotFoundException e) {
@@ -89,17 +90,6 @@ public class MainActivityTest {
     @Test
     public void perform_all_ui() throws InterruptedException
     {
-        if (Build.VERSION.SDK_INT >= 23) {
-            UiDevice device = UiDevice.getInstance(getInstrumentation());
-            UiObject allowPermissions = device.findObject(new UiSelector().text("Allow"));
-            if (allowPermissions.exists()) {
-                try {
-                    allowPermissions.click();
-                } catch (UiObjectNotFoundException e) {
-                    Log.e(e.toString(), "There is no permissions dialog to interact with ");
-                }
-            }
-        }
 
         // Test settings tab
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
