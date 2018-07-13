@@ -10,6 +10,7 @@ import java.util.Iterator;
 import jlibrtp.Participant;
 import jlibrtp.RTCPAppIntf;
 import jlibrtp.RTPSession;
+import splitsound.com.audio.opus.OpusAudioThread;
 import splitsound.com.splitsound.R;
 import splitsound.com.splitsound.SplitSoundApplication;
 import splitsound.com.ui.adapters.RecyclerAdapter;
@@ -99,7 +100,12 @@ public class RTCPReceiverTask implements RTCPAppIntf, Runnable
                         if(e.next().getSSRC() == part.getSSRC())
                             exists = true;
                     if(!exists && Boolean.parseBoolean(dataString[4]))
+                    {
                         rtpSess.addParticipant(part);
+
+                        // Start the audio relay
+                        new Thread(new OpusAudioThread()).start();
+                    }
 
                     // Display error dialog if server denied service
                     if(!Boolean.parseBoolean(dataString[4]))

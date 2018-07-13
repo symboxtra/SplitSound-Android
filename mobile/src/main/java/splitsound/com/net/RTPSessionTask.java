@@ -49,14 +49,14 @@ public class RTPSessionTask implements RTPAppIntf, Runnable
     @Override
     public void receiveData(DataFrame frame, Participant p)
     {
-        // Add data to data queue only if participant is accepted
+        // Add data to data queue only if participant server is accepted
         boolean exists = false;
         for(Iterator<Participant> e = rtpSess.getUnicastReceivers(); e.hasNext();)
             if(e.next().getSSRC() == p.getSSRC())
                 exists = true;
 
         byte[] data = frame.getConcatenatedData();
-        //if(exists)
+        if(exists)
             RTPNetworking.networkPackets.add(data);
         p.debugPrint();
     }
