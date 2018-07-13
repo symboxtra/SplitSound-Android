@@ -30,7 +30,6 @@ import android.util.Log;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
-import splitsound.com.audio.controls.MediaPlaybackService;
 import splitsound.com.net.RTPNetworking;
 
 import java.net.InterfaceAddress;
@@ -106,90 +105,8 @@ public class DrawerActivityTest extends AppCompatActivity implements NavigationV
         // Ask Audio permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.RECORD_AUDIO }, MY_PERMISSIONS_REQUEST_RECORD_AUDIO);
-
-        //mediaBrowser = new MediaBrowserCompat(SplitSoundApplication.getAppContext(), new ComponentName(this, MediaPlaybackService.class)), mConnectionCallbacks, null);
-        //mediaBrowser.connect();
-        //mediaBrowser = new MediaBrowserCompat(getApplicationContext(), new ComponentName(this, MediaPlaybackService.class), mConnectionCallbacks, null);
-        //mediaBrowser.connect();
     }
 
-    private final MediaBrowserCompat.ConnectionCallback mConnectionCallbacks = new MediaBrowserCompat.ConnectionCallback() {
-                @Override
-                public void onConnected() {
-
-                    // Get the token for the MediaSession
-                    MediaSessionCompat.Token token = mediaBrowser.getSessionToken();
-
-                    // Create a MediaControllerCompat
-                    MediaControllerCompat mediaController =
-                            null;
-                    try {
-                        mediaController = new MediaControllerCompat(DrawerActivityTest.this, // Context
-                                token);
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
-
-                    // Save the controller
-                    MediaControllerCompat.setMediaController(DrawerActivityTest.this, mediaController);
-
-                    // Finish building the UI
-                    buildTransportControls();
-                }
-
-                @Override
-                public void onConnectionSuspended() {
-                    // The Service has crashed. Disable transport controls until it automatically reconnects
-                }
-
-                @Override
-                public void onConnectionFailed() {
-                    // The Service has refused our connection
-                    Log.i(TAG, "Test");
-                }
-            };
-
-    public void buildTransportControls()
-    {
-        /*ImageButton button = (ImageButton)findViewById(R.id.connect);
-        button.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v)
-            {
-                int pbState = MediaControllerCompat.getMediaController(DrawerActivityTest.this).getPlaybackState().getState();
-                if (pbState == PlaybackStateCompat.STATE_PLAYING) {
-                    MediaControllerCompat.getMediaController(DrawerActivityTest.this).getTransportControls().pause();
-                } else {
-                    MediaControllerCompat.getMediaController(DrawerActivityTest.this).getTransportControls().play();
-                }
-                RTPNetworking.requestQ.add(AppPacket.LIST_ALL);
-
-                new Thread(new OpusAudioThread()).start();
-            }
-        });*/
-        MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(DrawerActivityTest.this);
-
-        // Display the initial state
-        MediaMetadataCompat metadata = mediaController.getMetadata();
-        PlaybackStateCompat pbState = mediaController.getPlaybackState();
-
-        // Register a Callback to stay in sync
-        mediaController.registerCallback(controllerCallback);
-		//MediaControllerCompat.getMediaController(DrawerActivityTest.this).getTransportControls().pause();
-
-    }
-
-    MediaControllerCompat.Callback controllerCallback = new MediaControllerCompat.Callback() {
-                @Override
-                public void onMetadataChanged(MediaMetadataCompat metadata) {}
-
-                @Override
-                public void onPlaybackStateChanged(PlaybackStateCompat state)
-                {
-                    Log.i(TAG, state.toString());
-                }
-            };
 
     /**
      * Executed when back button on device is pressed
@@ -338,9 +255,6 @@ public class DrawerActivityTest extends AppCompatActivity implements NavigationV
     public void onDestroy()
     {
         super.onDestroy();
-        /*if (MediaControllerCompat.getMediaController(DrawerActivityTest.this) != null) {
-            MediaControllerCompat.getMediaController(DrawerActivityTest.this).unregisterCallback(controllerCallback);
-        }
-        mediaBrowser.disconnect();*/
+
     }
 }
