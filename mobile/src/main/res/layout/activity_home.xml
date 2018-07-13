@@ -26,14 +26,15 @@
         <include layout="@layout/content_drawer_activity_test" />
 
         <ImageButton
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
             android:id="@+id/connect"
             android:layout_width="135dp"
             android:layout_height="135dp"
             android:layout_gravity="center"
-            android:background="@drawable/button_design"
             android:contentDescription="@string/headphone_button"
             android:paddingBottom="10dp"
-            android:src="@drawable/ic_sound_wave_headphones" />
+            android:src="@drawable/play_button" />
 
         <RelativeLayout
             android:layout_width="180dp"

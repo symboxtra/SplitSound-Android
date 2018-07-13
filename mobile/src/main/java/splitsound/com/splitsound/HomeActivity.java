@@ -1,5 +1,6 @@
 package splitsound.com.splitsound;
 
+import android.annotation.SuppressLint;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -59,6 +61,7 @@ public class HomeActivity extends Fragment {
      * @param view
      * @param savedInstanceState
      */
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         //Click listeners for the main buttons
@@ -134,18 +137,58 @@ public class HomeActivity extends Fragment {
             }
         });
 
-        // RTCP transmission testing
-        //TODO: Remove after basic transmission is setup
-        ImageButton button = (ImageButton) getView().findViewById(R.id.connect);
-        button.setOnClickListener(new View.OnClickListener() {
+        final ImageButton button = (ImageButton) getView().findViewById(R.id.connect);
+        //button.setImageDrawable();
+        button.setImageResource(R.drawable.play_button); // R.drawable.play_button
+        button.setOnTouchListener(new View.OnTouchListener(){
 
+            boolean pause = false;
             @Override
-            public void onClick(View v) {
-                RTPNetworking.requestQ.add(AppPacket.LIST_ALL);
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_UP)
+                {
+                    if(pause)
+                    {
+                        button.requestLayout();
+                        button.setImageResource(R.drawable.play_button_mute);
+                        button.getLayoutParams().height = 550;
+                        button.getLayoutParams().width = 550;
+                    }
+                    else
+                    {
+                        button.setImageResource(R.drawable.play_button);
+                        button.requestLayout();
+                        button.getLayoutParams().height = 500;
+                        button.getLayoutParams().width = 500;
+                    }
 
-                new Thread(new OpusAudioThread()).start();
+                    //TODO: Remove after basic transmission is setup
+                    RTPNetworking.requestQ.add(AppPacket.LIST_ALL);
+                    new Thread(new OpusAudioThread()).start();
+                }
+                else if (event.getAction() == MotionEvent.ACTION_DOWN)
+                {
+                    if(pause)
+                    {
+                        button.requestLayout();
+                        button.setImageResource(R.drawable.play_button_mute_hover);
+                        button.getLayoutParams().height = 500;
+                        button.getLayoutParams().width = 500;
+                    }
+                    else
+                    {
+                        button.requestLayout();
+                        button.setImageResource(R.drawable.play_button_hover);
+                        button.getLayoutParams().height = 500;
+                        button.getLayoutParams().width = 500;
+                    }
+
+                    pause = !pause;
+                }
+                return true;
             }
         });
+
         getActivity().setTitle("Home");
         super.onViewCreated(view, savedInstanceState);
 
