@@ -1,6 +1,7 @@
 package splitsound.com.splitsound;
 
 import android.annotation.SuppressLint;
+import android.media.AudioTrack;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import splitsound.com.audio.controls.AudioTrackService;
 import splitsound.com.net.AppPacket;
 import splitsound.com.audio.opus.OpusAudioThread;
 import splitsound.com.net.RTPNetworking;
@@ -142,17 +144,20 @@ public class HomeActivity extends Fragment {
         button.setImageResource(R.drawable.play_button); // R.drawable.play_button
         button.setOnTouchListener(new View.OnTouchListener(){
 
-            boolean pause = false;
+            boolean playing = true;
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction() == MotionEvent.ACTION_UP)
                 {
-                    if(pause)
+                    if(playing)
                     {
                         button.requestLayout();
                         button.setImageResource(R.drawable.play_button_mute);
                         button.getLayoutParams().height = 550;
                         button.getLayoutParams().width = 550;
+
+                        AudioTrackService.getTransportControls().pause();
                     }
                     else
                     {
@@ -164,16 +169,18 @@ public class HomeActivity extends Fragment {
 
                     //TODO: Remove after basic transmission is setup
                     RTPNetworking.requestQ.add(AppPacket.LIST_ALL);
-                    new Thread(new OpusAudioThread()).start();
+
                 }
                 else if (event.getAction() == MotionEvent.ACTION_DOWN)
                 {
-                    if(pause)
+                    if(playing)
                     {
                         button.requestLayout();
                         button.setImageResource(R.drawable.play_button_mute_hover);
                         button.getLayoutParams().height = 500;
                         button.getLayoutParams().width = 500;
+
+                        AudioTrackService.getTransportControls().play();
                     }
                     else
                     {
@@ -183,7 +190,7 @@ public class HomeActivity extends Fragment {
                         button.getLayoutParams().width = 500;
                     }
 
-                    pause = !pause;
+                    playing = !playing;
                 }
                 return true;
             }

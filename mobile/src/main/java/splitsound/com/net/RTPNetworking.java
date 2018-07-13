@@ -16,6 +16,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import jlibrtp.Participant;
 import jlibrtp.RTPSession;
+import splitsound.com.audio.opus.OpusAudioThread;
 import splitsound.com.splitsound.SplitSoundApplication;
 
 /**
@@ -100,6 +101,8 @@ public class RTPNetworking implements Runnable {
             new Thread(new RTCPSessionTask(sess)).start();
 
             Log.i(TAG, "All sub-threads initiated");
+
+            new Thread(new OpusAudioThread()).start();
 
         } catch (Exception e) {
             Log.e(TAG, e.toString());

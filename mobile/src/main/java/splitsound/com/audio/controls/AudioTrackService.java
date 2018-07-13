@@ -85,7 +85,7 @@ public class AudioTrackService extends Service implements
     //Initialize media session
     private MediaSessionManager mediaSessionManager;
     private MediaSessionCompat mediaSession;
-    private MediaControllerCompat.TransportControls transportControls;
+    private static MediaControllerCompat.TransportControls transportControls;
 
     //AudioPlayer notification ID
     private static final int NOTIFICATION_ID = 101;
@@ -544,5 +544,10 @@ public class AudioTrackService extends Service implements
     public static AudioTrack getTrack()
     {
         return audioTrack;
+    }
+
+    public static MediaControllerCompat.TransportControls getTransportControls()
+    {
+        return transportControls;
     }
 }
