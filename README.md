@@ -60,7 +60,19 @@ Preferred environments:
 - Windows: PowerShell
 - Unix: bash
 
-For simplify building and testing, a number of platform specific scripts are included in the repository. 
+For simplify building and testing, a number of platform specific scripts are included in the repository.
+
+Before runninng the scripts provided in the repository make sure that Java is downloaded on the machine and `JAVA_HOME` environment variable is pointing to the latest version of the installed JDK
+
+In Unix, `JAVA_HOME` is automatically set however make sure that it is pointing to the right folder by running:
+```
+export JAVA_HOME=/usr/java/jdk1.8/bin/java
+```
+
+In Windows, `JAVA_HOME` is not automatically set however the installer does set Java in the `PATH`. Just to be sure you can open your Environment Variables and add/check the following if necessary
+```
+JAVA_HOME=%PROGRAMFILES%\Java\jdk1.8
+```
 
 ### Build/Test Scripts ###
 
