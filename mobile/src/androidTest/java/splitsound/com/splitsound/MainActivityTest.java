@@ -1,11 +1,14 @@
 package splitsound.com.splitsound;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Context;
 import android.os.Build;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.NavigationViewActions;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
@@ -16,6 +19,7 @@ import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
 import android.util.Log;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.api.internal.ApiExceptionMapper;
 
 // Common Espresso imports (Do not remove because auto-import does not work with Espresso)
@@ -34,6 +38,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.contrib.DrawerActions.*;
 import static android.support.test.espresso.action.ViewActions.click;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -91,27 +96,51 @@ public class MainActivityTest {
     public void perform_all_ui() throws InterruptedException
     {
 
+        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(SettingsActivity.class.getName(), null, false);
+
         // Test settings tab
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.settings));
 
         // Test username dialog
-        //onData(anything()).inAdapterView(withId(R.id.userSettings)).atPosition(0).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.userSettings)).atPosition(0).perform(click());
         //Thread.sleep(100);
+        onView(isRoot()).perform(pressBack());
+        onView(isRoot()).perform(pressBack());
         onView(isRoot()).perform(pressBack());
 
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.home_button));
 
-        // Test user list
+        // Test play button
+        onView(withId(R.id.connect)).perform(click());
+        Thread.sleep(100);
+        onView(withId(R.id.connect)).perform(click());
+
+        // Test user list swipe up
         onView(withId(R.id.sliding_layout)).perform(swipeUp());
-        //Thread.sleep(100);
-        //onView(withId(R.id.sliding_layout)).perform(swipeDown());
+        Thread.sleep(100);
+
+        // Test user menu
+        //onView(withId(R.id.usr_control)).perform(click());
+
+        // Test user list swipe down
+        onView(withId(R.id.sliding_layout)).perform(swipeDown());
 
         // Test available sessions tab
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.available_sessions));
         Thread.sleep(10000);
+
+        // Test joining session
+        onView(withId(R.id.server_list_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        Thread.sleep(100);
+        onView(isRoot()).perform(pressBack());
+
+        // Test refresh
+        onView(withId(R.id.swipeRefreshLayout)).perform(swipeDown());
+
+        // TEst
 
         // Test settings tab
         //onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
