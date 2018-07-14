@@ -36,6 +36,7 @@ import android.util.Log;
 
 import splitsound.com.audio.opus.OpusAudioThread;
 import splitsound.com.splitsound.DrawerActivityTest;
+import splitsound.com.splitsound.HomeActivity;
 import splitsound.com.splitsound.R;
 import splitsound.com.splitsound.SplitSoundApplication;
 
@@ -295,7 +296,7 @@ public class AudioTrackService extends Service implements
 
         //Code so when you tap outside the buttons it goes back to the app
         Intent intent = new Intent(this, DrawerActivityTest.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         // Create a new Notification
@@ -305,7 +306,7 @@ public class AudioTrackService extends Service implements
                 .setSubText(description.getDescription())
                 .setLargeIcon(description.getIconBitmap())
                 .setSmallIcon(R.drawable.ic_headset_mic_black_24dp)
-                .setContentIntent(controller.getSessionActivity())
+                .setContentIntent(pendingIntent)
                 .setShowWhen(false)
                 .setOngoing(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -316,8 +317,7 @@ public class AudioTrackService extends Service implements
                 .setContentInfo("Streaming audio...")
                 //.addAction(R.drawable.ic_skip_previous_black_40dp, "previous", playbackAction(3))
                 .addAction(notificationAction, notificationText, play_pauseAction)
-                .addAction(android.R.drawable.ic_menu_send, "Leave", playbackAction(2))
-                .setAutoCancel(true);
+                .addAction(android.R.drawable.ic_menu_send, "Leave", playbackAction(2));
 
         NotificationManager mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
