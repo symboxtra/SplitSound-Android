@@ -103,6 +103,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     {
                         // Display dialog to store password into shared preferences
                         MaterialDialog builder = new MaterialDialog.Builder(v.getContext())
+                                .typeface("karla.ttf", "karla.ttf")
                                 .title("Session Password")
                                 .customView(R.layout.pass_dialog, true)
                                 .positiveText("CONNECT")

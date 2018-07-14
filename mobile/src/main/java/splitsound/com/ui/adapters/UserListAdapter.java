@@ -150,6 +150,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
                             {
                                 // Display dialog to get admin password into shared preferences to kick user
                                 MaterialDialog builder = new MaterialDialog.Builder(holder.itemView.getContext())
+                                        .typeface("karla.ttf", "karla.ttf")
                                         .title("Admin Password")
                                         .customView(R.layout.pass_dialog, true)
                                         .positiveText("KICK")

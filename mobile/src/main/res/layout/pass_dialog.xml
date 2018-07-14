@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <EditText
+        android:fontFamily="@font/karla"
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,6 +15,7 @@
         android:textColor="#FFFFFF" />
 
     <CheckBox
+        android:fontFamily="@font/karla"
         android:id="@+id/showPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

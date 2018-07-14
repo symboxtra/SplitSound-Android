@@ -97,6 +97,7 @@ public class SettingsActivity extends Activity
                 {
                     // Display dialog to store username into shared preferences
                     new MaterialDialog.Builder(view.getContext())
+                            .typeface("karla.ttf", "karla.ttf")
                             .title("Username")
                             .content("Enter a new username:")
                             .inputType(InputType.TYPE_CLASS_TEXT)
