@@ -35,6 +35,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import splitsound.com.audio.opus.OpusAudioThread;
+import splitsound.com.net.AppPacket;
+import splitsound.com.net.RTPNetworking;
 import splitsound.com.splitsound.DrawerActivityTest;
 import splitsound.com.splitsound.HomeActivity;
 import splitsound.com.splitsound.R;
@@ -228,6 +230,7 @@ public class AudioTrackService extends Service implements
             {
                 super.onStop();
                 stopMedia();
+                RTPNetworking.requestQ.add(AppPacket.BYE);
                 removeNotification();
                 stopSelf();
             }
@@ -288,7 +291,7 @@ public class AudioTrackService extends Service implements
             play_pauseAction = playbackAction(0);
         }
 
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.image); //replace with your own image
+        //Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_skip_white); //replace with your own image
 
         MediaControllerCompat controller = mediaSession.getController();
         MediaMetadataCompat mediaMetadata = controller.getMetadata();
@@ -308,6 +311,7 @@ public class AudioTrackService extends Service implements
                 .setSmallIcon(R.drawable.ic_headset_mic_black_24dp)
                 .setContentIntent(pendingIntent)
                 .setShowWhen(false)
+                .setAutoCancel(false)
                 .setOngoing(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
@@ -317,7 +321,7 @@ public class AudioTrackService extends Service implements
                 .setContentInfo("Streaming audio...")
                 //.addAction(R.drawable.ic_skip_previous_black_40dp, "previous", playbackAction(3))
                 .addAction(notificationAction, notificationText, play_pauseAction)
-                .addAction(android.R.drawable.ic_menu_send, "Leave", playbackAction(2));
+                .addAction(R.drawable.ic_leave_white, "Leave", playbackAction(4));
 
         NotificationManager mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -362,6 +366,9 @@ public class AudioTrackService extends Service implements
                 // Previous track
                 playbackAction.setAction(ACTION_PREVIOUS);
                 return PendingIntent.getService(this, actionNumber, playbackAction, 0);
+            case 4:
+                playbackAction.setAction(ACTION_STOP);
+                return PendingIntent.getService(this, actionNumber, playbackAction, 0);
             default:
                 break;
         }
@@ -382,6 +389,9 @@ public class AudioTrackService extends Service implements
         }
         else if(actionString.contains("ACTION_PREVIOUS")) {
             transportControls.skipToPrevious();
+        }
+        else if(actionString.contains("ACTION_STOP")){
+            transportControls.stop();
         }
     }
 
