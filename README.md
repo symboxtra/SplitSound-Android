@@ -16,7 +16,7 @@ Every feature/line of development should have its own branch.
 Unless you know what you're doing, this branch should typically be a direct child of the `master` branch (see example below).
 Releases accumulate in release branches before being merged into master.
 
-Merging to master requires passing at least Jenkins CI (see [CI](#continuous-integration)) and a review from at least one member of the team.
+Merging to master requires passing our Jenkins CI (see [CI](#continuous-integration)) and a review from at least one member of the team.
 
 #### Example: ####
 ```
@@ -60,7 +60,7 @@ Preferred environments:
 - Windows: PowerShell
 - Unix: bash
 
-To simplify building and testing, a number of platform specific scripts are included in the repository. 
+For simplify building and testing, a number of platform specific scripts are included in the repository. 
 
 ### Build/Test Scripts ###
 
