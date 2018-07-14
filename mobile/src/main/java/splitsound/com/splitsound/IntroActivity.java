@@ -6,10 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntro2;
 import com.github.paolorotolo.appintro.AppIntro2Fragment;
 
-public class IntroActivity extends AppIntro2{
+public class IntroActivity extends AppIntro {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +27,8 @@ public class IntroActivity extends AppIntro2{
         // NOTE: you will need to ask VIBRATE permission in Manifest if you haven't already
         setVibrate(true);
         setVibrateIntensity(30);
+
+        showSkipButton(true);
 
         // Animations -- use only one of the below. Using both could cause errors.
         setFadeAnimation(); // OR

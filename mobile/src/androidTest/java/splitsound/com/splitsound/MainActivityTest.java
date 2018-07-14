@@ -96,7 +96,17 @@ public class MainActivityTest {
     public void perform_all_ui() throws InterruptedException
     {
 
-        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(SettingsActivity.class.getName(), null, false);
+        UiDevice device = UiDevice.getInstance(getInstrumentation());
+        UiObject entry = device.findObject(new UiSelector().text("DONE"));
+        if(entry.exists()) {
+            try {
+                entry.click();
+            } catch (UiObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(SettingsActivity.class.getName(), null, false);
 
         // Test settings tab
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
