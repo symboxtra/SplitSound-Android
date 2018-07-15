@@ -116,7 +116,8 @@ public class MainActivityTest {
         //Thread.sleep(100);
         onView(isRoot()).perform(pressBack());
         onView(isRoot()).perform(pressBack());
-        onView(withContentDescription("Navigate up")).perform(click());
+        onView(isRoot()).perform(pressBack());
+        //onView(withContentDescription("Navigate up")).perform(click());
 
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.home_button));
