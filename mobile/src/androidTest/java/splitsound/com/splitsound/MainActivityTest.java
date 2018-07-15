@@ -128,7 +128,7 @@ public class MainActivityTest {
         onView(isRoot()).perform(pressBack());
         //onView(withContentDescription("Navigate up")).perform(click());
 
-        /*onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.home_button));
 
         // Test play button
@@ -157,7 +157,7 @@ public class MainActivityTest {
         onView(withId(R.id.swipeRefreshLayout)).perform(swipeDown());
         Thread.sleep(5000);
         onView(withId(R.id.action_refresh)).perform(click());
-        Thread.sleep(5000);*/
+        Thread.sleep(5000);
 
         Intent serviceIntent = new Intent(InstrumentationRegistry.getTargetContext(), AudioTrackService.class);
 
