@@ -89,6 +89,9 @@ public class AudioTrackService extends Service implements
     // SplitSound media control notification id
     private static final int NOTIFICATION_ID = 101;
 
+    // Binder given to clients
+    private final IBinder iBinder = new LocalBinder();
+
     /********************************** Initialization *********************************/
 
     /**
@@ -160,7 +163,15 @@ public class AudioTrackService extends Service implements
     @Override
     public IBinder onBind(Intent intent)
     {
-        return new Binder();
+        return iBinder;
+    }
+
+    public class LocalBinder extends Binder
+    {
+        public AudioTrackService getService()
+        {
+            return AudioTrackService.this;
+        }
     }
 
     /**

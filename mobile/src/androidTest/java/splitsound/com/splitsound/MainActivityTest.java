@@ -4,7 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Context;
+import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Build;
+import android.os.IBinder;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.NavigationViewActions;
@@ -12,6 +15,7 @@ import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
+import android.support.test.rule.ServiceTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
@@ -53,9 +57,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.net.DatagramSocket;
+import java.util.concurrent.TimeoutException;
 
 import jlibrtp.Participant;
 import jlibrtp.RTPSession;
+import splitsound.com.audio.controls.AudioTrackService;
 import splitsound.com.net.RTCPReceiverTask;
 import splitsound.com.net.RTPSessionTask;
 
@@ -119,7 +125,7 @@ public class MainActivityTest {
         onView(isRoot()).perform(pressBack());
         //onView(withContentDescription("Navigate up")).perform(click());
 
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        /*onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.home_button));
 
         // Test play button
@@ -148,80 +154,33 @@ public class MainActivityTest {
         onView(withId(R.id.swipeRefreshLayout)).perform(swipeDown());
         Thread.sleep(5000);
         onView(withId(R.id.action_refresh)).perform(click());
-        Thread.sleep(5000);
+        Thread.sleep(5000);*/
     }
 
-    /*
-    @Test
-    public void test_quick_maths()
-    {
-        assertEquals(2 + 2, 4);
-    }
-
+    @Rule
+    public final ServiceTestRule serviceRule = new ServiceTestRule();
 
     @Test
-    public void check_play_button()
+    public void testServiceFeatures() throws TimeoutException
     {
-        // Check if main play button exists
-        onView(withId(R.id.main_play_button)).check(matches(isDisplayed()));
+        // Create the service Intent.
+        Intent serviceIntent = new Intent(InstrumentationRegistry.getTargetContext(), AudioTrackService.class);
+
+        IBinder bind = serviceRule.bindService(serviceIntent);
+
+        AudioTrackService serv = ((AudioTrackService.LocalBinder)bind).getService();
+
+        serv.playMedia();
+        serv.pauseMedia();
+        serv.resumeMedia();
+        serv.stopMedia();
+
+        serv.onAudioFocusChange(AudioManager.AUDIOFOCUS_GAIN);
+        serv.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS_TRANSIENT);
+        serv.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK);
+        serv.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS);
+
+        serv.onDestroy();
+
     }
-
-    @Test
-    public void test_settings_activity()
-    {
-        // Perform activity change using navigation drawer
-
-        // Open drawer and Settings activity
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.settings));
-    }
-
-    @Test
-    public void swipe_test_user_list()
-    {
-        // Swipe up to open user list
-        onView(withId(R.id.sliding_layout)).perform(swipeUp());
-        onView(withId(R.id.sliding_layout)).perform(swipeDown());
-    }
-
-    @Test
-    public void check_available_sessions() throws InterruptedException
-    {
-        //Open available sessions tab
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.available_sessions));
-        Thread.sleep(100);
-        onView(isRoot()).perform(pressBack());
-    }
-
-    @Test
-    public void getPackets() throws Exception
-    {
-        // Create datagram ports for RTP and RTCP communication
-        DatagramSocket rtpSocket = null;
-        DatagramSocket rtcpSocket = null;
-        try {
-            rtpSocket = new DatagramSocket(8001);
-            rtcpSocket = new DatagramSocket(6001);
-        }catch(Exception e)
-        {
-            Log.e("Datagram Socket", "RTPSession failed to obtain port");
-            Log.e("Error: ", e.toString());
-        }
-
-        RTPSessionTask sessionTask = new RTPSessionTask();
-
-        // Create the RTP session and setup RTP and RTCP channels
-        RTPSession sess = new RTPSession(rtpSocket, rtcpSocket);
-        sess.naivePktReception(true);
-        sess.RTPSessionRegister(sessionTask,null, null);
-        Participant p = new Participant("127.0.0.1", 8000, 6005);
-        sess.addParticipant(p);
-
-        for(int i = 0;i < 5;i++)
-        {
-            sess.sendData("Test Hi".getBytes());
-        }
-    }
-   */
 }
