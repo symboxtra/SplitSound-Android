@@ -43,21 +43,19 @@ import splitsound.com.splitsound.R;
 import splitsound.com.splitsound.SplitSoundApplication;
 
 /**
- * Created by Neel on 7/1/2018.
+ * Service to handle user control over media playback and
+ * allow for background playback to remove restriction to only
+ * the application
+ *
+ * @version 0.0.1
+ * @author Neel, Emanuel
  */
-
 public class AudioTrackService extends Service implements
         AudioManager.OnAudioFocusChangeListener
 {
+    //TODO: Try to reduce static uses...find alternatives because static is not good
+
     private static final String TAG = "AudioTrackService";
-
-    /*public class LocalBinder extends Binder
-    {
-        public AudioTrackService getService(){return AudioTrackService.this;}
-    }*/
-
-    // Binder given to clients
-    //private final IBinder iBinder = new LocalBinder();
 
     // Audio instances to manage audio data
     public static AudioTrack audioTrack;
@@ -68,14 +66,12 @@ public class AudioTrackService extends Service implements
     private PhoneStateListener phoneStateListener;
     private TelephonyManager telephonyManager;
 
-    // Sample rate must be one supported by Opus.
+    // Opus supported audio sample rate
     public static final int SAMPLE_RATE = 44100;
 
     // Number of samples per frame is not arbitrary,
     // it must match one of the predefined values, specified in the standard.
     public static final int FRAME_SIZE = 160;
-
-    // 1 or 2
     public static final int NUM_CHANNELS = 1;
 
     // Pending Intent actions triggerd by the Media Session listener
@@ -85,21 +81,27 @@ public class AudioTrackService extends Service implements
     public static final String ACTION_NEXT = "splitsound.com.audio.ACTION_NEXT";
     public static final String ACTION_STOP = "splitsound.com.audio.ACTION_STOP";
 
-    //Initialize media session
+    // Media session managers
     private MediaSessionManager mediaSessionManager;
     private MediaSessionCompat mediaSession;
     private static MediaControllerCompat.TransportControls transportControls;
 
-    //AudioPlayer notification ID
+    // SplitSound media control notification id
     private static final int NOTIFICATION_ID = 101;
 
     /********************************** Initialization *********************************/
 
+    /**
+     * Executed when the service is initiated
+     *
+     */
     @Override
     public void onCreate()
     {
         super.onCreate();
 
+        // Initialize media session and the audio track
+        // for media playback
         if(mediaSessionManager == null)
         {
             try {
@@ -113,6 +115,7 @@ public class AudioTrackService extends Service implements
             buildNotification(PlaybackStatus.PLAYING);
         }
 
+        // Initialize necessary listeners
         initNoisyReceiver();
         callStateListener();
         initPlayNewAudio();
@@ -120,25 +123,52 @@ public class AudioTrackService extends Service implements
         Log.i(TAG, "Audio service initiated and audio focus acquired");
     }
 
+    /**
+     * Triggered everytime a new pending intent is collected
+     * from the Pending Intent queue
+     *
+     * @param intent The next intent in the Pending Intent queue
+     * @param flags
+     * @param startId The state at which the session should be restarted
+     *                Ex: Sticky, Not sticky etc.
+     * @return
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
+
+        // Request audio focus for successful
+        // audio playback
         if(!requestAudioFocus()) {
             Log.e(TAG, "Could not obtain audio focus....exiting");
             stopSelf();
         }
 
+        // Handle the next intent from the intent queue
         handleIncomingActions(intent);
+
         return super.onStartCommand(intent, flags, startId);
     }
 
+    /**
+     * Bind the service to an activity
+     *
+     * @param intent The intent that is binded to the activity
+     *
+     * @return The binder that confirms the activity bind
+     */
     @Override
     public IBinder onBind(Intent intent)
     {
         return new Binder();
     }
 
-    /*Requests the audio focus from the Android service*/
+    /**
+     * Request system for audio focus to instantiate
+     * audio playback
+     *
+     * @return Success status of the focus request
+     */
     private boolean requestAudioFocus()
     {
         audioManager = (AudioManager)getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
@@ -148,7 +178,11 @@ public class AudioTrackService extends Service implements
         return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
     }
 
-    /*Removes the audio focus and provides it back to the android service*/
+    /**
+     * Removes the audio focus from the Android system
+     *
+     * @return Success status of the removed focus
+     */
     private boolean removeAudioFocus()
     {
         if(audioManager == null)
@@ -156,6 +190,11 @@ public class AudioTrackService extends Service implements
         return AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioManager.abandonAudioFocus(this);
     }
 
+    /**
+     * Initializes the audio track that inputs audio
+     * buffers for audio playback
+     *
+     */
     public void initAudioTrack()
     {
         // Get the most minimum buffer size based on channel and encoding
@@ -169,23 +208,35 @@ public class AudioTrackService extends Service implements
                 minBufSize,
                 AudioTrack.MODE_STREAM);
 
+        // Start the audio track
         audioTrack.play();
     }
 
+    /**
+     * Initializes the media session that allows
+     * interaction with media controllers and acts as a bridge
+     * between the service and the UI controls
+     *
+     * @throws RemoteException
+     */
     private void initMediaSession() throws RemoteException
     {
         if(mediaSession!= null)return;
 
         mediaSessionManager = (MediaSessionManager)getApplicationContext().getSystemService(Context.MEDIA_SESSION_SERVICE);
 
+        // Init media session and transport controls for media controls
         mediaSession = new MediaSessionCompat(getApplicationContext(),"SplitSound Player");
         transportControls = mediaSession.getController().getTransportControls();
         mediaSession.setActive(true);
 
+        // Set flags to allow media control buttons as response
         mediaSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS | MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
 
+        // Update media session metadata for user info
         updateMetaData();
-        //Attach Callback to recieve MediaSession Updates
+
+        // Attach callback to receive media session updates
         mediaSession.setCallback(new MediaSessionCompat.Callback()
         {
             @Override
@@ -223,6 +274,11 @@ public class AudioTrackService extends Service implements
         Log.i(TAG, "Media session initialized and callbacks set");
     }
 
+    /**
+     * Initializes noisy receiver that shuts down audio
+     * when external audio sources disconnect
+     *
+     */
     private void initNoisyReceiver()
     {
         IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
@@ -231,6 +287,11 @@ public class AudioTrackService extends Service implements
         registerReceiver(becomingNoisy, intentFilter);
     }
 
+    /**
+     * Plays new audio
+     *
+     * TODO: Look into what this actually does.....Remove if not really important
+     */
     private void initPlayNewAudio()
     {
         IntentFilter filter = new IntentFilter(OpusAudioThread.Broadcast_PLAY_NEW_AUDIO);
@@ -239,6 +300,9 @@ public class AudioTrackService extends Service implements
 
     /********************************** Session Updates *********************************/
 
+    /**
+     * Update audio metadata based on incoming audio streams
+     */
     private void updateMetaData()
     {
         Bitmap albumArt = BitmapFactory.decodeResource(getResources(), R.drawable.image);
@@ -251,31 +315,33 @@ public class AudioTrackService extends Service implements
                 .build());
     }
 
+    /**
+     * Builds the media control notifications that allows
+     * users to control the audio playback from outside the application
+     *
+     * @param playbackStatus State of the playback if audio is paused or playing
+     */
     @TargetApi(Build.VERSION_CODES.O)
     private void buildNotification(PlaybackStatus playbackStatus)
     {
-        int notificationAction = R.drawable.ic_pause_black_40dp;//needs to be initialized
+        int notificationAction = R.drawable.ic_pause_black_40dp;
         String notificationText = "Pause";
-        PendingIntent play_pauseAction = null;
+        PendingIntent play_pauseAction = playbackAction(1);
 
         //Build a new notification according to the current state of the MediaPlayer
-        if (playbackStatus == PlaybackStatus.PLAYING) {
-            notificationAction = R.drawable.ic_pause_black_40dp;
-            notificationText = "Pause";
-            play_pauseAction = playbackAction(1);
-        } else if (playbackStatus == PlaybackStatus.PAUSED) {
+        if (playbackStatus == PlaybackStatus.PAUSED)
+        {
             notificationAction = R.drawable.ic_play_arrow_black_40dp;
             notificationText = "Play";
             play_pauseAction = playbackAction(0);
         }
 
-        //Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_skip_white); //replace with your own image
 
         MediaControllerCompat controller = mediaSession.getController();
         MediaMetadataCompat mediaMetadata = controller.getMetadata();
         MediaDescriptionCompat description = mediaMetadata.getDescription();
 
-        //Code so when you tap outside the buttons it goes back to the app
+        // Allows user to tap on notification to redirect to the application
         Intent intent = new Intent(this, DrawerActivityTest.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
@@ -297,10 +363,10 @@ public class AudioTrackService extends Service implements
                         .setShowActionsInCompactView(0))
                 .setColor(getResources().getColor(R.color.colorPrimary))
                 .setContentInfo("Streaming audio...")
-                //.addAction(R.drawable.ic_skip_previous_black_40dp, "previous", playbackAction(3))
                 .addAction(notificationAction, notificationText, play_pauseAction)
                 .addAction(R.drawable.ic_leave_white, "Leave", playbackAction(2));
 
+        // Add a notification channel on newer Android OS
         NotificationManager mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("notify_001",
@@ -314,18 +380,29 @@ public class AudioTrackService extends Service implements
         Log.i(TAG, "Media control notification built");
     }
 
+    /**
+     * Removes the notification from the notification bar
+     *
+     */
     private void removeNotification()
     {
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
 
         Log.i(TAG, "Notification removed");
-
     }
 
     /********************************** Action Intents *********************************/
 
-    private PendingIntent playbackAction(int actionNumber) {
+    /**
+     * Creates a service pending intent and adds it to pending queue
+     * based on the action performed on the media controls
+     *
+     * @param actionNumber control action that is performed
+     * @return New Pending Intent
+     */
+    private PendingIntent playbackAction(int actionNumber)
+    {
         Intent playbackAction = new Intent(this, AudioTrackService.class);
         switch (actionNumber) {
             case 0:
@@ -345,25 +422,34 @@ public class AudioTrackService extends Service implements
         return null;
     }
 
-    private void handleIncomingActions(Intent playbackAction) {
+    /**
+     * Handles the next Pending Intent from the intent queue
+     *
+     * @param playbackAction The intent that needs to be handled by transport controls
+     */
+    private void handleIncomingActions(Intent playbackAction)
+    {
         if (playbackAction == null || playbackAction.getAction() == null) return;
         String actionString = playbackAction.getAction();
-        if (actionString.contains("ACTION_PLAY")){
+
+        if (actionString.contains("ACTION_PLAY"))
             transportControls.play();
-        }
-        else if (actionString.contains("ACTION_PAUSE")){
+        else if (actionString.contains("ACTION_PAUSE"))
             transportControls.pause();
-        }
-        else if(actionString.contains("ACTION_STOP")){
+        else if(actionString.contains("ACTION_STOP"))
             transportControls.stop();
-        }
     }
 
-    /*Handle incoming phone calls*/
-    private void callStateListener() {
-        // Get the telephony manager
+    /**
+     * Handle incoming phone calls
+     *
+     */
+    private void callStateListener()
+    {
+        // Get the telephony manager from Android system
         telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-        //Starting listening for PhoneState changes
+
+        // Listen for phone state changes
         phoneStateListener = new PhoneStateListener()
         {
             @Override
@@ -371,8 +457,6 @@ public class AudioTrackService extends Service implements
             {
                 switch (state)
                 {
-                    //if at least one call exists or the phone is ringing
-                    //pause the MediaPlayer
                     case TelephonyManager.CALL_STATE_OFFHOOK:
                     case TelephonyManager.CALL_STATE_RINGING:
                         if (audioTrack != null)
@@ -382,9 +466,10 @@ public class AudioTrackService extends Service implements
                         }
                         break;
                     case TelephonyManager.CALL_STATE_IDLE:
-                        // Phone idle. Start playing.
-                        if (audioTrack != null) {
-                            if (ongoingCall) {
+                        if (audioTrack != null)
+                        {
+                            if (ongoingCall)
+                            {
                                 ongoingCall = false;
                                 resumeMedia();
                             }
@@ -393,9 +478,10 @@ public class AudioTrackService extends Service implements
                 }
             }
         };
+
         // Register the listener with the telephony manager
-        // Listen for changes to the device call state.
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+
         if(telephonyManager != null && phoneStateListener != null)
             Log.i(TAG, "PhoneState Listener added");
         else
@@ -405,6 +491,12 @@ public class AudioTrackService extends Service implements
     /********************************** Media Callbacks *********************************/
 
     /*Invoked when the audio focus of the system is updated*/
+
+    /**
+     * Handle audio focus changes
+     *
+     * @param focusChange Focus change state
+     */
     @Override
     public void onAudioFocusChange(int focusChange)
     {
@@ -429,6 +521,10 @@ public class AudioTrackService extends Service implements
         }
     }
 
+    /**
+     * Pauses media when device becomes noisy
+     *
+     */
     private BroadcastReceiver becomingNoisy = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -439,6 +535,10 @@ public class AudioTrackService extends Service implements
         }
     };
 
+    /**
+     * Plays media when new audio invoked from external sources
+     *
+     */
     private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -449,6 +549,11 @@ public class AudioTrackService extends Service implements
         }
     };
 
+    /**
+     * Executed when the service is disconnected or application is
+     * low on resources
+     *
+     */
     @Override
     public void onDestroy()
     {
@@ -460,29 +565,45 @@ public class AudioTrackService extends Service implements
             stopMedia();
             audioTrack.release();
         }
+
+        // Remove audio focus
         removeAudioFocus();
 
+        // Remove phone state listener
         if(phoneStateListener != null) {
             telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
             Log.i(TAG, "Remove PhoneState listener");
         }
 
+        // Remove the notification
         removeNotification();
 
         unregisterReceiver(becomingNoisy);
         unregisterReceiver(playNewAudio);
+
+        // Stop the service
         stopSelf();
     }
 
+    /**
+     * Forces onDestroy to be called becasue application quit does
+     * not invoke onDestroy for services
+     *
+     * @param rootIntent Intent that invoked the service
+     */
     @Override
-    public void onTaskRemoved(Intent rootIntent) {
+    public void onTaskRemoved(Intent rootIntent)
+    {
         super.onTaskRemoved(rootIntent);
         onDestroy();
     }
 
     /********************************** Media Controls *********************************/
 
-    /*Plays media*/
+    /**
+     * Plays the media
+     *
+     */
     public void playMedia()
     {
 
@@ -490,14 +611,19 @@ public class AudioTrackService extends Service implements
             audioTrack.play();
     }
 
-    /*Pause media*/
+    /**
+     * Pauses the media
+     *
+     */
     public void pauseMedia()
     {
         if(audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING)
             audioTrack.pause();
     }
 
-    /*Stops media*/
+    /**
+     * Stops the media
+     */
     public void stopMedia()
     {
         if(audioTrack == null)return;
@@ -505,7 +631,9 @@ public class AudioTrackService extends Service implements
             audioTrack.stop();
     }
 
-    /*Resumes media*/
+    /**
+     * Resumes the media
+     */
     public void resumeMedia()
     {
         if(audioTrack.getPlayState() != AudioTrack.PLAYSTATE_PLAYING)
@@ -515,11 +643,22 @@ public class AudioTrackService extends Service implements
         }
     }
 
+    /**
+     * Returns the audio track for adding to
+     * audio buffer
+     *
+     * @return AudioTrack instance
+     */
     public static AudioTrack getTrack()
     {
         return audioTrack;
     }
 
+    /**
+     * Returns the controls for UI to send play/pause commands
+     *
+     * @return TransportControls instance
+     */
     public static MediaControllerCompat.TransportControls getTransportControls()
     {
         return transportControls;

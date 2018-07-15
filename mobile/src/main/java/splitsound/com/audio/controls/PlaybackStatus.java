@@ -1,9 +1,12 @@
 package splitsound.com.audio.controls;
 
 /**
- * Created by Neel on 7/1/2018.
+ * Enumerator with possible media playback states
+ * for notification options
+ *
+ * @version 0.0.1
+ * @author Neel
  */
-
 public enum PlaybackStatus
 {
     PLAYING, PAUSED
