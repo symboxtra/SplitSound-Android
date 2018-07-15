@@ -124,25 +124,6 @@ public class DrawerActivityTest extends AppCompatActivity implements NavigationV
     }
 
     /**
-     * Executed when options on the toolbar are pressed
-     *
-     * @param item The item that is pressed on the toolbar
-     * @return boolean based on successful actions performed
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id)
-        {
-            case R.id.action_settings:
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
      * Executed when one of the navigation items are pressed
      *
      * @param item The item that was pressed
@@ -199,7 +180,7 @@ public class DrawerActivityTest extends AppCompatActivity implements NavigationV
             }
         }catch(SocketException e) {}
 
-        return "";
+        return null;
     }
 
     /**

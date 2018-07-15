@@ -51,13 +51,13 @@ public class AudioTrackService extends Service implements
 {
     private static final String TAG = "AudioTrackService";
 
-    public class LocalBinder extends Binder
+    /*public class LocalBinder extends Binder
     {
         public AudioTrackService getService(){return AudioTrackService.this;}
-    }
+    }*/
 
     // Binder given to clients
-    private final IBinder iBinder = new LocalBinder();
+    //private final IBinder iBinder = new LocalBinder();
 
     // Audio instances to manage audio data
     public static AudioTrack audioTrack;
@@ -135,7 +135,7 @@ public class AudioTrackService extends Service implements
     @Override
     public IBinder onBind(Intent intent)
     {
-        return iBinder;
+        return new Binder();
     }
 
     /*Requests the audio focus from the Android service*/
@@ -210,22 +210,6 @@ public class AudioTrackService extends Service implements
             }
 
             @Override
-            public void onSkipToNext()
-            {
-                super.onSkipToNext();
-                updateMetaData();
-                buildNotification(PlaybackStatus.PLAYING);
-            }
-
-            @Override
-            public void onSkipToPrevious()
-            {
-                super.onSkipToPrevious();
-                updateMetaData();
-                buildNotification(PlaybackStatus.PLAYING);
-            }
-
-            @Override
             public void onStop()
             {
                 super.onStop();
@@ -233,12 +217,6 @@ public class AudioTrackService extends Service implements
                 RTPNetworking.requestQ.add(AppPacket.BYE);
                 removeNotification();
                 stopSelf();
-            }
-
-            @Override
-            public void onSeekTo(long position)
-            {
-                super.onSeekTo(position);
             }
         });
 
@@ -321,7 +299,7 @@ public class AudioTrackService extends Service implements
                 .setContentInfo("Streaming audio...")
                 //.addAction(R.drawable.ic_skip_previous_black_40dp, "previous", playbackAction(3))
                 .addAction(notificationAction, notificationText, play_pauseAction)
-                .addAction(R.drawable.ic_leave_white, "Leave", playbackAction(4));
+                .addAction(R.drawable.ic_leave_white, "Leave", playbackAction(2));
 
         NotificationManager mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -359,14 +337,6 @@ public class AudioTrackService extends Service implements
                 playbackAction.setAction(ACTION_PAUSE);
                 return PendingIntent.getService(this, actionNumber, playbackAction, 0);
             case 2:
-                // Next track
-                playbackAction.setAction(ACTION_NEXT);
-                return PendingIntent.getService(this, actionNumber, playbackAction, 0);
-            case 3:
-                // Previous track
-                playbackAction.setAction(ACTION_PREVIOUS);
-                return PendingIntent.getService(this, actionNumber, playbackAction, 0);
-            case 4:
                 playbackAction.setAction(ACTION_STOP);
                 return PendingIntent.getService(this, actionNumber, playbackAction, 0);
             default:
@@ -383,12 +353,6 @@ public class AudioTrackService extends Service implements
         }
         else if (actionString.contains("ACTION_PAUSE")){
             transportControls.pause();
-        }
-        else if(actionString.contains("ACTION_NEXT")) {
-            transportControls.skipToNext();
-        }
-        else if(actionString.contains("ACTION_PREVIOUS")) {
-            transportControls.skipToPrevious();
         }
         else if(actionString.contains("ACTION_STOP")){
             transportControls.stop();

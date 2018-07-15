@@ -66,34 +66,6 @@ public class HomeActivity extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        //Click listeners for the main buttons
-        ImageView prev = getView().findViewById(R.id.main_skip_back_button);
-        prev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-        ImageView next = getView().findViewById(R.id.main_skip_forward_button);
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-        isPlay = true;
-        final ImageView playPause = getView().findViewById(R.id.main_play_button);
-        playPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isPlay) {
-                    playPause.setImageResource(R.drawable.ic_pause_black_24dp);
-                } else {
-                    playPause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
-                }
-                isPlay = !isPlay;
-            }
-        });
 
         isActionBarHidden = false;
 

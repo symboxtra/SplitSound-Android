@@ -171,8 +171,9 @@ public class SessionsActivity extends Fragment
         refreshLayout.setOnRefreshListener(swipeListener);
 
         // Recycler View testing
-        //TODO:: Remove after basic transmission is setup
+        //TODO:: Remove after basic RTCP transmission is setup
         RecyclerAdapter.addServer(new ServerInfo("My server", "80.108.12.11", 3, true));
+        RecyclerAdapter.addServer(new ServerInfo("Test server", "127.0.0.1", 5, false));
     }
 
     /**

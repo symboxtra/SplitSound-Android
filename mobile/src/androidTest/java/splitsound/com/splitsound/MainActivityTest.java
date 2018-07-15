@@ -117,7 +117,7 @@ public class MainActivityTest {
         //Thread.sleep(100);
         onView(isRoot()).perform(pressBack());
         onView(isRoot()).perform(pressBack());
-        onView(isRoot()).perform(pressBack());
+        onView(withId(android.R.id.home)).perform(click());
 
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.home_button));
@@ -149,17 +149,9 @@ public class MainActivityTest {
 
         // Test refresh
         onView(withId(R.id.swipeRefreshLayout)).perform(swipeDown());
-
-        // TEst
-
-        // Test settings tab
-        //onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        //onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.settings));
-
-        // Test username dialog
-        //onData(anything()).inAdapterView(withId(R.id.userSettings)).atPosition(0).perform(click());
-        //Thread.sleep(100);
-        //onView(isRoot()).perform(pressBack());
+        Thread.sleep(5000);
+        onView(withId(R.id.action_refresh)).perform(click());
+        Thread.sleep(5000);
     }
 
     /*
