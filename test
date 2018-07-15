@@ -86,7 +86,7 @@ if $useEmulator; then
     if $headless; then
         emulator -avd "$avd" -no-audio -no-window -no-boot-anim &
     else
-        emulator -avd "$avd" &
+        emulator -avd "$avd" -gpu off &
     fi
 
     # Wait for emulator
