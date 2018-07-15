@@ -177,11 +177,4 @@ public class MainActivityTest {
 
         serv.onDestroy();
     }
-
-    @Test
-    public void testSomething()
-    {
-        Intent serviceIntent = new Intent(InstrumentationRegistry.getTargetContext(), AudioTrackService.class);
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-    }
 }
