@@ -80,6 +80,9 @@ public class MainActivityTest {
     // TODO: Fix this after new Google bug update
     @Rule public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.RECORD_AUDIO);
 
+    @Rule
+    public final ServiceTestRule serviceRule = new ServiceTestRule();
+
 
     // Grant permissions
     @Before
@@ -100,7 +103,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void perform_all_ui() throws InterruptedException
+    public void perform_all_ui() throws InterruptedException, TimeoutException
     {
 
         UiDevice device = UiDevice.getInstance(getInstrumentation());
@@ -155,15 +158,7 @@ public class MainActivityTest {
         Thread.sleep(5000);
         onView(withId(R.id.action_refresh)).perform(click());
         Thread.sleep(5000);*/
-    }
 
-    @Rule
-    public final ServiceTestRule serviceRule = new ServiceTestRule();
-
-    @Test
-    public void testServiceFeatures() throws TimeoutException
-    {
-        // Create the service Intent.
         Intent serviceIntent = new Intent(InstrumentationRegistry.getTargetContext(), AudioTrackService.class);
 
         IBinder bind = serviceRule.bindService(serviceIntent);
@@ -181,6 +176,5 @@ public class MainActivityTest {
         serv.onAudioFocusChange(AudioManager.AUDIOFOCUS_LOSS);
 
         serv.onDestroy();
-
     }
 }
