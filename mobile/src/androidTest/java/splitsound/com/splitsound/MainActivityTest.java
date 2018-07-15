@@ -32,6 +32,7 @@ import static android.support.test.espresso.action.ViewActions.swipeDown;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -106,8 +107,6 @@ public class MainActivityTest {
             }
         }
 
-        //Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(SettingsActivity.class.getName(), null, false);
-
         // Test settings tab
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.settings));
@@ -117,7 +116,7 @@ public class MainActivityTest {
         //Thread.sleep(100);
         onView(isRoot()).perform(pressBack());
         onView(isRoot()).perform(pressBack());
-        onView(withId(android.R.id.home)).perform(click());
+        onView(withContentDescription("Navigate up")).perform(click());
 
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.home_button));
@@ -130,9 +129,6 @@ public class MainActivityTest {
         // Test user list swipe up
         onView(withId(R.id.sliding_layout)).perform(swipeUp());
         Thread.sleep(100);
-
-        // Test user menu
-        //onView(withId(R.id.usr_control)).perform(click());
 
         // Test user list swipe down
         onView(withId(R.id.sliding_layout)).perform(swipeDown());

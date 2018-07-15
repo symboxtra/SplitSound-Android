@@ -87,7 +87,7 @@ public class OpusAudioThread implements Runnable
         public void onServiceConnected(ComponentName name, IBinder service)
         {
             serviceBound = true;
-            Toast.makeText(SplitSoundApplication.getAppContext(), "Connected to service",Toast.LENGTH_SHORT).show();
+            Toast.makeText(SplitSoundApplication.getAppContext(), "Connected",Toast.LENGTH_SHORT).show();
         }
 
         @Override
