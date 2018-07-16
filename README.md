@@ -4,7 +4,7 @@
 [![Coverage Status](https://codecov.io/gh/symboxtra/SplitSound-Android/branch/master/graph/badge.svg)](https://codecov.io/gh/symboxtra/SplitSound-Android)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.opensource.org/licenses/GPL-3.0)
 
-# Contributing to SplitSound-Android #
+# SplitSound-Android #
 
 **Project status**: Early development
 
@@ -12,7 +12,7 @@ We welcome contributions from outside collaborators. Feel free to fork and open 
 
 ## Branching ##
 
-Every feature/line of development should have its own branch. 
+Every feature/line of development should have its own branch.
 Unless you know what you're doing, this branch should typically be a direct child of the `master` branch (see example below).
 Releases accumulate in release branches before being merged into master.
 
@@ -37,7 +37,7 @@ These changes can be staged and committed by anyone, but we prefer that someone 
 
 ## Development ##
 
-Building the Android application does not require installation of Android Studio. 
+Building the Android application does not require installation of Android Studio.
 For active development, however, Android studio is the recommended environment.
 
 ## Android Studio ##
@@ -53,7 +53,7 @@ Before commiting, make sure Android Studio hasn't automatically updated any of y
 
 Building from the CLI was initially developed for use on our Continuous Integration (CI) servers.
 For most of us now, it also makes running the test suite super easy and can give a good idea of whether or not CI will pass before committing.
-    
+
 ### Environment requirements ###
 
 Preferred environments:
@@ -76,7 +76,7 @@ JAVA_HOME=%PROGRAMFILES%\Java\jdk1.8
 
 ### Build/Test Scripts ###
 
-The commands `./run` and `./test` can be used to run (install the application on an emulator and/or attached device) and test the application. 
+The commands `./run` and `./test` can be used to run (install the application on an emulator and/or attached device) and test the application.
 `./test` is definitely the go-to for most of us. It's also what the CI server uses and again is a pretty good indication of whether or not anything broke before you push.
 
 Gradle tasks (ex. build, clean, test, installDebug) can always be run using `./gradlew task_name` from the project root.
@@ -85,10 +85,10 @@ This is essentially what's happening under the hood of the other scripts.
 More information on testing and the test script can be found [here](#testing).
 
 ### Install script ###
- 
+
 #### Unix/Unix-like ####
- 
-If you don't want to worry about packages and their associated nonsense, executing `source install-sdk-tools.sh` will install the Android SDK and required packages (listed below) to `$HOME/Android/Sdk`. 
+
+If you don't want to worry about packages and their associated nonsense, executing `source install-sdk-tools.sh` will install the Android SDK and required packages (listed below) to `$HOME/Android/Sdk`.
 The `source` part of the command ensures that any exported variables are brought into your current shell session. This means that the installed tools will be on `PATH` and usable for the rest of your shell session.
 
 Before installing anything, the script also checks if `$HOME/Android/Sdk` already exists.
@@ -121,19 +121,19 @@ This is a copy of our installed sdkmanager packages (updated 6/9/2018). If yours
 
   Path                                                | Version      | Description                                     | Location
   -------                                             | -------      | -------                                         | -------
-  build-tools;27.0.3                                  | 27.0.3       | Android SDK Build-Tools 27.0.3                  | build-tools\27.0.3\ 
-  cmake;3.6.4111459                                   | 3.6.4111459  | CMake 3.6.4111459                               | cmake\3.6.4111459\ 
-  emulator                                            | 27.2.9       | Android Emulator                                | emulator\ 
-  extras;android;m2repository                         | 47.0.0       | Android Support Repository                      | extras\android\m2repository\ 
-  extras;google;m2repository                          | 58           | Google Repository                               | extras\google\m2repository\ 
-  extras;intel;Hardware_Accelerated_Execution_Manager | 6.2.1        | Intel x86 Emulator Accelerator (HAXM installer) | extras\intel\Hardware_Accelerated_Execution_Manager\ 
-  ndk-bundle                                          | 17.0.4754217 | NDK                                             | ndk-bundle\ 
-  patcher;v4                                          | 1            | SDK Patch Applier v4                            | patcher\v4\ 
-  platform-tools                                      | 27.0.1       | Android SDK Platform-Tools                      | platform-tools\ 
-  platforms;android-27                                | 1            | Android SDK Platform 27                         | platforms\android-27\ 
-  sources;android-27                                  | 1            | Sources for Android 27                          | sources\android-27\ 
-  system-images;android-27;google_apis;x86            | 6            | Google APIs Intel x86 Atom System Image         | system-images\android-27\google_apis\x86\ 
-  tools                                               | 26.1.1       | Android SDK Tools                               | tools\ 
+  build-tools;27.0.3                                  | 27.0.3       | Android SDK Build-Tools 27.0.3                  | build-tools\27.0.3\
+  cmake;3.6.4111459                                   | 3.6.4111459  | CMake 3.6.4111459                               | cmake\3.6.4111459\
+  emulator                                            | 27.2.9       | Android Emulator                                | emulator\
+  extras;android;m2repository                         | 47.0.0       | Android Support Repository                      | extras\android\m2repository\
+  extras;google;m2repository                          | 58           | Google Repository                               | extras\google\m2repository\
+  extras;intel;Hardware_Accelerated_Execution_Manager | 6.2.1        | Intel x86 Emulator Accelerator (HAXM installer) | extras\intel\Hardware_Accelerated_Execution_Manager\
+  ndk-bundle                                          | 17.0.4754217 | NDK                                             | ndk-bundle\
+  patcher;v4                                          | 1            | SDK Patch Applier v4                            | patcher\v4\
+  platform-tools                                      | 27.0.1       | Android SDK Platform-Tools                      | platform-tools\
+  platforms;android-27                                | 1            | Android SDK Platform 27                         | platforms\android-27\
+  sources;android-27                                  | 1            | Sources for Android 27                          | sources\android-27\
+  system-images;android-27;google_apis;x86            | 6            | Google APIs Intel x86 Atom System Image         | system-images\android-27\google_apis\x86\
+  tools                                               | 26.1.1       | Android SDK Tools                               | tools\
 
 Note: `system-images;android-27;google_apis;x86` is architecture dependent in the above configuration.
 If you don't have an x86 based computer, you might be out of luck.
@@ -145,11 +145,11 @@ Google stopped distributing ARM based images at API level 25.
 
 Unit tests can be found under `mobile/src/test/`.
 
-Instrumented tests can be found under `mobile/src/androidTest`. 
+Instrumented tests can be found under `mobile/src/androidTest`.
 We're currently working through an issue where separating our instrumentation tests into more than one file causes our test orchestrator process to crash.
 For the time being, all instrumented tests are stored in a single file.
 
-Test can be run on all platforms using the command `./test`. 
+Test can be run on all platforms using the command `./test`.
 With no options, the script will create an avd image, start an emulator using that avd image, and run the test suite on both the emulator and any connected devices.
 The following options are currently available:
 
@@ -177,7 +177,7 @@ Because of the way Jenkins handles badging, this ensures that the status of the 
 
 ## Code Coverage ##
 
-Code coverage can be acquired using the custom gradle task `jacocoTestReport`. 
+Code coverage can be acquired using the custom gradle task `jacocoTestReport`.
 
 The XML and HTML reports can be found at `mobile/build/reports/jacoco/jacocoTestReport`.
 
