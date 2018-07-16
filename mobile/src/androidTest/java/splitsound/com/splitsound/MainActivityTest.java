@@ -9,6 +9,8 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.UiController;
+import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.NavigationViewActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
@@ -22,6 +24,7 @@ import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
 import android.util.Log;
+import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.api.internal.ApiExceptionMapper;
@@ -34,9 +37,11 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.action.ViewActions.swipeDown;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -50,6 +55,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.hasEntry;
 
+import org.hamcrest.Matcher;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -103,8 +109,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void perform_all_ui() throws InterruptedException, TimeoutException
-    {
+    public void perform_all_ui() throws InterruptedException, TimeoutException, UiObjectNotFoundException {
 
         UiDevice device = UiDevice.getInstance(getInstrumentation());
         UiObject entry = device.findObject(new UiSelector().text("DONE"));
@@ -122,11 +127,15 @@ public class MainActivityTest {
 
         // Test username dialog
         onData(anything()).inAdapterView(withId(R.id.userSettings)).atPosition(0).perform(click());
-        //Thread.sleep(100);
+        onView(withHint("username")).perform(typeText("hello"));
+        onView(withText("SUBMIT")).perform(click());
+
+        // Negative test username dialog
+        onData(anything()).inAdapterView(withId(R.id.userSettings)).atPosition(0).perform(click());
+        onView(withHint("username")).perform(typeText("1*&^"));
+        onView(withText("SUBMIT")).perform(click());
+
         onView(isRoot()).perform(pressBack());
-        onView(isRoot()).perform(pressBack());
-        onView(isRoot()).perform(pressBack());
-        //onView(withContentDescription("Navigate up")).perform(click());
 
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.home_button));
@@ -135,10 +144,39 @@ public class MainActivityTest {
         onView(withId(R.id.connect)).perform(click());
         Thread.sleep(100);
         onView(withId(R.id.connect)).perform(click());
+        Thread.sleep(100);
+        onView(withId(R.id.connect)).perform(click());
+        Thread.sleep(100);
+        onView(withId(R.id.connect)).perform(click());
 
         // Test user list swipe up
         onView(withId(R.id.sliding_layout)).perform(swipeUp());
         Thread.sleep(100);
+
+        // Test kick user
+        onView(withId(R.id.user_list_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return null;
+            }
+
+            @Override
+            public String getDescription() {
+                return null;
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                View button = view.findViewById(R.id.usr_control);
+                button.performClick();
+
+            }
+        }));
+        Thread.sleep(500);
+        onView(withText("Kick user")).perform(click());
+        onView(withHint("Default")).perform(typeText("ThisIsAdminPassword"));
+        onView(withText("Show Password")).perform(click());
+        onView(withText("KICK")).perform(click());
 
         // Test user list swipe down
         onView(withId(R.id.sliding_layout)).perform(swipeDown());
@@ -151,7 +189,9 @@ public class MainActivityTest {
         // Test joining session
         onView(withId(R.id.server_list_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         Thread.sleep(100);
-        onView(isRoot()).perform(pressBack());
+        onView(withHint("Default")).perform(typeText("Password123"));
+        onView(withText("Show Password")).perform(click());
+        onView(withText("CONNECT")).perform(click());
 
         // Test refresh
         onView(withId(R.id.swipeRefreshLayout)).perform(swipeDown());
