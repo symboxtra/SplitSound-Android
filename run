@@ -105,6 +105,7 @@ echo -e "${YELLOW}=== Starting build/test... ===${NC}"
 echo
 
 # Build and install the APK
+adb uninstall splitsound.com.splitsound
 error=0
 ./gradlew mobile:clean mobile:build mobile:installDebug
 #adb install -r .\mobile\build\outputs\apk\debug\mobile-debug.apk
