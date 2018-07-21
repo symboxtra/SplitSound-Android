@@ -97,23 +97,23 @@ If it does, it ONLY exports the required variables to your current session, maki
 To use the tools repeatedly, adding them to `PATH` yourself, sourcing this script manually every time you start a new instance of bash, or sourcing it automatically in your [`~/.bashrc`](https://stackoverflow.com/questions/4952177/include-additional-files-in-bashrc) are all options.
 
 #### Windows ####
-The Windows setup is slightly less scripted than Unix right now. The packages listed below can all be installed via CLI with `sdkmanager`, but the process is not currently automated.
-A standard GUI installation of Android Studio followed by adding the installation's SDK and tools to PATH is the best option for most.
-The installation usually puts the SDK in `%LocalAppData%\Android\Sdk`
+A standard GUI installation of Android Studio and SDK bundle is the best option for most since it removes the hassle of configuring PATH variables and keeps it ready for further development.
 
-After installing Android Studio, open Environment Variables, and add/modify the following.
+If you are feeling lucky and want to go down the scripting process instead of downloading Android Studio, the Windows setup is more like the Unix setup with some extra steps.
+
+Just like the Unix installation, executing `install-sdk-tools.ps1` will install the necessary Android SDK tools and required packages (listed below). The installation usually puts the SDK in `%LocalAppData%\Android\Sdk`. Before running the scripts make sure that you are running PowerShell with admin priviledges. To run PowerShell with administrator rights, right-click on PowerShell and click `Run as administrator`
+
+Once the SDK tools are installed, you will have to manually accept licenses for the packages that are to be installed.
+
+Note: When testing/running the application using an emulator, make sure that Intel virtualization is enabled and you have HAXM installed on your system. You can install HAXM from [here](https://software.intel.com/en-us/articles/intel-hardware-accelerated-execution-manager-intel-haxm).
+
+To check if Virtualization Technology is enabled go to:
 ```
-ANDROID_HOME=%LocalAppData%\Android\Sdk
-```
-And the following entries to `PATH`
-```
-%ANDROID_HOME%\tools
-%ANDROID_HOME%\tools\bin
-%ANDROID_HOME%\platform-tools
-%ANDROID_HOME%\emulator
+Task Manager -> Performance -> CPU
 ```
 
-This will hopefully be automated soon.
+If your Virtualization Technology is disabled, you will have to go into your BIOS and enable it. If you do not have Virtualization Technology at all, you are out of luck and you can only test it with a connected Android device.
+
 
 From here, everything should be relatively similar for both operating systems.
 
