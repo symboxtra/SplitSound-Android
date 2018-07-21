@@ -15,7 +15,7 @@ $sure = Read-Host -Prompt "This may take awhile....		[Y/n]"
 $sure=$sure -replace "^[Yy]$", 'y' 
 if($sure -ne "y")
 {
-	$host.SetShouldExit(0)
+	exit 0
 }
 
 # Check for SDK Home
@@ -49,7 +49,7 @@ foreach($package in $PACKAGES)
 
 	if($LastExitCode -ne 0)
 	{
-		$host.SetShouldExit($LastExitCode)
+		exit $LastExitCode
 	}
 
 	""
