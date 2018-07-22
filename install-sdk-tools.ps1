@@ -1,7 +1,7 @@
 #########################################################
 #                                                       #
-#	  Setup Android tools and packages on Windows		#
-#		                                                #
+#      Setup Android tools and packages on Windows	#
+#		                                        #
 #########################################################
 
 ""
