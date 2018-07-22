@@ -13,7 +13,7 @@ $env:ANDROID_HOME="$env:LOCALAPPDATA\Android\sdk"
 [Environment]::SetEnvironmentVariable("ANDROID_NDK_HOME", "$env:ANDROID_HOME\ndk-bundle", [EnvironmentVariableTarget]::Machine)
 [Environment]::SetEnvironmentvariable("Path", $env:Path + ";$env:ANDROID_HOME\platform-tools;$env:ANDROID_HOME\emulator;$env:ANDROID_HOME\emulator\bin;$env:ANDROID_HOME\tools;$env:ANDROID_HOME\tools\bin;$env:ANDROID_HOME", [EnvironmentVariableTarget]::Machine)
 
-$env:Path=[Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine) + ";" + [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine)
+$env:Path=[Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine) + ";" + [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::User)
 
 # Check if Path is already defined
 if(Test-Path -path $env:ANDROID_HOME)
