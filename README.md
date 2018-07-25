@@ -97,23 +97,25 @@ If it does, it ONLY exports the required variables to your current session, maki
 To use the tools repeatedly, adding them to `PATH` yourself, sourcing this script manually every time you start a new instance of bash, or sourcing it automatically in your [`~/.bashrc`](https://stackoverflow.com/questions/4952177/include-additional-files-in-bashrc) are all options.
 
 #### Windows ####
-The Windows setup is slightly less scripted than Unix right now. The packages listed below can all be installed via CLI with `sdkmanager`, but the process is not currently automated.
-A standard GUI installation of Android Studio followed by adding the installation's SDK and tools to PATH is the best option for most.
-The installation usually puts the SDK in `%LocalAppData%\Android\Sdk`
+A standard GUI installation of Android Studio and the SDK bundle is the best option for most since it removes the hassle of configuring PATH variables and keeps everything ready for further development.
 
-After installing Android Studio, open Environment Variables, and add/modify the following.
-```
-ANDROID_HOME=%LocalAppData%\Android\Sdk
-```
-And the following entries to `PATH`
-```
-%ANDROID_HOME%\tools
-%ANDROID_HOME%\tools\bin
-%ANDROID_HOME%\platform-tools
-%ANDROID_HOME%\emulator
-```
+If you're feeling lucky and prefer to take the scripting route instead, the Windows setup is similar to the Unix setup with just a few extra steps.
 
-This will hopefully be automated soon.
+Just like the Unix installation, executing `install-sdk-tools.ps1` will install the necessary Android SDK tools and packages (listed below). The installation usually puts the SDK bundle in `%LocalAppData%\Android\Sdk`. 
+Before running the script, make sure that you have started PowerShell with admin privileges. To run PowerShell with administrator rights, right-click it and select `Run as administrator`.
+
+Once the SDK tools are installed, you will need to manually accept the license for each package as the script progresses.
+
+Note: When testing/running the application using an emulator, make sure that Intel Virtualization Technology is enabled and HAXM is installed on your system. 
+You can install HAXM from [here](https://software.intel.com/en-us/articles/intel-hardware-accelerated-execution-manager-intel-haxm).
+
+To confirm that Virtualization Technology is enabled check:
+```
+Windows Task Manager -> Performance -> CPU -> Virtualization
+```
+Note: This may only work on Windows 10.
+
+If Virtualization Technology is disabled, you'll have to go into your BIOS to enable it. If your computer does not support Virtualization Technology at all, you may be out of luck. You can still always test with a connected Android device.
 
 From here, everything should be relatively similar for both operating systems.
 
