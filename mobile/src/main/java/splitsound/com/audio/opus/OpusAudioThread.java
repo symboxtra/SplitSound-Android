@@ -44,6 +44,7 @@ public class OpusAudioThread implements Runnable
     public void run()
     {
         //TODO: Set thread priority
+        Log.d(TAG, "Started");
 
         // Start the background service
         if(!serviceBound)

@@ -162,6 +162,7 @@ dependencies {
     implementation 'commons-io:commons-io:2.4'
     implementation 'com.github.martoreto:opuscodec:v1.2.1.2'
     implementation 'com.github.apl-devs:appintro:v4.2.3'
+    implementation 'com.chibde:audiovisualizer:2.0.1'
     wearApp project(':wear')
     implementation files('libs/svg-android-1.1.jar')
 }

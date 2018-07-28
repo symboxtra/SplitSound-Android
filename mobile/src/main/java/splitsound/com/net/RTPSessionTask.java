@@ -56,7 +56,7 @@ public class RTPSessionTask implements RTPAppIntf, Runnable
                 exists = true;
 
         byte[] data = frame.getConcatenatedData();
-        if(exists)
+        //if(exists)
             RTPNetworking.networkPackets.add(data);
         p.debugPrint();
     }

@@ -1,7 +1,10 @@
 package splitsound.com.splitsound;
 
 import android.annotation.SuppressLint;
+import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.media.MediaPlayer;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chibde.visualizer.CircleBarVisualizer;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import splitsound.com.audio.controls.AudioTrackService;
@@ -167,6 +171,12 @@ public class HomeActivity extends Fragment {
                 return true;
             }
         });
+
+        CircleBarVisualizer circleVisualizer = getView().findViewById(R.id.visualizer);
+        circleVisualizer.setColor(R.color.orange);
+
+        if(AudioTrackService.audioTrack != null)
+            circleVisualizer.setPlayer(AudioTrackService.audioTrack.getAudioSessionId());
 
         getActivity().setTitle("Home");
         super.onViewCreated(view, savedInstanceState);

@@ -25,6 +25,13 @@
 
         <include layout="@layout/content_drawer_activity_test" />
 
+
+        <com.chibde.visualizer.CircleBarVisualizer
+            android:id="@+id/visualizer"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"/>
+
         <ImageButton
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
