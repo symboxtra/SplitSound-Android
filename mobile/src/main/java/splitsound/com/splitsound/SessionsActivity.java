@@ -126,8 +126,7 @@ public class SessionsActivity extends Fragment
         }
 
         // Send list_all RTCP packets while loading
-        createRequestThread();
-        requestThread.start();
+        RTPNetworking.requestQ.add(AppPacket.LIST_ALL);
 
         // Executed after random delay
         new Handler().postDelayed(new Runnable() {
@@ -143,9 +142,6 @@ public class SessionsActivity extends Fragment
                     sessRV.setHasFixedSize(true);
                     sessRV.setLayoutManager(new LinearLayoutManager(getContext()));
                     sessRV.setAdapter(new RecyclerAdapter());
-
-                    // Stop sending list all packets
-                    requestThread.interrupt();
                 }catch (NullPointerException npe){
                 }
             }
@@ -188,7 +184,7 @@ public class SessionsActivity extends Fragment
                 {
                     try {
                         RTPNetworking.requestQ.add(AppPacket.LIST_ALL);
-                        Thread.sleep(100);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         Log.i(Thread.currentThread().getName(), "Stoppped sending packets");
                         Thread.currentThread().interrupt();
