@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         WEBHOOK_URL = credentials('WEBHOOK_URL')
-        CODECOV_TOKEN = credentials('CODECOV_TOKEN')
+        CODE_COV_TOKEN = credentials('CODE_COV_TOKEN')
     }
 
     options {
