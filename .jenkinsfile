@@ -44,7 +44,9 @@ pipeline {
             
             post {
                 always {
-                    curl https://raw.githubusercontent.com/symboxtra/universal-ci-discord-webhook/master/send.sh > send.sh && chmod +x send.sh
+                    sh """
+                        curl https://raw.githubusercontent.com/symboxtra/universal-ci-discord-webhook/master/send.sh > send.sh && chmod +x send.sh
+                    """
                 }
                 success {
                     sh """
