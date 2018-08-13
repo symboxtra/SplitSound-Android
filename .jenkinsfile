@@ -1,0 +1,64 @@
+pipeline {
+    agent none
+
+    environment {
+        WEBHOOK_URL = credentials('WEBHOOK_URL')
+        CODECOV_TOKEN = credentials('CODECOV_TOKEN')
+    }
+
+    options {
+        timeout(time: 10, unit: 'MINUTES')
+        timestamps()
+    }
+
+    stages {
+
+        stage('Build and Test - Linux') {
+            agent {
+                label 'linux'
+            }
+
+            steps {
+                script {
+                    currentBuild.displayName = env.BRANCH_NAME + " - #" + env.BUILD_NUMBER
+                }
+
+                wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
+
+                        sh """
+                            set +x
+                            TEMP=$HOME
+                            HOME=/home/symboxtra
+                            source ./install-sdk-tools.sh
+                            HOME=$TEMP
+                            set -x
+
+                            export QT_XKB_CONFIG_ROOT=/usr/share/X11/xkb
+
+                            ./test
+
+                            set -x
+                        """
+                }
+            }
+            
+            post {
+                always {
+                    curl https://raw.githubusercontent.com/symboxtra/universal-ci-discord-webhook/master/send.sh > send.sh && chmod +x send.sh
+                }
+                success {
+                    sh """
+                        ./send.sh success $WEBHOOK_URL
+                        ./send-coverage.sh
+                    """
+                }
+                failure {
+                    sh """
+                        ./send.sh failure $WEBHOOK_URL
+                    """
+                }
+            }
+        }
+    }
+
+}
