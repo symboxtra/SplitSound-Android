@@ -27,7 +27,7 @@ pipeline {
                 wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
                     
                     ansiColor('xterm') {
-                        sh 'TEMP=$HOME && HOME=/home/symboxtra && . ./install-sdk-tools.sh && HOME=$TEMP && export QT_XKB_CONFIG_ROOT=/usr/share/X11/xkb && ./test'
+                        sh 'set +x && TEMP=$HOME && HOME=/home/symboxtra && . ./install-sdk-tools.sh && HOME=$TEMP && export QT_XKB_CONFIG_ROOT=/usr/share/X11/xkb && ./test'
                     }
 
                 }
