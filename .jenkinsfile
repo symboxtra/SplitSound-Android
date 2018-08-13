@@ -25,8 +25,11 @@ pipeline {
                 }
 
                 wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
+                    
+                    ansiColor('xterm') {
+                        sh 'TEMP=$HOME && HOME=/home/symboxtra && . ./install-sdk-tools.sh && HOME=$TEMP && export QT_XKB_CONFIG_ROOT=/usr/share/X11/xkb && ./test'
+                    }
 
-                    sh 'TEMP=$HOME && HOME=/home/symboxtra && . ./install-sdk-tools.sh && HOME=$TEMP && export QT_XKB_CONFIG_ROOT=/usr/share/X11/xkb && ./test'
                 }
             }
             
@@ -37,15 +40,19 @@ pipeline {
                     """
                 }
                 success {
-                    sh """
-                        ./send.sh success $WEBHOOK_URL
-                        ./send-coverage.sh
-                    """
+                    ansiColor('xterm') {
+                        sh """
+                            ./send.sh success $WEBHOOK_URL
+                            ./send-coverage.sh
+                        """
+                    }
                 }
                 failure {
-                    sh """
-                        #./send.sh failure $WEBHOOK_URL
-                    """
+                    ansiColor('xterm') {
+                        sh """
+                            ./send.sh failure $WEBHOOK_URL
+                        """
+                    }
                 }
             }
         }
