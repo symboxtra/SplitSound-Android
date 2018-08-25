@@ -37,9 +37,12 @@ cache:
 # Build succeeded
 after_success:
     - curl https://raw.githubusercontent.com/symboxtra/travis-ci-discord-webhook/master/send.sh > send.sh && chmod +x send.sh
-    - ./send.sh success $WEBHOOK_URL # Webhook to Discord
+    - ./send.sh success $WEBHOOK_URL
+    -  curl -X PUT -d status=passing http://pi.symboxtra.dynu.net/status/builds/android-${BRANCH_NAME} || true
 
 # Build failed
 after_failure:
     - curl https://raw.githubusercontent.com/symboxtra/travis-ci-discord-webhook/master/send.sh > send.sh && chmod +x send.sh
-    - ./send.sh failure $WEBHOOK_URL # Webhook to Discord
+    - ./send.sh failure $WEBHOOK_URL
+    - curl -X PUT -d status=failing http://pi.symboxtra.dynu.net/status/builds/android-${BRANCH_NAME} || true
+
