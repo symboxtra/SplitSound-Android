@@ -1,4 +1,4 @@
-[![Jenkins Server Status](https://img.shields.io/badge/dynamic/json.svg?label=Jenkins%20Server&url=http%3A%2F%2Fsymboxtra.tk%2Fjenkins%2F/status_badge.php&query=status&colorB=0b7cbd)](http://jenkins.symboxtra.dynu.net "Jenkins Server Status")
+[![Jenkins Server Status](https://img.shields.io/badge/dynamic/json.svg?label=Jenkins%20Server&url=http%3A%2F%2Fwww.symboxtra.tk%2Fstatus.php%3Fservers%3Djenkins&query=%24..jenkins&colorB=0b7cbd)](http://jenkins.symboxtra.dynu.net "Jenkins Server Status")
 [![](http://jenkins.symboxtra.dynu.net/buildStatus/icon?job=SplitSound-Android)](http://jenkins.symboxtra.tk/job/SplitSound-Android "Jenkins Build Status")
 [![Travis Build Status](https://travis-ci.org/symboxtra/SplitSound-Android.svg?branch=master)](https://travis-ci.org/symboxtra/SplitSound-Android/builds "Travis Build Status (unit tests only)")
 [![Coverage Status](https://codecov.io/gh/symboxtra/SplitSound-Android/branch/master/graph/badge.svg)](https://codecov.io/gh/symboxtra/SplitSound-Android)
