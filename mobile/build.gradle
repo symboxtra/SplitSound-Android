@@ -64,13 +64,6 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-        // Native programming build
-        externalNativeBuild {
-            cmake {
-                cppFlags "-std=c++14 -frtti -fexceptions"
-            }
-        }
     }
 
     // Turn off animations for Unit testing
@@ -94,19 +87,13 @@ android {
         }
     }
 
-    // Builds dummy cpp file
-    externalNativeBuild {
-        cmake {
-            path "CMakeLists.txt"
-        }
-    }
-
     // Prevent build failures due to lint errors
     lintOptions {
         abortOnError false
     }
 
     sourceSets {
+        main.jni.srcDirs = []
         main.java.srcDirs += 'src/main/java'
     }
 }
