@@ -1,0 +1,63 @@
+pipeline {
+    agent none
+
+    environment {
+        WEBHOOK_URL = credentials('WEBHOOK_URL')
+        CODE_COV_TOKEN = credentials('CODE_COV_TOKEN')
+    }
+
+    options {
+        timeout(time: 10, unit: 'MINUTES')
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
+    stages {
+
+        stage('Build and Test - Linux') {
+            agent {
+                label 'linux'
+            }
+
+            steps {
+                script {
+                    currentBuild.displayName = env.BRANCH_NAME + " - #" + env.BUILD_NUMBER
+                }
+
+                wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
+                    
+                    ansiColor('xterm') {
+                        sh 'set +x && TEMP=$HOME && HOME=/home/symboxtra && . ./install-sdk-tools.sh && HOME=$TEMP && export QT_XKB_CONFIG_ROOT=/usr/share/X11/xkb && ./test'
+                    }
+
+                }
+            }
+            
+            post {
+                always {
+                    sh """
+                        curl https://raw.githubusercontent.com/symboxtra/universal-ci-discord-webhook/master/send.sh > send.sh && chmod +x send.sh
+                    """
+                }
+                success {
+                    ansiColor('xterm') {
+                        sh """
+                            ./send.sh success $WEBHOOK_URL
+                            ./send-coverage.sh
+                            curl -X PUT -d status=passing http://pi.symboxtra.dynu.net/status/builds/android-${BRANCH_NAME} || true
+                        """
+                    }
+                }
+                failure {
+                    ansiColor('xterm') {
+                        sh """
+                            ./send.sh failure $WEBHOOK_URL
+                            curl -X PUT -d status=failing http://pi.symboxtra.dynu.net/status/builds/android-${BRANCH_NAME} || true
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+}

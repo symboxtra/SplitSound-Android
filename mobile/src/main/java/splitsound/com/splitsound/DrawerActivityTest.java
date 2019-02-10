@@ -1,62 +1,92 @@
 package splitsound.com.splitsound;
 
+import android.Manifest;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.os.RemoteException;
+import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v4.app.Fragment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.util.Log;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
-
-
-import splitsound.com.ui.adapters.RecyclerAdapter;
-import splitsound.com.ui.adapters.UserListAdapter;
 
 import splitsound.com.net.RTPNetworking;
 
-import java.net.DatagramSocket;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 
-import jlibrtp.*;
-
-
-public class DrawerActivityTest extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+/**
+ * Main Initial Activity
+ *
+ * @version 0.0.1
+ * @author Emanuel, Neel
+ * */
+public class DrawerActivityTest extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
+{
     private static final String TAG = "DrawerActivityTest";
 
-    private boolean avSess = false;
-    private RecyclerView sessRV;
-    private RecyclerView userRV;
+    private static final int MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
 
-    private SlidingUpPanelLayout slideUp;
+    public SlidingUpPanelLayout slideUp;
 
-    View myView;
-    boolean isUp = false;
+    private MediaBrowserCompat mediaBrowser;
 
+    /**
+     * Test function for unit testing purposes
+     *
+     * @return "Hello World"
+     */
     public static String helloWorld()
     {
         return "Hello World";
     }
 
+    /**
+     * Executed when the application starts
+     * the view is created
+     *
+     * @param savedInstanceState No clue what this is! ;P
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer_test);
-        
-        // Start networking thread (RTPReciever, RTCPSender, RTCPReceiver)
-        new Thread(new RTPNetworking()).start();
+
+        SharedPreferences sp = getSharedPreferences("firstBool",MODE_PRIVATE);
+        if (!sp.getBoolean("first", false)) {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putBoolean("first", true);
+            editor.apply();
+            Intent intent = new Intent(this, IntroActivity.class); // Call the AppIntro java class
+            startActivity(intent);
+        }
+
+        // Start main networking thread (RTPReciever, RTCPSender, RTCPReceiver)
+        new Thread(new RTPNetworking(getBroadcastAddress())).start();
+        Log.i("Broadcast Address", getBroadcastAddress());
 
         // Create custom toolbar and drawer functions
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -67,116 +97,145 @@ public class DrawerActivityTest extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        // Create the whole navigation view
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Setup RecyclerView for userlist and serverlist
-        sessRV = findViewById(R.id.server_list_recycler_view);
-        sessRV.setHasFixedSize(true);
-        sessRV.setLayoutManager(new LinearLayoutManager(this));
-        sessRV.setAdapter(new RecyclerAdapter());
-        sessRV.setVisibility(View.GONE);
-        
-        userRV = findViewById(R.id.user_list_recycler_view);
-        userRV.setHasFixedSize(true);
-        userRV.setLayoutManager(new LinearLayoutManager(this));
-        userRV.setAdapter(new UserListAdapter());
 
-        // Setup sliding panel action listeners
-        slideUp = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout);
-        slideUp.addPanelSlideListener(new PanelSlideListener(){
-            @Override
-            public void onPanelSlide(View panel, float slideOffset) {
-                Log.i(TAG, "onPanelSlide, offset " + slideOffset);
-            }
-
-            @Override
-            public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-                Log.i(TAG, "onPanelStateChanged " + newState);
-
-                ImageView arrowIcon = (ImageView)findViewById(R.id.arrow_icon);
-                TextView swipe = (TextView)findViewById(R.id.swipe);
-
-                if(newState == PanelState.EXPANDED)
-                {
-                    arrowIcon.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
-                    swipe.setText(R.string.close_drawer);
-                }
-                else if(newState == PanelState.COLLAPSED)
-                {
-                    arrowIcon.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
-                    swipe.setText(R.string.open_drawer);
-                }
-            }
-        });
+        // Ask Audio permission
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.RECORD_AUDIO }, MY_PERMISSIONS_REQUEST_RECORD_AUDIO);
     }
 
+
+    /**
+     * Executed when back button on device is pressed
+     */
     @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START))
             drawer.closeDrawer(GravityCompat.START);
         else if(slideUp != null && (slideUp.getPanelState() == PanelState.EXPANDED || slideUp.getPanelState() == PanelState.ANCHORED))
             slideUp.setPanelState(PanelState.COLLAPSED);
-        else if(avSess)
-        {
-            NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
-            onNavigationItemSelected(nav.getMenu().getItem(0));
-            avSess = false;
-        } else {
+        else
             super.onBackPressed();
-        }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.drawer_activity_test, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
+    /**
+     * Executed when one of the navigation items are pressed
+     *
+     * @param item The item that was pressed
+     * @return boolean based on successful actions performed
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+    public boolean onNavigationItemSelected(MenuItem item)
+    {
+        Fragment f = null;
         int id = item.getItemId();
-        System.out.println(id);
-        if (id == R.id.available_sessions) {
-            avSess = true;
-            View b = findViewById(R.id.connect);
-            b.setVisibility(View.GONE);
-            View play_button = findViewById(R.id.main_play_button);
-            play_button.setVisibility(View.GONE);
-            sessRV.setVisibility(View.VISIBLE);
+
+        switch (id)
+        {
+            case R.id.available_sessions:
+                f = new SessionsActivity();
+                break;
+            case R.id.settings:
+                Intent startSettings = new Intent(this, SettingsActivity.class);
+                startActivity(startSettings);
+                break;
+            case R.id.home_button:
+                f = new HomeActivity();
+                break;
         }
-        else if(id == R.id.settings) {
-            Intent startSettings = new Intent(this, SettingsActivity.class);
-            startActivity(startSettings);
-        }
-        else if(id == R.id.home_button){
-            sessRV.setVisibility(View.GONE);
-            View b = findViewById(R.id.connect);
-            b.setVisibility(View.VISIBLE);
-            View play_button = findViewById(R.id.main_play_button);
-            play_button.setVisibility(View.VISIBLE);
-        }
+
+        // Open associating fragment/activity
+        if(f != null)
+            getSupportFragmentManager().beginTransaction().replace(R.id.test, f).addToBackStack("test_fragment").commit();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /**
+     * Calculate the broadcast address of the network
+     *
+     * @return the broadcast address in String format
+     */
+    @NonNull
+    public static String getBroadcastAddress()
+    {
+        try {
+            System.setProperty("java.net.preferIPv4Stack", "true");
+            for (Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces(); interfaces.hasMoreElements(); ) {
+                NetworkInterface nif = interfaces.nextElement();
+                if (!nif.isLoopback())
+                    for (InterfaceAddress addr : nif.getInterfaceAddresses())
+                        if (addr.getBroadcast() != null)
+                            return addr.getBroadcast().toString().substring(1);
+
+
+            }
+        }catch(SocketException e) {}
+
+        return null;
+    }
+
+    /**
+     * Collapses the application toolbar for the slideup menu
+     *
+     * @return boolean whether successful
+     */
+    public boolean collapseBar(){
+        AppBarLayout appBarLayout = findViewById(R.id.appBar);
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
+        Log.d("HEIGHT", lp.height + "");
+        lp.height = 0;
+        appBarLayout.setLayoutParams(lp);
+        return true;
+    }
+
+    /**
+     * Adds back the application toolbar for the slideup menu
+     *
+     * @return boolean whether successful
+     */
+    public boolean unCollapseBar(){
+        AppBarLayout appBarLayout = findViewById(R.id.appBar);
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
+        Log.d("HEIGHT", lp.height + "");
+        lp.height = -2;
+        appBarLayout.setLayoutParams(lp);
+        return false;
+    }
+
+    /**
+     * Requests the user for approving permissions
+     *
+     * @param requestCode permission code
+     * @param permissions List of permissions requested
+     * @param grantResults Results provided for the request
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults)
+    {
+        switch (requestCode)
+        {
+            case MY_PERMISSIONS_REQUEST_RECORD_AUDIO: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    // do nothing and wait
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+
     }
 }

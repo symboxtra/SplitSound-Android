@@ -7,11 +7,13 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="action_refresh">Refresh</string>
     <string name="available_sessions">Available Sessions</string>
     <string name="splitsound">SplitSound</string>
     <string name="settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
     <string name="username">Default</string>
+    <string name="password">Default</string>
     <string name="people_picture">People Picture</string>
     <string name="server_with_or_without_password">Server with or without password</string>
     <string name="user_mute_or_unmute">User is muted or not muted</string>
@@ -20,4 +22,17 @@
     <string name="close_drawer">Swipe down to close</string>
     <string name="open_drawer">Swipe up to view</string>
     <string name="play_button">Play Button</string>
+    <string name="skip_back_button">skip back button</string>
+    <string name="skip_forward_button">skip forward button</string>
+    <string name="stream_text">Streaming from [comp. name]...</string>
+    <string name="app_intro">App Intro</string>
+    <string name="currently_listening">Currently Listening</string>
+    <string name="show_password">Show Password</string>
+    <string name="listening_on_phone">Listening on Phone</string>
+    <string name="kick_user">Kick user</string>
+    <string name="general">General</string>
+    <string name="scan_for_sessions_at_startup">Scan for sessions at startup</string>
+    <string name="low_battery_mode">Low battery mode</string>
+    <string name="user">User</string>
+    <string name="server_settings">Server Settings</string>
 </resources>

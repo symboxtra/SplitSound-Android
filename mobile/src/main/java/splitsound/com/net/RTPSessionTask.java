@@ -1,24 +1,43 @@
 package splitsound.com.net;
 
 import android.app.Activity;
+import android.util.Log;
+
+import java.util.Iterator;
 
 import jlibrtp.DataFrame;
 import jlibrtp.Participant;
 import jlibrtp.RTPAppIntf;
+import jlibrtp.RTPSession;
 
 /**
- * Created by Neel on 4/25/2018.
+ * Handles callbacks for RTP packets
+ *
+ * @version 0.0.1
+ * @author Neel
  */
-
 public class RTPSessionTask implements RTPAppIntf, Runnable
 {
-    public Activity activity;
-    String receiveText = "";
-    int pktCount = 0;
+
+    private static final String TAG = "RTPSessionTask";
+
+    // Instance of RTP session created in the main thread
+    private RTPSession rtpSess;
+
+    /**
+     * Constructor to start the RTP receiver callback
+     *
+     * @param sess Current RTP session
+     */
+    public RTPSessionTask(RTPSession sess)
+    {
+        rtpSess = sess;
+    }
 
     @Override
     public void run()
     {
+        Log.i(TAG, "Thread initiated");
     }
 
     @Override
@@ -30,12 +49,14 @@ public class RTPSessionTask implements RTPAppIntf, Runnable
     @Override
     public void receiveData(DataFrame frame, Participant p)
     {
-        byte[] data = frame.getConcatenatedData();
-        if(!RTPNetworking.servers.exists(p))
-            RTPNetworking.servers.add(p);
+        // Add data to data queue only if participant server is accepted
+        boolean exists = false;
+        for(Iterator<Participant> e = rtpSess.getUnicastReceivers(); e.hasNext();)
+            if(e.next().getSSRC() == p.getSSRC())
+                exists = true;
 
-        System.out.println(RTPNetworking.servers);
-        if(RTPNetworking.servers.exists(p))
+        byte[] data = frame.getConcatenatedData();
+        if(exists)
             RTPNetworking.networkPackets.add(data);
         p.debugPrint();
     }
